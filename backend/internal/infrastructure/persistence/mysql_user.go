@@ -63,15 +63,14 @@ func (r *mysqlUserRepository) GetByUsername(ctx context.Context, username string
 }
 
 func (r *mysqlUserRepository) Update(ctx context.Context, user *entity.User) error {
-	// ไม่อัพเดท created_at
 	result := r.db.WithContext(ctx).Model(&entity.User{}).
 		Where("user_id = ?", user.UserID).
 		Updates(map[string]interface{}{
-			"username":      user.Username,
-			"email":         user.Email,
-			"password":      user.Password,
-			"role":          user.Role,
-			"profile_image": user.ProfileImage,
+			"first_name": user.FirstName, // ต้องมี
+			"last_name":  user.LastName,  // ต้องมี
+			"phone":      user.Phone,
+			"bio":        user.Bio,
+			"email":      user.Email,
 		})
 
 	if result.Error != nil {

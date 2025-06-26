@@ -16,13 +16,17 @@ const (
 
 // โครงสร้างข้อมูลผู้ใช้
 type User struct {
-	UserID       int       `gorm:"primary_key;column:user_id"`
-	Username     string    `gorm:"column:username"`
-	Email        string    `gorm:"column:email"`
-	Password     string    `gorm:"column:password"`
-	Role         Role      `gorm:"column:role"`
-	CreatedAt    time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP"`
-	ProfileImage *string   `gorm:"column:profile_image"`
+	UserID       int       `gorm:"primary_key;column:user_id" json:"user_id"`
+	Username     string    `gorm:"column:username" json:"username"`
+	Email        string    `gorm:"column:email" json:"email"`
+	Password     string    `gorm:"column:password" json:"password"`
+	Role         Role      `gorm:"column:role" json:"role"`
+	ProfileImage *string   `gorm:"column:profile_image" json:"profile_image"`
+	CreatedAt    time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"created_at"`
+	FirstName    string    `gorm:"column:first_name" json:"first_name"`
+	LastName     string    `gorm:"column:last_name" json:"last_name"`
+	Phone        string    `gorm:"column:phone" json:"phone"`
+	Bio          string    `gorm:"column:bio" json:"bio"`
 }
 
 // กำหนดชื่อตารางสำหรับ GORM
@@ -39,3 +43,5 @@ func NewUser(username, email, password string) *User {
 		Role:     RoleMember, // กำหนดค่าเริ่มต้นเป็นสมาชิก
 	}
 }
+
+// NewUserHandler creates a new UserHandler

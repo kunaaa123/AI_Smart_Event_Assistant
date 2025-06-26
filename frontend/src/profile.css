@@ -1,0 +1,291 @@
+.profile-outer-container {
+  min-height: 100vh;
+  background: #f7f8fa;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;    /* จัดให้อยู่ตรงกลางแนวนอน */
+  padding: 48px 0 48px 0;
+}
+
+.profile-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 40px;
+  max-width: 1200px;
+  width: 100%;
+  margin-left: 32px;          /* ขยับทั้งกล่องมาทางขวาเล็กน้อย */
+  background: transparent;
+}
+
+.profile-sidebar {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+  width: 270px;
+  padding: 36px 0 28px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ทำให้ sidebar คงที่ (fixed) เฉพาะจอใหญ่ */
+@media (min-width: 900px) {
+  .profile-sidebar {
+    position: sticky;
+    top: 48px;
+    left: 0;
+    align-self: flex-start;
+  }
+}
+
+.profile-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e9ecef;
+  margin-bottom: 18px;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.profile-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.profile-menu {
+  width: 100%;
+  margin-top: 32px;
+}
+
+.profile-menu-item {
+  padding: 12px 32px;
+  color: #22223b;
+  font-size: 1.08rem;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: background 0.15s, border 0.15s;
+}
+
+.profile-menu-item.active,
+.profile-menu-item:hover {
+  background: #22223b;
+  color: #fff;
+  border-left: 4px solid #22223b;
+}
+
+.profile-main {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+  padding: 38px 44px 32px 44px;
+  min-width: 440px;
+  max-width: 600px;
+  width: 100%;
+  flex: 1;
+}
+
+.profile-form-row {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.profile-form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-label {
+  font-size: 1rem;
+  color: #22223b;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.profile-input-wrapper {
+  position: relative;
+}
+
+.profile-input,
+.profile-textarea {
+  width: 100%;
+  padding: 10px 38px 10px 12px;
+  border: 1.5px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  background: #f7f8fa;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.profile-input:focus,
+.profile-textarea:focus {
+  border: 1.5px solid #22223b;
+  background: #fff;
+}
+
+.profile-edit-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #adb5bd;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.profile-textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.profile-submit-btn {
+  margin-top: 10px;
+  background: #4f8cff;
+  color: #fff;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.profile-submit-btn:hover {
+  background: #22223b;
+}
+
+.profile-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(34, 34, 59, 0.18);
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-modal-content {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(31,38,135,0.18);
+  min-width: 340px;
+  max-width: 700px;
+  width: 100%;
+  padding: 36px 40px 32px 40px;
+  position: relative;
+  animation: profile-modal-fadein 0.18s;
+  margin: 0 12px;
+
+  /* เพิ่ม 2 บรรทัดนี้ */
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .profile-modal-content {
+    max-width: 98vw;
+    padding: 18px 4vw 18px 4vw;
+  }
+}
+
+@media (max-width: 700px) {
+  .profile-modal-content {
+    max-width: 98vw;
+    padding: 18px 4vw 18px 4vw;
+    max-height: 96vh;
+  }
+}
+
+/* ปรับ input/textarea ให้ไม่ล้น */
+.profile-modal-content .profile-input,
+.profile-modal-content .profile-textarea {
+  font-size: 1.08rem;
+  padding: 10px 38px 10px 12px;
+  border-radius: 8px;
+  background: #f7f8fa;
+  border: 1.5px solid #e9ecef;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.profile-modal-content .profile-form-row {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.profile-modal-content .profile-form-group {
+  flex: 1 1 220px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-modal-content .profile-label {
+  font-size: 1rem;
+  color: #22223b;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+/* กล่อง preview รูป */
+.profile-modal-content .profile-form-group > div[style*="background: #f7f8fa"] {
+  width: 100%;
+  max-width: 420px;
+  min-height: 160px;
+  margin: 0 auto 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ปุ่มส่งคำร้องขออยู่ขวาล่าง */
+.profile-modal-content .profile-submit-btn {
+  min-width: 120px;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  float: right;
+  margin-top: 18px;
+}
+
+@keyframes profile-modal-fadein {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+.profile-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.18rem;
+  font-weight: bold;
+  margin-bottom: 18px;
+}
+
+.profile-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #22223b;
+  cursor: pointer;
+  line-height: 1;
+}
+
+
+

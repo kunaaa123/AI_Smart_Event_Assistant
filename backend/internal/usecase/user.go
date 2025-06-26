@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -32,23 +31,11 @@ func (u *UserUsecase) GetByID(ctx context.Context, id string) (*entity.User, err
 }
 
 func (uc *UserUsecase) Update(ctx context.Context, id string, user *entity.User) error {
-	// แปลง string ID เป็น int
 	userID, err := strconv.Atoi(id)
 	if err != nil {
 		return fmt.Errorf("invalid user ID: %v", err)
 	}
-
-	// เรียกใช้ GetByID ด้วย string
-	existingUser, err := uc.userRepo.GetByID(ctx, strconv.Itoa(userID))
-	if err != nil {
-		return err
-	}
-	if existingUser == nil {
-		return errors.New("user not found")
-	}
-
-	// อัพเดทข้อมูล
-	user.UserID = userID // ให้แน่ใจว่าใช้ ID เดิม
+	user.UserID = userID // สำคัญ!
 	return uc.userRepo.Update(ctx, user)
 }
 
@@ -121,6 +108,45 @@ func (h *UserHandler) Register(c *gin.Context) {
 			"email":    user.Email,
 			"role":     user.Role,
 		},
+	})
+}
+
+func (h *UserHandler) UpdateUser(c *gin.Context) {
+	id := c.Param("id")
+	var updatedUser entity.User
+	if err := c.ShouldBindJSON(&updatedUser); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// เพิ่มตรงนี้!
+	fmt.Println("first_name:", updatedUser.FirstName)
+	fmt.Println("last_name:", updatedUser.LastName)
+
+	existingUser, err := h.userUsecase.GetByID(c.Request.Context(), id)
+	if err != nil || existingUser == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	// อัปเดตเฉพาะฟิลด์ที่อนุญาต
+	existingUser.FirstName = updatedUser.FirstName
+	existingUser.LastName = updatedUser.LastName
+	existingUser.Phone = updatedUser.Phone
+	existingUser.Bio = updatedUser.Bio
+	existingUser.Email = updatedUser.Email // ถ้าอนุญาตให้แก้ไข
+
+	// ไม่อัปเดต role, username, password ตรงนี้
+
+	err = h.userUsecase.Update(c.Request.Context(), id, existingUser)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User updated successfully",
+		"user":    existingUser,
 	})
 }
 

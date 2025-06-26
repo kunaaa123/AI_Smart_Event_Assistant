@@ -19,11 +19,10 @@ func NewEventHandler(uc *usecase.EventUsecase) *EventHandler {
 func (h *EventHandler) RegisterRoutes(router *gin.Engine) {
 	events := router.Group("/events")
 	{
+		events.POST("", h.CreateEvent)
 		events.GET("", h.GetAllEvents)
 		events.GET("/:id", h.GetEvent)
-		events.POST("", h.CreateEvent)
-		events.PUT("/:id", h.UpdateEvent)
-		events.DELETE("/:id", h.DeleteEvent)
+		events.GET("/user/:user_id", h.GetEventsByUserID)
 	}
 }
 
@@ -82,4 +81,14 @@ func (h *EventHandler) DeleteEvent(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Event deleted successfully"})
+}
+
+func (h *EventHandler) GetEventsByUserID(c *gin.Context) {
+	userID := c.Param("user_id")
+	events, err := h.eventUsecase.GetByUserID(c.Request.Context(), userID)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(200, events)
 }

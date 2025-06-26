@@ -44,3 +44,14 @@ func (r *mysqlEventRepository) GetAll(ctx context.Context) ([]entity.Event, erro
 	result := r.db.Find(&events)
 	return events, result.Error
 }
+
+func (r *mysqlEventRepository) GetByUserID(ctx context.Context, userID string) ([]*entity.Event, error) {
+	var events []*entity.Event
+	if err := r.db.
+		Joins("JOIN organizers ON events.organizer_id = organizers.organizer_id").
+		Where("organizers.user_id = ?", userID).
+		Find(&events).Error; err != nil {
+		return nil, err
+	}
+	return events, nil
+}

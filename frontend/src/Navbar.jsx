@@ -99,7 +99,7 @@ const Navbar = () => {
                 className="btn btn-outline-secondary btn-sm ms-2"
                 onClick={() => {
                   localStorage.removeItem("user");
-                  window.location.reload();
+                  window.location.href = "/login";
                 }}
               >
                 ออกจากระบบ

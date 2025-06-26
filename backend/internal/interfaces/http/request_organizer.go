@@ -47,17 +47,38 @@ func (h *RequestOrganizerHandler) GetByID(c *gin.Context) {
 }
 
 func (h *RequestOrganizerHandler) Create(c *gin.Context) {
-	var req entity.RequestOrganizer
+	var req struct {
+		UserID        int    `json:"user_id"`
+		OrganizerName string `json:"organizer_name"`
+		Category      string `json:"category"`
+		Email         string `json:"email"`
+		Price         string `json:"price"`
+		Phone         string `json:"phone"`
+		Description   string `json:"description"`
+		ImageLabel    string `json:"imageLabel"`
+	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
-	err := h.usecase.Create(c.Request.Context(), &req)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+
+	request := entity.RequestOrganizer{
+		UserID:        req.UserID,
+		OrganizerName: req.OrganizerName,
+		Category:      req.Category,
+		Email:         req.Email,
+		Price:         req.Price,
+		Phone:         req.Phone,
+		Description:   req.Description,
+		ImageLabel:    req.ImageLabel,
+	}
+
+	if err := h.usecase.Create(c.Request.Context(), &request); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save request"})
 		return
 	}
-	c.JSON(http.StatusCreated, req)
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Request submitted successfully"})
 }
 
 func (h *RequestOrganizerHandler) Update(c *gin.Context) {

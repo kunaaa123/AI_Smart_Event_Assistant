@@ -75,5 +75,11 @@ func main() {
 	loginHandler := http.NewLoginHandler(userUsecase)
 	loginHandler.RegisterRoutes(router)
 
+	// OrganizerPortfolio
+	organizerPortfolioRepo := persistence.NewMySQLOrganizerPortfolioRepository(db)
+	organizerPortfolioUsecase := usecase.NewOrganizerPortfolioUsecase(organizerPortfolioRepo)
+	organizerPortfolioHandler := http.NewOrganizerPortfolioHandler(organizerPortfolioUsecase)
+	organizerPortfolioHandler.RegisterRoutes(router)
+
 	router.Run(":8080")
 }

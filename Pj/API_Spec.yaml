@@ -1,0 +1,339 @@
+openapi: 3.0.0
+info:
+  title: Smart AI Event Assistant API
+  version: 1.0.0
+  description: API สำหรับระบบ Smart AI Event Assistant
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /users/register:
+    post:
+      summary: สมัครสมาชิก
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required: [username, email, password]
+      responses:
+        '201':
+          description: Register successful
+        '400':
+          description: Invalid request
+
+  /users:
+    get:
+      summary: ดึงข้อมูลผู้ใช้ทั้งหมด
+      responses:
+        '200':
+          description: OK
+
+    post:
+      summary: สร้างผู้ใช้ใหม่
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created
+
+  /users/{id}:
+    get:
+      summary: ดึงข้อมูลผู้ใช้ตาม ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+
+    put:
+      summary: อัปเดตข้อมูลผู้ใช้
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Updated
+
+    delete:
+      summary: ลบผู้ใช้
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Deleted
+
+  /login:
+    post:
+      summary: ล็อกอิน
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Email or password incorrect
+
+  /events:
+    get:
+      summary: ดึงข้อมูล Event ทั้งหมด
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: สร้าง Event ใหม่
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: Created
+
+  /events/{id}:
+    get:
+      summary: ดึง Event ตาม ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: อัปเดต Event
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: ลบ Event
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Deleted
+
+  /organizers:
+    get:
+      summary: ดึงข้อมูล Organizer ทั้งหมด
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: สร้าง Organizer ใหม่
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organizer'
+      responses:
+        '201':
+          description: Created
+
+  /organizers/{id}:
+    get:
+      summary: ดึง Organizer ตาม ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: อัปเดต Organizer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organizer'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: ลบ Organizer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Deleted
+
+  /request_organizers:
+    get:
+      summary: ดึง Request Organizer ทั้งหมด
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: สร้าง Request Organizer ใหม่
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestOrganizer'
+      responses:
+        '201':
+          description: Created
+
+  /request_organizers/{id}:
+    get:
+      summary: ดึง Request Organizer ตาม ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: อัปเดต Request Organizer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestOrganizer'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: ลบ Request Organizer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Deleted
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+        profile_image:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+        bio:
+          type: string
+    Event:
+      type: object
+      properties:
+        event_id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        organizer_id:
+          type: integer
+        event_image:
+          type: string
+    Organizer:
+      type: object
+      properties:
+        organizer_id:
+          type: integer
+        user_id:
+          type: integer
+        portfolio_img:
+          type: string
+        expertise:
+          type: string
+    RequestOrganizer:
+      type: object
+      properties:
+        request_id:
+          type: integer
+        user_id:
+          type: integer
+        port_img:
+          type: string
