@@ -4,8 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"github.com/kunaaa123/smart-ai-event-assistant/backend/internal/domain/entity"
 	"github.com/kunaaa123/smart-ai-event-assistant/backend/internal/domain/repository"
 	"gorm.io/gorm"
@@ -58,6 +60,10 @@ func (u *UserUsecase) GetAll(ctx context.Context) ([]entity.User, error) {
 	return u.userRepo.GetAll(ctx)
 }
 
+func (u *UserUsecase) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
+	return u.userRepo.GetByEmail(ctx, email)
+}
+
 // MySQL implementation
 type mysqlUserRepository struct {
 	db *gorm.DB
@@ -70,4 +76,57 @@ func (r *mysqlUserRepository) GetByID(ctx context.Context, id string) (*entity.U
 		return nil, result.Error
 	}
 	return &user, nil
+}
+
+type UserHandler struct {
+	userUsecase *UserUsecase
+}
+
+func NewUserHandler(userUsecase *UserUsecase) *UserHandler {
+	return &UserHandler{
+		userUsecase: userUsecase,
+	}
+}
+
+func (h *UserHandler) Register(c *gin.Context) {
+	var req struct {
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	// ตรวจสอบซ้ำ (email ห้ามซ้ำ)
+	existing, _ := h.userUsecase.GetByEmail(c.Request.Context(), req.Email)
+	if existing != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already exists"})
+		return
+	}
+
+	user := entity.NewUser(req.Username, req.Email, req.Password)
+	err := h.userUsecase.Create(c.Request.Context(), user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Register successful",
+		"user": gin.H{
+			"user_id":  user.UserID,
+			"username": user.Username,
+			"email":    user.Email,
+			"role":     user.Role,
+		},
+	})
+}
+
+func RegisterRoutes(r *gin.Engine, h *UserHandler) {
+	users := r.Group("/users")
+	{
+		users.POST("/register", h.Register) // ถูกต้องแล้ว
+	}
 }

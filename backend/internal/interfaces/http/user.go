@@ -19,18 +19,51 @@ func NewUserHandler(uc *usecase.UserUsecase) *UserHandler {
 }
 
 func (h *UserHandler) Register(c *gin.Context) {
-	// Handle HTTP request
+	var req struct {
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	// ตรวจสอบซ้ำ (email ห้ามซ้ำ)
+	existing, _ := h.userUsecase.GetByEmail(c.Request.Context(), req.Email)
+	if existing != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already exists"})
+		return
+	}
+
+	user := entity.NewUser(req.Username, req.Email, req.Password)
+	err := h.userUsecase.Create(c.Request.Context(), user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Register successful",
+		"user": gin.H{
+			"user_id":  user.UserID,
+			"username": user.Username,
+			"email":    user.Email,
+			"role":     user.Role,
+		},
+	})
 }
 
 func (h *UserHandler) RegisterRoutes(router *gin.Engine) {
 	// เพิ่ม route group
 	users := router.Group("/users")
 	{
-		users.GET("", h.GetAllUsers)       // เพิ่ม route สำหรับดึงข้อมูลทั้งหมด
-		users.GET("/:id", h.GetUser)       // ดึงข้อมูล user คนเดียว
-		users.POST("", h.CreateUser)       // สร้าง user
-		users.PUT("/:id", h.UpdateUser)    // อัพเดท user
-		users.DELETE("/:id", h.DeleteUser) // ลบ user
+		users.POST("/register", h.Register) // เพิ่ม route สมัครสมาชิก
+		users.GET("", h.GetAllUsers)        // เพิ่ม route สำหรับดึงข้อมูลทั้งหมด
+		users.GET("/:id", h.GetUser)        // ดึงข้อมูล user คนเดียว
+		users.POST("", h.CreateUser)        // สร้าง user
+		users.PUT("/:id", h.UpdateUser)     // อัพเดท user
+		users.DELETE("/:id", h.DeleteUser)  // ลบ user
 	}
 }
 

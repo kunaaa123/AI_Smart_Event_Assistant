@@ -1,6 +1,8 @@
 package entity
 
-import "time"
+import (
+	"time"
+)
 
 // กำหนดชนิดของ Role เป็น string
 type Role string

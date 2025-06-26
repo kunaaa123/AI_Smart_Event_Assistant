@@ -36,7 +36,13 @@ func (r *mysqlUserRepository) GetByID(ctx context.Context, id string) (*entity.U
 func (r *mysqlUserRepository) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
 	var user entity.User
 	err := r.db.WithContext(ctx).Where("email = ?", email).First(&user).Error
-	return &user, err
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil // ไม่เจอ user = ไม่ error
+		}
+		return nil, err // error อื่นๆ
+	}
+	return &user, nil
 }
 
 func (r *mysqlUserRepository) Delete(ctx context.Context, id string) error {
