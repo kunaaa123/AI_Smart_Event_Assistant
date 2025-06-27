@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ProfileLayout from "./ProfileLayout";
 import "./MyEvents.css";
 
@@ -10,6 +11,7 @@ const MyEvents = () => {
 
   // เช็คว่า user เป็น organizer หรือไม่
   const isOrganizer = user.role === "organizer";
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMyEvents = async () => {
@@ -48,7 +50,10 @@ const MyEvents = () => {
           />
           <button className="my-events-create-btn">สร้างอีเว้นท์</button>
           {isOrganizer && (
-            <button className="my-events-organizer-btn">
+            <button
+              className="my-events-organizer-btn"
+              onClick={() => navigate("/organizer-portfolios")}
+            >
               อีเว้นท์สำหรับผู้จัดทำ
             </button>
           )}

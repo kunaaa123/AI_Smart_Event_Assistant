@@ -32,7 +32,7 @@ func main() {
 	// User
 	userRepo := persistence.NewMySQLUserRepository(db)
 	userUsecase := usecase.NewUserUsecase(userRepo)
-	userHandler := http.NewUserHandler(userUsecase)
+	userHandler := http.NewUserHandler(userUsecase, db)
 	userHandler.RegisterRoutes(router)
 
 	// Event
@@ -72,7 +72,7 @@ func main() {
 	requestOrganizerHandler.RegisterRoutes(router)
 
 	// เพิ่ม LoginHandler
-	loginHandler := http.NewLoginHandler(userUsecase)
+	loginHandler := http.NewLoginHandler(userUsecase, db)
 	loginHandler.RegisterRoutes(router)
 
 	// OrganizerPortfolio

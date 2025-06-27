@@ -7,15 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kunaaa123/smart-ai-event-assistant/backend/internal/domain/entity" // แก้ path
 	"github.com/kunaaa123/smart-ai-event-assistant/backend/internal/usecase"
+	"gorm.io/gorm"
 )
 
 type UserHandler struct {
-	userUsecase *usecase.UserUsecase // Note the case
+	userUsecase *usecase.UserUsecase
+	db          *gorm.DB
 }
 
-func NewUserHandler(uc *usecase.UserUsecase) *UserHandler {
+func NewUserHandler(uc *usecase.UserUsecase, db *gorm.DB) *UserHandler {
 	return &UserHandler{
 		userUsecase: uc,
+		db:          db,
 	}
 }
 
@@ -105,7 +108,24 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, user)
+
+	var organizerID int
+	h.db.Table("organizers").Select("organizer_id").Where("user_id = ?", user.UserID).Scan(&organizerID)
+
+	c.JSON(http.StatusOK, gin.H{
+		"user_id":       user.UserID,
+		"username":      user.Username,
+		"email":         user.Email,
+		"role":          user.Role,
+		"organizer_id":  organizerID, // เพิ่มตรงนี้!
+		"first_name":    user.FirstName,
+		"last_name":     user.LastName,
+		"phone":         user.Phone,
+		"bio":           user.Bio,
+		"profile_image": user.ProfileImage,
+		"created_at":    user.CreatedAt,
+		// ...field อื่นๆ
+	})
 }
 
 func (h *UserHandler) UpdateUser(c *gin.Context) {
@@ -155,3 +175,24 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 }
 
 // เพิ่ม handler functions อื่นๆ ตามต้องการ
+
+func (h *UserHandler) GetByID(c *gin.Context) {
+	id := c.Param("id")
+	user, err := h.userUsecase.GetByID(c.Request.Context(), id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	var organizerID int
+	h.db.Table("organizers").Select("organizer_id").Where("user_id = ?", user.UserID).Scan(&organizerID)
+
+	c.JSON(http.StatusOK, gin.H{
+		"user_id":      user.UserID,
+		"username":     user.Username,
+		"email":        user.Email,
+		"role":         user.Role,
+		"organizer_id": organizerID, // เพิ่มตรงนี้
+		// ...field อื่นๆ
+	})
+}

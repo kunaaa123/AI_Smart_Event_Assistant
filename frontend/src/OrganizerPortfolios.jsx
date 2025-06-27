@@ -1,0 +1,146 @@
+import React, { useEffect, useState } from "react";
+import ProfileLayout from "./ProfileLayout";
+import { useNavigate } from "react-router-dom";
+import "./MyEvents.css"; // ใช้ style เดิมได้เลย
+
+const OrganizerPortfolios = () => {
+  const navigate = useNavigate();
+  // อ่าน user จาก localStorage
+  const [user] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user")) || {};
+    } catch {
+      return {};
+    }
+  });
+  const [portfolios, setPortfolios] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ดึงผลงานของ organizer นี้
+  useEffect(() => {
+    const fetchPortfolios = async () => {
+      if (!user.organizer_id) {
+        setPortfolios([]);
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `http://localhost:8080/organizer_portfolios/organizer/${user.organizer_id}`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setPortfolios(data);
+        } else {
+          setPortfolios([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch portfolios:", error);
+        setPortfolios([]);
+      }
+      setLoading(false);
+    };
+    fetchPortfolios();
+  }, [user.organizer_id]);
+
+  // ถ้าไม่มี organizer_id ให้แจ้งเตือน
+  if (!user.organizer_id) {
+    return (
+      <ProfileLayout user={user}>
+        <div className="my-events-header-outer">
+          <h2 className="my-events-title">ผลงานของผู้จัดทำ</h2>
+          <button
+            className="my-events-create-btn"
+            onClick={() => navigate("/my-events")}
+            style={{
+              background: "#fff",
+              color: "#22223b",
+              border: "1.5px solid #adb5bd",
+            }}
+          >
+            ← กลับไปหน้าอีเว้นท์ของฉัน
+          </button>
+        </div>
+        <div className="my-events-main-border">
+          <div className="my-events-container">
+            <div style={{ color: "red", textAlign: "center", margin: 40 }}>
+              คุณยังไม่ได้เป็นผู้จัดทำ หรือระบบยังไม่ได้เชื่อมโยง
+              organizer_id
+              <br />
+              กรุณาติดต่อแอดมินหรือสมัครเป็น organizer ก่อน
+            </div>
+          </div>
+        </div>
+      </ProfileLayout>
+    );
+  }
+
+  return (
+    <ProfileLayout user={user}>
+      <div className="my-events-header-outer">
+        <h2 className="my-events-title">ผลงานของผู้จัดทำ</h2>
+        <button
+          className="my-events-create-btn"
+          onClick={() => navigate("/my-events")}
+          style={{
+            background: "#fff",
+            color: "#22223b",
+            border: "1.5px solid #adb5bd",
+          }}
+        >
+          ← กลับไปหน้าอีเว้นท์ของฉัน
+        </button>
+        {/* ปุ่มเพิ่มผลงาน */}
+        <button className="my-events-create-btn">เพิ่มผลงาน</button>
+      </div>
+      <div className="my-events-main-border">
+        <div className="my-events-container">
+          {loading ? (
+            <div>กำลังโหลด...</div>
+          ) : portfolios.length === 0 ? (
+            <div>คุณยังไม่มีผลงาน</div>
+          ) : (
+            <div className="my-events-list-grid">
+              {portfolios.map((item) => (
+                <div className="my-event-card-grid" key={item.portfolio_id}>
+                  <div className="my-event-img-wrap">
+                    <img
+                      src={
+                        item.image_url ||
+                        "https://placehold.co/300x180?text=No+Image"
+                      }
+                      alt={item.title}
+                      className="my-event-img"
+                    />
+                  </div>
+                  <div className="my-event-info">
+                    <div className="my-event-info-title">{item.title}</div>
+                    <div className="my-event-info-organizer">
+                      {item.category}
+                    </div>
+                    <div className="my-event-info-desc">{item.description}</div>
+                    <div className="my-event-info-price">
+                      {item.price && `ราคา: ${item.price}`}
+                    </div>
+                  </div>
+                  {/* ปุ่มลบ/แก้ไข สามารถเพิ่มฟังก์ชันได้ภายหลัง */}
+                  <div className="my-event-actions">
+                    <button className="my-event-action-btn" title="Edit">
+                      ✏️
+                    </button>
+                    <button className="my-event-action-btn" title="Delete">
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </ProfileLayout>
+  );
+};
+
+export default OrganizerPortfolios;

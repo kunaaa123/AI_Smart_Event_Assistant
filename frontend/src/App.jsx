@@ -7,6 +7,7 @@ import Register from "./Register";
 import GlassAlert from "./GlassAlert";
 import Profile from "./Profile";
 import MyEvents from "./MyEvents";
+import OrganizerPortfolios from "./OrganizerPortfolios";
 
 function App() {
   const [alert, setAlert] = useState({ message: "", type: "success", show: false });
@@ -31,6 +32,7 @@ function App() {
         <Route path="/register" element={<Register showToast={showToast} />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/my-events" element={<MyEvents />} />
+        <Route path="/organizer-portfolios" element={<OrganizerPortfolios />} />
       </Routes>
     </Router>
   );

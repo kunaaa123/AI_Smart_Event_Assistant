@@ -3,7 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = (() => {
+    try {
+      const raw = localStorage.getItem("user");
+      if (!raw || raw === "undefined") return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  })();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">

@@ -122,7 +122,7 @@ const Profile = () => {
           profile_image: data.profile_image || null,
         });
         // อัปเดต localStorage ด้วย (ถ้าต้องการให้ navbar เปลี่ยนด้วย)
-        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("user", JSON.stringify(data)); // data ต้องมี organizer_id
       }
     } catch {
       // handle error
@@ -253,3 +253,6 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
+
