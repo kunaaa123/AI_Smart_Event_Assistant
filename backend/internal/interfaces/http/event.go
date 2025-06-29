@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -47,11 +48,32 @@ func (h *EventHandler) GetEvent(c *gin.Context) {
 
 func (h *EventHandler) CreateEvent(c *gin.Context) {
 	var event entity.Event
-	if err := c.ShouldBindJSON(&event); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+
+	event.Name = c.PostForm("name")
+	event.Description = c.PostForm("description")
+	organizerIDStr := c.PostForm("organizer_id")
+	if organizerIDStr != "" {
+		fmt.Sscanf(organizerIDStr, "%d", &event.OrganizerID)
 	}
-	err := h.eventUsecase.Create(c.Request.Context(), &event)
+	userIDStr := c.PostForm("user_id")
+	if userIDStr != "" {
+		fmt.Sscanf(userIDStr, "%d", &event.UserID)
+	}
+
+	// รับไฟล์
+	file, err := c.FormFile("event_image")
+	if err == nil && file != nil {
+		// สมมติบันทึกไฟล์ไว้ที่ ./uploads/
+		dst := fmt.Sprintf("./uploads/%s", file.Filename)
+		if err := c.SaveUploadedFile(file, dst); err == nil {
+			event.EventImage = &dst
+		}
+	}
+
+	// ...validate event.Name, event.Description...
+
+	// สร้าง event ในฐานข้อมูล
+	err = h.eventUsecase.Create(c.Request.Context(), &event)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

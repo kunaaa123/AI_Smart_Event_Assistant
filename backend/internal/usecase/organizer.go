@@ -34,3 +34,7 @@ func (u *OrganizerUsecase) Delete(ctx context.Context, id string) error {
 func (u *OrganizerUsecase) GetAll(ctx context.Context) ([]entity.Organizer, error) {
 	return u.organizerRepo.GetAll(ctx)
 }
+
+func (u *OrganizerUsecase) GetAllWithName(ctx context.Context, out *[]entity.OrganizerWithName) error {
+	return u.organizerRepo.GetAllWithName(ctx, out)
+}

@@ -66,11 +66,12 @@ func (r *mysqlUserRepository) Update(ctx context.Context, user *entity.User) err
 	result := r.db.WithContext(ctx).Model(&entity.User{}).
 		Where("user_id = ?", user.UserID).
 		Updates(map[string]interface{}{
-			"first_name": user.FirstName, // ต้องมี
-			"last_name":  user.LastName,  // ต้องมี
-			"phone":      user.Phone,
-			"bio":        user.Bio,
-			"email":      user.Email,
+			"first_name":    user.FirstName,
+			"last_name":     user.LastName,
+			"phone":         user.Phone,
+			"bio":           user.Bio,
+			"email":         user.Email,
+			"profile_image": user.ProfileImage, // <-- เพิ่มบรรทัดนี้
 		})
 
 	if result.Error != nil {

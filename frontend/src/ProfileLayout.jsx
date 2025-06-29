@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Profile.css";
 
 const ProfileLayout = ({ user, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const fileInputRef = useRef();
+  const [uploading, setUploading] = useState(false);
 
   // กำหนด active menu
   const menuList = [
@@ -15,22 +17,62 @@ const ProfileLayout = ({ user, children }) => {
     { label: "สร้างธีมบัตรเชิญด้วย AI", path: "/ai-invite-theme" },
   ];
 
+  // ฟังก์ชันอัปโหลดรูป
+  const handleProfileImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true);
+    const data = new FormData();
+    data.append("profile_image", file);
+    try {
+      const res = await fetch(
+        `http://localhost:8080/users/${user.user_id}/profile-image`,
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const result = await res.json();
+      if (res.ok && result.profile_image) {
+        const updatedUser = { ...user, profile_image: result.profile_image };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event("user-profile-updated")); // เพิ่มบรรทัดนี้
+      } else {
+        alert(result.error || "อัปโหลดรูปไม่สำเร็จ");
+      }
+    } catch {
+      alert("เกิดข้อผิดพลาดในการอัปโหลดรูป");
+    }
+    setUploading(false);
+  };
+
   return (
     <div className="profile-outer-container">
       <div className="profile-container">
         {/* Sidebar */}
         <div className="profile-sidebar">
-          {user.profile_image ? (
-            <img
-              src={user.profile_image}
-              alt="avatar"
-              className="profile-avatar"
-            />
-          ) : (
-            <div className="profile-avatar">
-              {user.username ? user.username[0].toUpperCase() : "U"}
-            </div>
-          )}
+          <img
+            src={
+              user.profile_image
+                ? user.profile_image.startsWith("http")
+                  ? user.profile_image
+                  : `http://localhost:8080${user.profile_image}`
+                : "/default-avatar.png"
+            }
+            alt="avatar"
+            className="profile-avatar"
+            style={{ cursor: "pointer" }}
+            onClick={() => fileInputRef.current.click()}
+            title="เปลี่ยนรูปโปรไฟล์"
+          />
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleProfileImageChange}
+            disabled={uploading}
+          />
           <div className="profile-name">{user.username || "ชื่อผู้ใช้"}</div>
           <button
             style={{
@@ -42,9 +84,12 @@ const ProfileLayout = ({ user, children }) => {
               fontSize: "0.98rem",
               color: "#22223b",
               cursor: "pointer",
+              opacity: uploading ? 0.6 : 1,
             }}
+            onClick={() => fileInputRef.current.click()}
+            disabled={uploading}
           >
-            อัปโหลดรูป
+            {uploading ? "กำลังอัปโหลด..." : "อัปโหลดรูป"}
           </button>
           <div className="profile-menu">
             {menuList.map((item) => (

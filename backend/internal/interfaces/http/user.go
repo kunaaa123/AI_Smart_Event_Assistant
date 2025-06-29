@@ -66,12 +66,13 @@ func (h *UserHandler) RegisterRoutes(router *gin.Engine) {
 	// เพิ่ม route group
 	users := router.Group("/users")
 	{
-		users.POST("/register", h.Register) // เพิ่ม route สมัครสมาชิก
-		users.GET("", h.GetAllUsers)        // เพิ่ม route สำหรับดึงข้อมูลทั้งหมด
-		users.GET("/:id", h.GetUser)        // ดึงข้อมูล user คนเดียว
-		users.POST("", h.CreateUser)        // สร้าง user
-		users.PUT("/:id", h.UpdateUser)     // อัพเดท user
-		users.DELETE("/:id", h.DeleteUser)  // ลบ user
+		users.POST("/register", h.Register)                    // เพิ่ม route สมัครสมาชิก
+		users.GET("", h.GetAllUsers)                           // เพิ่ม route สำหรับดึงข้อมูลทั้งหมด
+		users.GET("/:id", h.GetUser)                           // ดึงข้อมูล user คนเดียว
+		users.POST("", h.CreateUser)                           // สร้าง user
+		users.PUT("/:id", h.UpdateUser)                        // อัพเดท user
+		users.DELETE("/:id", h.DeleteUser)                     // ลบ user
+		users.POST("/:id/profile-image", h.UploadProfileImage) // <<--- เพิ่มบรรทัดนี้
 	}
 }
 
@@ -195,4 +196,36 @@ func (h *UserHandler) GetByID(c *gin.Context) {
 		"organizer_id": organizerID, // เพิ่มตรงนี้
 		// ...field อื่นๆ
 	})
+}
+
+func (h *UserHandler) UploadProfileImage(c *gin.Context) {
+	id := c.Param("id")
+	user, err := h.userUsecase.GetByID(c.Request.Context(), id)
+	if err != nil || user == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	file, err := c.FormFile("profile_image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No file uploaded"})
+		return
+	}
+
+	filename := fmt.Sprintf("profile_%s_%s", id, file.Filename)
+	dst := fmt.Sprintf("./uploads/%s", filename)
+	if err := c.SaveUploadedFile(file, dst); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
+		return
+	}
+
+	// อัปเดต path ใน DB
+	profileImagePath := "/uploads/" + filename
+	user.ProfileImage = &profileImagePath
+	if err := h.userUsecase.Update(c.Request.Context(), id, user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"profile_image": profileImagePath})
 }

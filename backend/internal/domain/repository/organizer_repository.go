@@ -12,4 +12,5 @@ type OrganizerRepository interface {
 	Update(ctx context.Context, organizer *entity.Organizer) error
 	Delete(ctx context.Context, id string) error
 	GetAll(ctx context.Context) ([]entity.Organizer, error)
+	GetAllWithName(ctx context.Context, out *[]entity.OrganizerWithName) error
 }

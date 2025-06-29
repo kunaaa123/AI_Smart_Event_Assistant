@@ -105,3 +105,19 @@
 .navbar-signup-btn:hover {
   background: #4a4e69;
 }
+
+.navbar-avatar {
+  width: 50px !important;
+  height: 50px !important;
+  min-width: 50px !important;
+  min-height: 50px !important;
+  max-width: 50px !important;
+  max-height: 50px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  border: 2px solid #e9ecef !important;
+  background: #fff !important;
+  box-shadow: 0 1px 4px #0001 !important;
+  display: block !important;
+}
+

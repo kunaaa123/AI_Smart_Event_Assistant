@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,10 +11,11 @@ import (
 
 type OrganizerHandler struct {
 	organizerUsecase *usecase.OrganizerUsecase
+	eventUsecase     *usecase.EventUsecase
 }
 
-func NewOrganizerHandler(uc *usecase.OrganizerUsecase) *OrganizerHandler {
-	return &OrganizerHandler{organizerUsecase: uc}
+func NewOrganizerHandler(uc *usecase.OrganizerUsecase, ec *usecase.EventUsecase) *OrganizerHandler {
+	return &OrganizerHandler{organizerUsecase: uc, eventUsecase: ec}
 }
 
 func (h *OrganizerHandler) RegisterRoutes(router *gin.Engine) {
@@ -28,7 +30,8 @@ func (h *OrganizerHandler) RegisterRoutes(router *gin.Engine) {
 }
 
 func (h *OrganizerHandler) GetAllOrganizers(c *gin.Context) {
-	organizers, err := h.organizerUsecase.GetAll(c.Request.Context())
+	var organizers []entity.OrganizerWithName
+	err := h.organizerUsecase.GetAllWithName(c.Request.Context(), &organizers)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -82,4 +85,22 @@ func (h *OrganizerHandler) DeleteOrganizer(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Organizer deleted successfully"})
+}
+
+func (h *OrganizerHandler) CreateEvent(c *gin.Context) {
+	var event entity.Event
+	if err := c.ShouldBindJSON(&event); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	organizerIDStr := c.PostForm("organizer_id")
+	if organizerIDStr != "" {
+		fmt.Sscanf(organizerIDStr, "%d", &event.OrganizerID)
+	}
+	err := h.eventUsecase.Create(c.Request.Context(), &event)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, event)
 }

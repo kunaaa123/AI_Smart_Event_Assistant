@@ -35,6 +35,6 @@ func (u *EventUsecase) GetAll(ctx context.Context) ([]entity.Event, error) {
 	return u.eventRepo.GetAll(ctx)
 }
 
-func (uc *EventUsecase) GetByUserID(ctx context.Context, userID string) ([]*entity.Event, error) {
-	return uc.eventRepo.GetByUserID(ctx, userID)
+func (u *EventUsecase) GetByUserID(ctx context.Context, userID string) ([]entity.Event, error) {
+	return u.eventRepo.GetByUserID(ctx, userID)
 }

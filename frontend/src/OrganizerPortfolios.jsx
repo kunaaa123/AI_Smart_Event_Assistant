@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ProfileLayout from "./ProfileLayout";
 import { useNavigate } from "react-router-dom";
-import "./MyEvents.css"; // ใช้ style เดิมได้เลย
+import AddPortfolio from "./AddPortfolio";
+import "./MyEvents.css";
 
 const OrganizerPortfolios = () => {
   const navigate = useNavigate();
-  // อ่าน user จาก localStorage
   const [user] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("user")) || {};
@@ -15,33 +15,35 @@ const OrganizerPortfolios = () => {
   });
   const [portfolios, setPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   // ดึงผลงานของ organizer นี้
-  useEffect(() => {
-    const fetchPortfolios = async () => {
-      if (!user.organizer_id) {
-        setPortfolios([]);
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `http://localhost:8080/organizer_portfolios/organizer/${user.organizer_id}`
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setPortfolios(data);
-        } else {
-          setPortfolios([]);
-        }
-      } catch (error) {
-        console.error("Failed to fetch portfolios:", error);
-        setPortfolios([]);
-      }
+  const fetchPortfolios = async () => {
+    if (!user.organizer_id) {
+      setPortfolios([]);
       setLoading(false);
-    };
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `http://localhost:8080/organizer_portfolios/organizer/${user.organizer_id}`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setPortfolios(data);
+      } else {
+        setPortfolios([]);
+      }
+    } catch {
+      setPortfolios([]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
     fetchPortfolios();
+    // eslint-disable-next-line
   }, [user.organizer_id]);
 
   // ถ้าไม่มี organizer_id ให้แจ้งเตือน
@@ -65,8 +67,7 @@ const OrganizerPortfolios = () => {
         <div className="my-events-main-border">
           <div className="my-events-container">
             <div style={{ color: "red", textAlign: "center", margin: 40 }}>
-              คุณยังไม่ได้เป็นผู้จัดทำ หรือระบบยังไม่ได้เชื่อมโยง
-              organizer_id
+              คุณยังไม่ได้เป็นผู้จัดทำ หรือระบบยังไม่ได้เชื่อมโยง organizer_id
               <br />
               กรุณาติดต่อแอดมินหรือสมัครเป็น organizer ก่อน
             </div>
@@ -92,8 +93,67 @@ const OrganizerPortfolios = () => {
           ← กลับไปหน้าอีเว้นท์ของฉัน
         </button>
         {/* ปุ่มเพิ่มผลงาน */}
-        <button className="my-events-create-btn">เพิ่มผลงาน</button>
+        <button
+          className="my-events-create-btn"
+          onClick={() => setShowAddModal(true)}
+        >
+          เพิ่มผลงาน
+        </button>
       </div>
+      {/* Popup Modal */}
+      {showAddModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.25)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 18,
+              boxShadow: "0 8px 32px 0 rgba(31,38,135,0.18)",
+              padding: 32,
+              minWidth: 340,
+              maxWidth: 420,
+              width: "100%",
+              position: "relative",
+            }}
+          >
+            <button
+              onClick={() => setShowAddModal(false)}
+              style={{
+                position: "absolute",
+                top: 12,
+                right: 18,
+                background: "none",
+                border: "none",
+                fontSize: 24,
+                cursor: "pointer",
+                color: "#22223b",
+              }}
+              aria-label="close"
+            >
+              ×
+            </button>
+            <AddPortfolio
+              onSuccess={() => {
+                setShowAddModal(false);
+                fetchPortfolios();
+              }}
+              onError={() => setShowAddModal(false)}
+            />
+          </div>
+        </div>
+      )}
       <div className="my-events-main-border">
         <div className="my-events-container">
           {loading ? (
@@ -107,8 +167,11 @@ const OrganizerPortfolios = () => {
                   <div className="my-event-img-wrap">
                     <img
                       src={
-                        item.image_url ||
-                        "https://placehold.co/300x180?text=No+Image"
+                        item.image_url
+                          ? item.image_url.startsWith("http")
+                            ? item.image_url
+                            : `http://localhost:8080/${item.image_url.replace(/^\/?/, "")}`
+                          : "https://placehold.co/300x180?text=No+Image"
                       }
                       alt={item.title}
                       className="my-event-img"
@@ -124,7 +187,6 @@ const OrganizerPortfolios = () => {
                       {item.price && `ราคา: ${item.price}`}
                     </div>
                   </div>
-                  {/* ปุ่มลบ/แก้ไข สามารถเพิ่มฟังก์ชันได้ภายหลัง */}
                   <div className="my-event-actions">
                     <button className="my-event-action-btn" title="Edit">
                       ✏️

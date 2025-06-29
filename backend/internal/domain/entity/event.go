@@ -3,12 +3,13 @@ package entity
 import "time"
 
 type Event struct {
-	EventID     int       `gorm:"primary_key;column:event_id" json:"event_id"`
-	Name        string    `gorm:"column:name" json:"name"`
-	Description string    `gorm:"column:description" json:"description"`
-	OrganizerID int       `gorm:"column:organizer_id" json:"organizer_id"`
+	EventID     int       `json:"event_id" gorm:"primaryKey"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	OrganizerID int       `json:"organizer_id"`
+	UserID      int       `json:"user_id"` // <--- ต้องมี field นี้
 	CreatedAt   time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"created_at"`
-	EventImage  *string   `gorm:"column:event_image" json:"event_image"`
+	EventImage  *string   `json:"event_image"`
 }
 
 func (Event) TableName() string {

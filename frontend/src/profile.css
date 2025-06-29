@@ -39,6 +39,7 @@
   }
 }
 
+/* .profile-avatar ใน Profile.css จะใช้กับ sidebar เท่านั้น */
 .profile-avatar {
   width: 110px;
   height: 110px;

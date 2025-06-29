@@ -1,0 +1,216 @@
+/* Modal Overlay */
+.add-portfolio-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal Content */
+.add-portfolio-modal-content,
+.create-event-modal-box {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+  padding: 32px 28px;
+  min-width: 340px;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+  animation: fadeInModal 0.18s;
+  margin: 0 12px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+.create-event-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #22223b;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.create-event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.create-event-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.create-event-form-group label {
+  font-weight: 500;
+  color: #22223b;
+  margin-bottom: 2px;
+}
+
+.create-event-form input[type="text"],
+.create-event-form input[type="number"],
+.create-event-form input[type="file"],
+.create-event-form textarea {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #e9ecef;
+  font-size: 1rem;
+  background: #f7f8fa;
+  transition: border 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.create-event-form textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.create-event-form input[type="file"] {
+  padding: 6px 0;
+  background: none;
+}
+
+.create-event-image-preview {
+  width: 100%;
+  max-width: 220px;
+  min-height: 120px;
+  margin: 0 auto 8px auto;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px #0001;
+  display: block;
+  background: #f7f8fa;
+}
+
+.create-event-btn {
+  margin-top: 8px;
+  width: 100%;
+  background: #4361ee;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.create-event-btn:hover {
+  background: #2746b0;
+}
+
+/* ปุ่มปิดมุมขวาบน */
+.add-portfolio-modal-content .modal-close-btn,
+.create-event-modal-box .modal-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #22223b;
+}
+
+/* กล่องฟอร์มหลัก */
+.my-events-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.12);
+  padding: 32px 28px;
+  box-sizing: border-box;
+}
+
+.my-events-header-outer {
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.my-events-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #22223b;
+  margin-bottom: 0.5em;
+}
+
+.my-events-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.my-events-form-group label {
+  font-weight: 500;
+  color: #22223b;
+  margin-bottom: 2px;
+}
+
+.my-events-form input[type="text"],
+.my-events-form input[type="number"],
+.my-events-form select,
+.my-events-form textarea {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #e9ecef;
+  font-size: 1rem;
+  background: #f7f8fa;
+  transition: border 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.my-events-form textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.my-events-form input[type="file"] {
+  padding: 6px 0;
+  background: none;
+}
+
+
+
+.my-events-create-btn:hover {
+  background: #2746b0;
+}
+
+.create-event-image-preview {
+  width: 100%;
+  max-width: 220px;
+  min-height: 120px;
+  margin: 0 auto 8px auto;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px #0001;
+  display: block;
+  background: #f7f8fa;
+}
+
+.alert {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.alert-success { background: #e7f9ed; color: #1b7e3c; }
+.alert-danger { background: #fdeaea; color: #c0392b; }

@@ -45,12 +45,10 @@ func (r *mysqlEventRepository) GetAll(ctx context.Context) ([]entity.Event, erro
 	return events, result.Error
 }
 
-func (r *mysqlEventRepository) GetByUserID(ctx context.Context, userID string) ([]*entity.Event, error) {
-	var events []*entity.Event
-	if err := r.db.
-		Joins("JOIN organizers ON events.organizer_id = organizers.organizer_id").
-		Where("organizers.user_id = ?", userID).
-		Find(&events).Error; err != nil {
+// ใน repository
+func (r *mysqlEventRepository) GetByUserID(ctx context.Context, userID string) ([]entity.Event, error) {
+	var events []entity.Event
+	if err := r.db.WithContext(ctx).Where("user_id = ?", userID).Find(&events).Error; err != nil {
 		return nil, err
 	}
 	return events, nil

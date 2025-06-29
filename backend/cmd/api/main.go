@@ -44,7 +44,8 @@ func main() {
 	// Organizer
 	organizerRepo := persistence.NewMySQLOrganizerRepository(db)
 	organizerUsecase := usecase.NewOrganizerUsecase(organizerRepo)
-	organizerHandler := http.NewOrganizerHandler(organizerUsecase)
+	// แก้ตรงนี้: ส่ง eventUsecase เข้าไปด้วย
+	organizerHandler := http.NewOrganizerHandler(organizerUsecase, eventUsecase)
 	organizerHandler.RegisterRoutes(router)
 
 	// Matching
@@ -80,6 +81,8 @@ func main() {
 	organizerPortfolioUsecase := usecase.NewOrganizerPortfolioUsecase(organizerPortfolioRepo)
 	organizerPortfolioHandler := http.NewOrganizerPortfolioHandler(organizerPortfolioUsecase)
 	organizerPortfolioHandler.RegisterRoutes(router)
+
+	router.Static("/uploads", "./uploads")
 
 	router.Run(":8080")
 }

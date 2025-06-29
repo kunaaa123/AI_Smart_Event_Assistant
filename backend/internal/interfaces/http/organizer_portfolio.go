@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,11 +31,29 @@ func (h *OrganizerPortfolioHandler) RegisterRoutes(router *gin.Engine) {
 
 func (h *OrganizerPortfolioHandler) Create(c *gin.Context) {
 	var portfolio entity.OrganizerPortfolio
-	if err := c.ShouldBindJSON(&portfolio); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+
+	portfolio.Title = c.PostForm("title")
+	portfolio.Description = c.PostForm("description")
+	portfolio.Category = c.PostForm("category")
+	portfolio.Price = c.PostForm("price")
+	organizerIDStr := c.PostForm("organizer_id")
+	if organizerIDStr != "" {
+		fmt.Sscanf(organizerIDStr, "%d", &portfolio.OrganizerID)
 	}
-	err := h.usecase.Create(c.Request.Context(), &portfolio)
+
+	// รับไฟล์
+	file, err := c.FormFile("image")
+	if err == nil && file != nil {
+		filename := file.Filename
+		dst := fmt.Sprintf("./uploads/%s", filename)
+		if err := c.SaveUploadedFile(file, dst); err == nil {
+			portfolio.ImageURL = "/uploads/" + filename
+		}
+	}
+
+	// validate ตามต้องการ...
+
+	err = h.usecase.Create(c.Request.Context(), &portfolio)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

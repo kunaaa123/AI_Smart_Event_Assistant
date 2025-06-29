@@ -12,5 +12,5 @@ type EventRepository interface {
 	Update(ctx context.Context, event *entity.Event) error
 	Delete(ctx context.Context, id string) error
 	GetAll(ctx context.Context) ([]entity.Event, error)
-	GetByUserID(ctx context.Context, userID string) ([]*entity.Event, error)
+	GetByUserID(ctx context.Context, userID string) ([]entity.Event, error)
 }

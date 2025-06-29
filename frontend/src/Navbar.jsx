@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './Navbar.css'; // ถ้าคุณเขียนไว้ในไฟล์ Navbar.css
+
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = (() => {
+  const [user, setUser] = useState(() => {
     try {
       const raw = localStorage.getItem("user");
       if (!raw || raw === "undefined") return null;
@@ -11,7 +13,33 @@ const Navbar = () => {
     } catch {
       return null;
     }
-  })();
+  });
+
+  // ฟัง event storage และอัปเดต user เมื่อ localStorage เปลี่ยน
+  useEffect(() => {
+    const handleStorage = () => {
+      try {
+        const raw = localStorage.getItem("user");
+        if (!raw || raw === "undefined") setUser(null);
+        else setUser(JSON.parse(raw));
+      } catch {
+        setUser(null);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("user-profile-updated", handleStorage); // เพิ่มบรรทัดนี้
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("user-profile-updated", handleStorage); // เพิ่มบรรทัดนี้
+    };
+  }, []);
+
+  // เพิ่มฟังก์ชัน refresh user เมื่อกลับมาที่หน้า (เช่นหลัง login/register)
+  useEffect(() => {
+    const raw = localStorage.getItem("user");
+    if (!raw || raw === "undefined") setUser(null);
+    else setUser(JSON.parse(raw));
+  }, []);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
@@ -79,28 +107,17 @@ const Navbar = () => {
                 onClick={() => navigate("/profile")}
                 title="โปรไฟล์"
               >
-                {user.profile_image ? (
-                  <img
-                    src={user.profile_image}
-                    alt="profile"
-                    width={36}
-                    height={36}
-                    className="rounded-circle border"
-                    style={{ objectFit: "cover" }}
-                  />
-                ) : (
-                  <div
-                    className="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center"
-                    style={{
-                      width: 36,
-                      height: 36,
-                      fontWeight: "bold",
-                      fontSize: "1.1rem",
-                    }}
-                  >
-                    {user.username ? user.username[0].toUpperCase() : "U"}
-                  </div>
-                )}
+                <img
+                  src={
+                    user.profile_image
+                      ? user.profile_image.startsWith("http")
+                        ? user.profile_image
+                        : `http://localhost:8080${user.profile_image}`
+                      : "/default-avatar.png"
+                  }
+                  alt="avatar"
+                  className="navbar-avatar" // เปลี่ยนตรงนี้
+                />
               </div>
               <span className="fw-semibold">{user.username}</span>
               <button

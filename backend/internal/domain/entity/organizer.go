@@ -13,3 +13,11 @@ type Organizer struct {
 func (Organizer) TableName() string {
 	return "organizers"
 }
+
+type OrganizerWithName struct {
+	OrganizerID int    `json:"organizer_id"`
+	UserID      int    `json:"user_id"`
+	Expertise   string `json:"expertise"`
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
+}
