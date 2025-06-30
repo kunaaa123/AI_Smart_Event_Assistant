@@ -48,7 +48,7 @@ func (r *mysqlOrganizerRepository) GetAll(ctx context.Context) ([]entity.Organiz
 func (r *mysqlOrganizerRepository) GetAllWithName(ctx context.Context, out *[]entity.OrganizerWithName) error {
 	return r.db.WithContext(ctx).
 		Table("organizers").
-		Select("organizers.organizer_id, organizers.user_id, organizers.expertise, users.first_name, users.last_name").
+		Select("organizers.organizer_id, organizers.user_id, organizers.expertise, organizers.portfolio_img, users.first_name, users.last_name").
 		Joins("JOIN users ON organizers.user_id = users.user_id").
 		Scan(out).Error
 }

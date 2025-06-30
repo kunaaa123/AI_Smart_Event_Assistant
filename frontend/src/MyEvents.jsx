@@ -13,6 +13,7 @@ const MyEvents = () => {
   const [search, setSearch] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: "", type: "success" });
+  const [eventImages, setEventImages] = useState({}); // {event_id: [images]}
 
   const isOrganizer = user.role === "organizer";
   const navigate = useNavigate();
@@ -44,6 +45,19 @@ const MyEvents = () => {
     }
   };
 
+  const fetchEventImages = async (event_id) => {
+    try {
+      const res = await fetch(`http://localhost:8080/events/${event_id}/images`);
+      if (res.ok) {
+        const imgs = await res.json();
+        setEventImages(prev => ({ ...prev, [event_id]: imgs }));
+      }
+    } catch (err) {
+      // ป้องกัน error ลูป
+      console.error("Failed to fetch images for event", event_id, err);
+    }
+  };
+
   useEffect(() => {
     if (user.user_id) fetchMyEvents();
     fetchOrganizers();
@@ -55,6 +69,17 @@ const MyEvents = () => {
       event.name?.toLowerCase().includes(search.toLowerCase()) ||
       event.description?.toLowerCase().includes(search.toLowerCase())
   );
+
+  useEffect(() => {
+    const fetched = new Set();
+    filteredEvents.forEach(event => {
+      if (!eventImages[event.event_id] && !fetched.has(event.event_id)) {
+        fetchEventImages(event.event_id);
+        fetched.add(event.event_id);
+      }
+    });
+    // eslint-disable-next-line
+  }, [filteredEvents]);
 
   // ฟังก์ชันหา organizer name
   const getOrganizerName = (organizer_id) => {
@@ -164,14 +189,25 @@ const MyEvents = () => {
           ) : (
             <div className="my-events-list-grid">
               {filteredEvents.map((event) => (
-                <div className="my-event-card-grid" key={event.event_id}>
+                <div
+                  className="my-event-card-grid"
+                  key={event.event_id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/events/${event.event_id}`)}
+                >
                   <div className="my-event-img-wrap">
                     <img
                       src={
-                        event.event_image
-                          ? event.event_image.startsWith("http")
-                            ? event.event_image
-                            : `http://localhost:8080${event.event_image.replace(/^\./, "")}`
+                        eventImages[event.event_id]
+                          ? (
+                              eventImages[event.event_id].find(img => img.is_cover) ||
+                              eventImages[event.event_id][0]
+                            )?.image_url
+                            ? `http://localhost:8080${(
+                                eventImages[event.event_id].find(img => img.is_cover) ||
+                                eventImages[event.event_id][0]
+                              ).image_url.replace(/^\./, "")}`
+                            : "https://placehold.co/300x180?text=No+Image"
                           : "https://placehold.co/300x180?text=No+Image"
                       }
                       alt={event.name}

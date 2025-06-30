@@ -45,7 +45,7 @@ func main() {
 	organizerRepo := persistence.NewMySQLOrganizerRepository(db)
 	organizerUsecase := usecase.NewOrganizerUsecase(organizerRepo)
 	// แก้ตรงนี้: ส่ง eventUsecase เข้าไปด้วย
-	organizerHandler := http.NewOrganizerHandler(organizerUsecase, eventUsecase)
+	organizerHandler := http.NewOrganizerHandler(organizerUsecase, eventUsecase, userUsecase)
 	organizerHandler.RegisterRoutes(router)
 
 	// Matching
@@ -81,6 +81,34 @@ func main() {
 	organizerPortfolioUsecase := usecase.NewOrganizerPortfolioUsecase(organizerPortfolioRepo)
 	organizerPortfolioHandler := http.NewOrganizerPortfolioHandler(organizerPortfolioUsecase)
 	organizerPortfolioHandler.RegisterRoutes(router)
+
+	// EventReview
+	eventReviewRepo := persistence.NewMySQLEventReviewRepository(db)
+	eventReviewUsecase := usecase.NewEventReviewUsecase(eventReviewRepo)
+	eventReviewHandler := http.NewEventReviewHandler(eventReviewUsecase, db)
+	eventReviewHandler.RegisterRoutes(router)
+
+	// OrganizerReview
+	organizerReviewRepo := persistence.NewMySQLOrganizerReviewRepository(db)
+	organizerReviewUsecase := usecase.NewOrganizerReviewUsecase(organizerReviewRepo)
+	organizerReviewHandler := http.NewOrganizerReviewHandler(organizerReviewUsecase, db)
+	organizerReviewHandler.RegisterRoutes(router)
+
+	// เพิ่ม EventImageHandler
+	eventImageRepo := persistence.NewMySQLEventImageRepository(db)
+	eventImageUsecase := usecase.NewEventImageUsecase(eventImageRepo)
+	eventImageHandler := http.NewEventImageHandler(eventImageUsecase)
+	router.POST("/events/:id/images", eventImageHandler.UploadImages)
+	router.GET("/events/:id/images", eventImageHandler.GetImages)
+	router.DELETE("/event_images/:image_id", eventImageHandler.DeleteImage)
+
+	// เพิ่ม OrganizerPortfolioImageHandler
+	organizerPortfolioImageRepo := persistence.NewMySQLOrganizerPortfolioImageRepository(db)
+	organizerPortfolioImageUsecase := usecase.NewOrganizerPortfolioImageUsecase(organizerPortfolioImageRepo)
+	organizerPortfolioImageHandler := http.NewOrganizerPortfolioImageHandler(organizerPortfolioImageUsecase)
+	router.POST("/organizer_portfolios/:id/images", organizerPortfolioImageHandler.UploadImages)
+	router.GET("/organizer_portfolios/:id/images", organizerPortfolioImageHandler.GetImages)
+	router.DELETE("/organizer_portfolio_images/:image_id", organizerPortfolioImageHandler.DeleteImage)
 
 	router.Static("/uploads", "./uploads")
 

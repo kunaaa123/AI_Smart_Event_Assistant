@@ -15,9 +15,10 @@ func (Organizer) TableName() string {
 }
 
 type OrganizerWithName struct {
-	OrganizerID int    `json:"organizer_id"`
-	UserID      int    `json:"user_id"`
-	Expertise   string `json:"expertise"`
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
+	OrganizerID  int     `json:"organizer_id"`
+	UserID       int     `json:"user_id"`
+	Expertise    string  `json:"expertise"`
+	FirstName    string  `json:"first_name"`
+	LastName     string  `json:"last_name"`
+	PortfolioImg *string `json:"portfolio_img"` // เพิ่มตรงนี้
 }

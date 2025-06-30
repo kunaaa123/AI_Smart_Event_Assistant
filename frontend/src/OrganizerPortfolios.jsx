@@ -16,6 +16,7 @@ const OrganizerPortfolios = () => {
   const [portfolios, setPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [portfolioImages, setPortfolioImages] = useState({}); // {portfolio_id: [images]}
 
   // ดึงผลงานของ organizer นี้
   const fetchPortfolios = async () => {
@@ -41,10 +42,33 @@ const OrganizerPortfolios = () => {
     setLoading(false);
   };
 
+  const fetchPortfolioImages = async (portfolio_id) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8080/organizer_portfolios/${portfolio_id}/images`
+      );
+      if (res.ok) {
+        const imgs = await res.json();
+        setPortfolioImages((prev) => ({ ...prev, [portfolio_id]: imgs }));
+      }
+    } catch {
+      // handle error
+    }
+  };
+
   useEffect(() => {
     fetchPortfolios();
     // eslint-disable-next-line
   }, [user.organizer_id]);
+
+  useEffect(() => {
+    portfolios.forEach((item) => {
+      if (!portfolioImages[item.portfolio_id]) {
+        fetchPortfolioImages(item.portfolio_id);
+      }
+    });
+    // eslint-disable-next-line
+  }, [portfolios]);
 
   // ถ้าไม่มี organizer_id ให้แจ้งเตือน
   if (!user.organizer_id) {
@@ -162,41 +186,47 @@ const OrganizerPortfolios = () => {
             <div>คุณยังไม่มีผลงาน</div>
           ) : (
             <div className="my-events-list-grid">
-              {portfolios.map((item) => (
-                <div className="my-event-card-grid" key={item.portfolio_id}>
-                  <div className="my-event-img-wrap">
-                    <img
-                      src={
-                        item.image_url
-                          ? item.image_url.startsWith("http")
-                            ? item.image_url
-                            : `http://localhost:8080/${item.image_url.replace(/^\/?/, "")}`
-                          : "https://placehold.co/300x180?text=No+Image"
-                      }
-                      alt={item.title}
-                      className="my-event-img"
-                    />
-                  </div>
-                  <div className="my-event-info">
-                    <div className="my-event-info-title">{item.title}</div>
-                    <div className="my-event-info-organizer">
-                      {item.category}
+              {portfolios.map((item) => {
+                const images = portfolioImages[item.portfolio_id] || [];
+                const firstImage = images[0];
+
+                return (
+                  <div className="my-event-card-grid" key={item.portfolio_id}>
+                    <div className="my-event-img-wrap">
+                      <img
+                        src={
+                          firstImage
+                            ? `http://localhost:8080${firstImage.image_url.replace(
+                                /^\./,
+                                ""
+                              )}`
+                            : "https://placehold.co/300x180?text=No+Image"
+                        }
+                        alt={item.title}
+                        className="my-event-img"
+                      />
                     </div>
-                    <div className="my-event-info-desc">{item.description}</div>
-                    <div className="my-event-info-price">
-                      {item.price && `ราคา: ${item.price}`}
+                    <div className="my-event-info">
+                      <div className="my-event-info-title">{item.title}</div>
+                      <div className="my-event-info-organizer">
+                        {item.category}
+                      </div>
+                      <div className="my-event-info-desc">{item.description}</div>
+                      <div className="my-event-info-price">
+                        {item.price && `ราคา: ${item.price}`}
+                      </div>
+                    </div>
+                    <div className="my-event-actions">
+                      <button className="my-event-action-btn" title="Edit">
+                        ✏️
+                      </button>
+                      <button className="my-event-action-btn" title="Delete">
+                        🗑️
+                      </button>
                     </div>
                   </div>
-                  <div className="my-event-actions">
-                    <button className="my-event-action-btn" title="Edit">
-                      ✏️
-                    </button>
-                    <button className="my-event-action-btn" title="Delete">
-                      🗑️
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

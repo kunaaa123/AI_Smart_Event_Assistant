@@ -1,0 +1,181 @@
+/* Modern2Block.css */
+.modern-2block-section {
+  display: grid;
+  gap: 44px;
+  background: #fff;
+  margin: 96px auto 0 auto;   /* เพิ่มระยะห่างด้านบน */
+  max-width: 1050px;
+  padding: 0 16px;
+}
+
+.modern-2block-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 12px;           /* ลดช่องว่างระหว่างรูปกับตัวหนังสือ */
+  background: transparent;
+  border-radius: 28px;
+  box-shadow: none;
+  padding: 32px 0;
+  min-height: 220px;
+}
+
+.modern-2block-row.second {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  justify-content: end;      /* ขยับทั้ง row ไปขวา */
+  margin-left: 80px;         /* หรือจะใช้ margin-left ก็ได้ */
+}
+
+.modern-2block-img-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0; /* ไม่มีระยะขวา */
+}
+
+.modern-2block-img {
+  width: 300px;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: none; /* ไม่มีเงา */
+  transition: transform 0.18s;
+}
+.modern-2block-img:hover {
+  transform: scale(1.04) rotate(-2deg);
+  /* ไม่มีเงา */
+}
+
+.modern-2block-content-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px; /* เดิม 14px */
+  min-width: 0;
+}
+
+.modern-2block-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #22223b;
+  margin-bottom: 0.5rem;
+  line-height: 1.18;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 12px rgba(30,58,138,0.04);
+}
+
+.modern-2block-desc {
+  font-size: 1.08rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+  line-height: 1.7;
+  max-width: 420px;
+  word-break: break-word;
+}
+
+.modern-2block-btn {
+  background: #22223b; /* สีเดียวกับ "ทดลอง" */
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px 38px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.15s;
+  box-shadow: 0 2px 12px 0 rgba(31,38,135,0.09);
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  letter-spacing: 0.5px;
+}
+.modern-2block-btn:hover {
+  background: #393a5a;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 24px 0 rgba(31,38,135,0.13);
+}
+
+.modern-2block-btn-arrow {
+  font-size: 1.3em;
+  margin-left: 6px;
+}
+
+.modern-2block-btn-blue {
+  background: #22223b !important; /* บังคับให้เหมือนกัน */
+}
+.modern-2block-btn-blue:hover {
+  background: #2563eb;
+}
+
+.modern-2block-btn-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+}
+
+.modern-2block-desc-below-btn {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.modern-2block-row.second .modern-2block-content-col {
+  align-items: flex-start;
+  text-align: left;
+  padding-right: 0;
+}
+
+.modern-2block-row.second .modern-2block-btn {
+  margin-bottom: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+.modern-2block-row.second .modern-2block-desc-below-btn {
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 420px;
+}
+
+@media (max-width: 900px) {
+  .modern-2block-section {
+    max-width: 99vw;
+    padding: 0 2vw;
+  }
+  .modern-2block-row {
+    grid-template-columns: 1fr;
+    padding: 14px 0;
+    gap: 10px;
+    min-height: unset;
+  }
+  .modern-2block-img {
+    width: 120px;
+    height: 120px;
+  }
+  .modern-2block-title {
+    font-size: 1.2rem;
+  }
+  .modern-2block-desc {
+    font-size: 0.98rem;
+  }
+  .modern-2block-btn {
+    padding: 10px 22px;
+    font-size: 1rem;
+  }
+  .modern-2block-content-col, .modern-2block-btn-col {
+    align-items: center;
+    text-align: center;
+  }
+  .modern-2block-row.second .modern-2block-content-col {
+    align-items: center;
+    text-align: center;
+    padding-right: 0;
+  }
+  .modern-2block-row.second .modern-2block-desc-below-btn {
+    margin-left: 0;
+  }
+}

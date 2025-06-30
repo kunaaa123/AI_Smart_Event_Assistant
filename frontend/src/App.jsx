@@ -10,6 +10,8 @@ import MyEvents from "./MyEvents";
 import OrganizerPortfolios from "./OrganizerPortfolios";
 import CreateEvent from "./CreateEvent";
 import AddPortfolio from "./AddPortfolio";
+import EventDetail from "./EventDetail";
+import "./App.css"; // Assuming you have some global styles
 
 function App() {
   const [alert, setAlert] = useState({ message: "", type: "success", show: false });
@@ -37,6 +39,7 @@ function App() {
         <Route path="/organizer-portfolios" element={<OrganizerPortfolios />} />
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/add-portfolio" element={<AddPortfolio />} />
+        <Route path="/events/:id" element={<EventDetail />} />
       </Routes>
     </Router>
   );

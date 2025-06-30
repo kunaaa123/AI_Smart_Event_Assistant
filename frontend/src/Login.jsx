@@ -16,7 +16,6 @@ const Login = ({ showToast }) => {
       const data = await res.json();
       if (res.ok) {
         showToast("เข้าสู่ระบบสำเร็จ", "success");
-        // ดึง user_id จาก data.user
         const user = data.user;
         // ดึงข้อมูล user profile อีกรอบ เพื่อให้ได้ profile_image
         fetch(`http://localhost:8080/users/${user.user_id}`)

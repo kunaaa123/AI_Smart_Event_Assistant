@@ -10,22 +10,16 @@ const AddPortfolio = () => {
     description: "",
     category: "",
     price: "",
-    image: null,
-    imagePreview: "",
   });
   const [alert, setAlert] = useState({ show: false, message: "", type: "success" });
 
+  // เพิ่ม state สำหรับรูป
+  const [coverImage, setCoverImage] = useState(null);
+  const [coverPreview, setCoverPreview] = useState("");
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryPreviews, setGalleryPreviews] = useState([]);
+
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setForm((prev) => ({
-        ...prev,
-        image: file,
-        imagePreview: URL.createObjectURL(file),
-      }));
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,22 +29,49 @@ const AddPortfolio = () => {
     data.append("category", form.category);
     data.append("price", form.price);
     data.append("organizer_id", user.organizer_id);
-    if (form.image) data.append("image", form.image);
 
+    let portfolioId = null;
     try {
       const res = await fetch("http://localhost:8080/organizer_portfolios", {
         method: "POST",
         body: data,
       });
       if (res.ok) {
-        setAlert({ show: true, message: "เพิ่มผลงานสำเร็จ!", type: "success" });
-        setTimeout(() => navigate("/organizer-portfolios"), 1000);
+        const portfolio = await res.json();
+        portfolioId = portfolio.portfolio_id;
       } else {
         setAlert({ show: true, message: "เกิดข้อผิดพลาด", type: "danger" });
+        return;
       }
     } catch {
       setAlert({ show: true, message: "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้", type: "danger" });
+      return;
     }
+
+    // อัปโหลดภาพปก
+    if (portfolioId && coverImage) {
+      const coverData = new FormData();
+      coverData.append("images", coverImage);
+      coverData.append("is_cover", "true");
+      await fetch(`http://localhost:8080/organizer_portfolios/${portfolioId}/images`, {
+        method: "POST",
+        body: coverData,
+      });
+    }
+
+    // อัปโหลดภาพ gallery
+    if (portfolioId && galleryImages.length > 0) {
+      const galleryData = new FormData();
+      galleryImages.forEach(img => galleryData.append("images", img));
+      galleryData.append("is_cover", "false");
+      await fetch(`http://localhost:8080/organizer_portfolios/${portfolioId}/images`, {
+        method: "POST",
+        body: galleryData,
+      });
+    }
+
+    setAlert({ show: true, message: "เพิ่มผลงานสำเร็จ!", type: "success" });
+    setTimeout(() => navigate("/organizer-portfolios"), 1000);
   };
 
   return (
@@ -74,10 +95,43 @@ const AddPortfolio = () => {
           <input name="price" value={form.price} onChange={handleChange} type="number" min="0" />
         </div>
         <div className="create-event-form-group">
-          <label>รูปภาพ</label>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-          {form.imagePreview && (
-            <img src={form.imagePreview} alt="preview" className="create-event-image-preview" />
+          <label>ภาพปก (Cover)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={e => {
+              const file = e.target.files[0];
+              setCoverImage(file);
+              setCoverPreview(file ? URL.createObjectURL(file) : "");
+            }}
+          />
+          {coverPreview && (
+            <img src={coverPreview} alt="cover" className="create-event-image-preview" />
+          )}
+        </div>
+        <div className="create-event-form-group">
+          <label>ภาพอื่นๆ (Gallery)</label>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={e => {
+              const files = Array.from(e.target.files);
+              setGalleryImages(files);
+              setGalleryPreviews(files.map(f => URL.createObjectURL(f)));
+            }}
+          />
+          {galleryPreviews.length > 0 && (
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
+              {galleryPreviews.map((src, idx) => (
+                <img
+                  key={idx}
+                  src={src}
+                  alt={`gallery-${idx}`}
+                  className="create-event-image-preview"
+                />
+              ))}
+            </div>
           )}
         </div>
         <button className="create-event-btn" type="submit">
