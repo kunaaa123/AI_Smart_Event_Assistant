@@ -21,7 +21,7 @@ func (h *EventHandler) RegisterRoutes(router *gin.Engine) {
 	events := router.Group("/events")
 	{
 		events.POST("", h.CreateEvent)
-		events.GET("", h.GetAllEvents)
+		events.GET("", h.GetAllWithStats) // ให้ /events ใช้ handler นี้
 		events.GET("/:id", h.GetEvent)
 		events.GET("/user/:user_id", h.GetEventsByUserID)
 	}
@@ -108,6 +108,15 @@ func (h *EventHandler) DeleteEvent(c *gin.Context) {
 func (h *EventHandler) GetEventsByUserID(c *gin.Context) {
 	userID := c.Param("user_id")
 	events, err := h.eventUsecase.GetByUserID(c.Request.Context(), userID)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(200, events)
+}
+
+func (h *EventHandler) GetAllWithStats(c *gin.Context) {
+	events, err := h.eventUsecase.GetAllWithStats(c.Request.Context())
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return

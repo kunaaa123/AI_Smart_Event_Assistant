@@ -38,3 +38,7 @@ func (u *OrganizerUsecase) GetAll(ctx context.Context) ([]entity.Organizer, erro
 func (u *OrganizerUsecase) GetAllWithName(ctx context.Context, out *[]entity.OrganizerWithName) error {
 	return u.organizerRepo.GetAllWithName(ctx, out)
 }
+
+func (u *OrganizerUsecase) GetAllWithStats(ctx context.Context) ([]entity.OrganizerWithStats, error) {
+	return u.organizerRepo.GetAllWithStats(ctx)
+}

@@ -13,4 +13,5 @@ type OrganizerRepository interface {
 	Delete(ctx context.Context, id string) error
 	GetAll(ctx context.Context) ([]entity.Organizer, error)
 	GetAllWithName(ctx context.Context, out *[]entity.OrganizerWithName) error
+	GetAllWithStats(ctx context.Context) ([]entity.OrganizerWithStats, error)
 }

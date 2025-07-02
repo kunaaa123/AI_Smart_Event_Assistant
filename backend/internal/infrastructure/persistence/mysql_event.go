@@ -53,3 +53,23 @@ func (r *mysqlEventRepository) GetByUserID(ctx context.Context, userID string) (
 	}
 	return events, nil
 }
+
+func (r *mysqlEventRepository) GetAllWithStats(ctx context.Context) ([]entity.EventWithStats, error) {
+	var results []entity.EventWithStats
+	err := r.db.WithContext(ctx).Raw(`
+        SELECT 
+            e.event_id, e.name, e.description, e.organizer_id,
+            IFNULL(AVG(r.rating), 0) as avgRating,
+            COUNT(r.rating) as totalReviews,
+            (
+                SELECT image_url 
+                FROM event_images 
+                WHERE event_id = e.event_id 
+                ORDER BY is_cover DESC, image_id ASC LIMIT 1
+            ) as cover_image
+        FROM events e
+        LEFT JOIN event_reviews r ON r.event_id = e.event_id
+        GROUP BY e.event_id
+    `).Scan(&results).Error
+	return results, err
+}

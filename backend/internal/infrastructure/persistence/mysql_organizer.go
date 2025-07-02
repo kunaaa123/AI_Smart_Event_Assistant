@@ -52,3 +52,19 @@ func (r *mysqlOrganizerRepository) GetAllWithName(ctx context.Context, out *[]en
 		Joins("JOIN users ON organizers.user_id = users.user_id").
 		Scan(out).Error
 }
+
+func (r *mysqlOrganizerRepository) GetAllWithStats(ctx context.Context) ([]entity.OrganizerWithStats, error) {
+	var results []entity.OrganizerWithStats
+	err := r.db.WithContext(ctx).Raw(`
+        SELECT 
+            o.organizer_id, o.user_id, o.expertise, o.portfolio_img,
+            u.first_name, u.last_name, u.username,
+            COALESCE(AVG(r.rating),0) as avg_rating,
+            COUNT(r.review_id) as total_reviews
+        FROM organizers o
+        LEFT JOIN users u ON o.user_id = u.user_id
+        LEFT JOIN organizer_reviews r ON o.organizer_id = r.organizer_id
+        GROUP BY o.organizer_id
+    `).Scan(&results).Error
+	return results, err
+}

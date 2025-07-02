@@ -27,6 +27,7 @@ func (h *OrganizerHandler) RegisterRoutes(router *gin.Engine) {
 		organizers.POST("", h.CreateOrganizer)
 		organizers.PUT("/:id", h.UpdateOrganizer)
 		organizers.DELETE("/:id", h.DeleteOrganizer)
+		organizers.GET("/organizers-with-stats", h.GetAllWithStats)
 	}
 }
 
@@ -38,6 +39,15 @@ func (h *OrganizerHandler) GetAllOrganizers(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, organizers)
+}
+
+func (h *OrganizerHandler) GetAllWithStats(c *gin.Context) {
+	organizers, err := h.organizerUsecase.GetAllWithStats(c.Request.Context())
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(200, organizers)
 }
 
 func (h *OrganizerHandler) GetOrganizer(c *gin.Context) {

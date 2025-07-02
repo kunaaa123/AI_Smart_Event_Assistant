@@ -22,3 +22,15 @@ type OrganizerWithName struct {
 	LastName     string  `json:"last_name"`
 	PortfolioImg *string `json:"portfolio_img"` // เพิ่มตรงนี้
 }
+
+type OrganizerWithStats struct {
+	OrganizerID  int     `json:"organizer_id"`
+	UserID       int     `json:"user_id"`
+	FirstName    string  `json:"first_name"`
+	LastName     string  `json:"last_name"`
+	Username     string  `json:"username"`
+	Expertise    string  `json:"expertise"`
+	PortfolioImg string  `json:"portfolio_img"`
+	AvgRating    float64 `json:"avgRating"`
+	TotalReviews int     `json:"totalReviews"`
+}

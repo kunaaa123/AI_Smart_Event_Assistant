@@ -13,4 +13,5 @@ type EventRepository interface {
 	Delete(ctx context.Context, id string) error
 	GetAll(ctx context.Context) ([]entity.Event, error)
 	GetByUserID(ctx context.Context, userID string) ([]entity.Event, error)
+	GetAllWithStats(ctx context.Context) ([]entity.EventWithStats, error)
 }

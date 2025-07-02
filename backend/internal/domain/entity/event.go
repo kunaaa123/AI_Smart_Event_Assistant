@@ -15,3 +15,13 @@ type Event struct {
 func (Event) TableName() string {
 	return "events"
 }
+
+type EventWithStats struct {
+	EventID      int     `json:"event_id"`
+	Name         string  `json:"name"`
+	Description  string  `json:"description"`
+	OrganizerID  int     `json:"organizer_id"`
+	AvgRating    float64 `json:"avgRating" gorm:"column:avgRating"`
+	TotalReviews int     `json:"totalReviews" gorm:"column:totalReviews"`
+	CoverImage   string  `json:"cover_image"`
+}

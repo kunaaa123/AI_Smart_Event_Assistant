@@ -28,6 +28,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [topOrganizers, setTopOrganizers] = useState([]);
   const [loadingOrganizers, setLoadingOrganizers] = useState(true);
+  const [show2Block, setShow2Block] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,45 +39,14 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     fetch("http://localhost:8080/events")
       .then((res) => res.json())
-      .then(async (events) => {
+      .then((events) => {
+        console.log("events from API:", events); // <--- เพิ่มตรงนี้
         if (!Array.isArray(events)) return setPopularEvents([]);
-        const eventWithRating = await Promise.all(
-          events.map(async (event) => {
-            const res = await fetch(
-              `http://localhost:8080/events/${event.event_id}/reviews`
-            );
-            let reviews = await res.json();
-            if (!Array.isArray(reviews)) reviews = [];
-            const ratings = reviews.map((r) => r.rating);
-            const avgRating =
-              ratings.length > 0
-                ? ratings.reduce((a, b) => a + b, 0) / ratings.length
-                : 0;
-
-            // ดึงรูปปก (is_cover) หรือรูปแรก
-            let coverImg = null;
-            try {
-              const imgRes = await fetch(`http://localhost:8080/events/${event.event_id}/images`);
-              let imgs = await imgRes.json();
-              if (Array.isArray(imgs) && imgs.length > 0) {
-                coverImg = imgs.find((img) => img.is_cover) || imgs[0];
-              }
-            } catch {
-              // Ignore errors when fetching event images
-            }
-            return {
-              ...event,
-              reviews,
-              avgRating,
-              totalReviews: ratings.length,
-              cover_image: coverImg ? coverImg.image_url : null,
-            };
-          })
-        );
         setPopularEvents(
-          eventWithRating
+          events
             .filter((e) => e.avgRating >= 3 && e.totalReviews > 0)
             .sort((a, b) => b.avgRating - a.avgRating)
             .slice(0, 4)
@@ -140,6 +110,19 @@ const Home = () => {
       setIndex((prev) => (prev + 1) % bannerImages.length);
     }, 4000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const section = document.querySelector('.modern-2block-section');
+    if (!section) return;
+    const observer = new window.IntersectionObserver(
+      ([entry]) => {
+        setShow2Block(entry.isIntersecting);
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -292,7 +275,7 @@ const Home = () => {
         )}
       </div>
 
-      <div className="modern-2block-section">
+      <div className={`modern-2block-section${show2Block ? " show" : ""}`}>
         {/* Block 1 */}
         <div className="modern-2block-row">
           <div className="modern-2block-img-col">
