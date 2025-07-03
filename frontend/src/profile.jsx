@@ -5,7 +5,6 @@ import GlassAlert from "./GlassAlert";
 
 const Profile = () => {
   const user = JSON.parse(localStorage.getItem("user")) || {};
-  // สมมุติ user มี first_name, last_name, email, phone, bio
   const [form, setForm] = useState({
     first_name: user.first_name || "",
     last_name: user.last_name || "",
@@ -133,7 +132,6 @@ const Profile = () => {
     if (user.user_id) {
       fetchUserProfile(user.user_id);
     }
-    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {

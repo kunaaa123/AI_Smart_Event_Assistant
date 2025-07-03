@@ -1,37 +1,47 @@
-import React, { useState } from "react";
+'use client'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import "./Login.css";
 
 const Login = ({ showToast }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const navigate = useNavigate()
 
   const handleSignIn = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    setError("")
     try {
       const res = await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        showToast("เข้าสู่ระบบสำเร็จ", "success");
-        const user = data.user;
-        // ดึงข้อมูล user profile อีกรอบ เพื่อให้ได้ profile_image
-        fetch(`http://localhost:8080/users/${user.user_id}`)
-          .then((res2) => res2.json())
-          .then((fullUser) => {
-            localStorage.setItem("user", JSON.stringify(fullUser));
-            window.dispatchEvent(new Event("user-profile-updated"));
-            setTimeout(() => (window.location = "/"), 1200);
-          });
+      })
+      const data = await res.json()
+      if (res.ok && data.user) {
+        // ดึง profile เพิ่มเติม
+        const profileRes = await fetch(`http://localhost:8080/users/${data.user.user_id}`)
+        if (profileRes.ok) {
+          const profile = await profileRes.json()
+          localStorage.setItem("user", JSON.stringify(profile))
+          window.dispatchEvent(new Event("user-profile-updated"))
+          showToast("เข้าสู่ระบบสำเร็จ", "success")
+          navigate("/")
+        } else {
+          localStorage.setItem("user", JSON.stringify(data.user))
+          showToast("เข้าสู่ระบบสำเร็จ (ข้อมูลไม่ครบ)", "warning")
+          navigate("/")
+        }
       } else {
-        showToast(data.error || "เข้าสู่ระบบไม่สำเร็จ", "danger");
+        setError(data.error || "เข้าสู่ระบบไม่สำเร็จ")
+        showToast(data.error || "เข้าสู่ระบบไม่สำเร็จ", "danger")
       }
     } catch {
-      showToast("เกิดข้อผิดพลาด", "danger");
+      setError("เกิดข้อผิดพลาด")
+      showToast("เกิดข้อผิดพลาด", "danger")
     }
-  };
+  }
 
   return (
     <section className="login-page-section">
@@ -70,6 +80,7 @@ const Login = ({ showToast }) => {
             <button className="login-page-main-btn" type="submit">
               เข้าสู่ระบบ
             </button>
+            {error && <div style={{color:'red'}}>{error}</div>}
             <div className="login-page-links">
               <a href="#">ลืมรหัสผ่าน</a>
             </div>
@@ -77,7 +88,7 @@ const Login = ({ showToast }) => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

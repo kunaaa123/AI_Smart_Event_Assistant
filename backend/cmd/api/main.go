@@ -110,6 +110,12 @@ func main() {
 	router.GET("/organizer_portfolios/:id/images", organizerPortfolioImageHandler.GetImages)
 	router.DELETE("/organizer_portfolio_images/:image_id", organizerPortfolioImageHandler.DeleteImage)
 
+	realmHandler := http.NewRealmHandler(db)
+	router.GET("/realms", realmHandler.GetRealmsByOwner)
+	router.POST("/realms", realmHandler.CreateRealm)
+	router.GET("/realms/:id", realmHandler.GetRealmByID)
+	router.PUT("/realms/:id", realmHandler.UpdateRealm) // <-- เพิ่มบรรทัดนี้
+
 	router.Static("/uploads", "./uploads")
 
 	router.Run(":8080")

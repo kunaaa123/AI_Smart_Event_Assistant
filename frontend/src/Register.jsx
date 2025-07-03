@@ -6,6 +6,7 @@ const Register = ({ showToast }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail]     = useState("");
   const [password, setPassword] = useState("");
+  // เพิ่ม field อื่นๆ เช่น first_name, last_name, phone, bio ถ้าต้องการ
 
   const handleRegister = async (e) => {
     e.preventDefault();
