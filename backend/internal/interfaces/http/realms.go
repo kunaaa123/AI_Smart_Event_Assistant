@@ -38,6 +38,13 @@ func (h *RealmHandler) GetRealmsByOwner(c *gin.Context) {
 
 // POST /realms
 func (h *RealmHandler) CreateRealm(c *gin.Context) {
+	// เช็คว่ามี realm อยู่แล้วหรือยัง
+	var count int64
+	h.db.Model(&entity.Realm{}).Count(&count)
+	if count > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Realm already exists"})
+		return
+	}
 	var req struct {
 		OwnerID int         `json:"owner_id"`
 		Name    string      `json:"name"`

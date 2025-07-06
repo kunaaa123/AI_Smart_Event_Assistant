@@ -156,7 +156,11 @@ const Home = () => {
           <div className="home-feature-btn-icon">📢</div>
           <div className="home-feature-btn-label">สร้างอีเว้นท์</div>
         </div>
-        <div className="home-feature-btn">
+        <div
+          className="home-feature-btn"
+          onClick={() => navigate("/ai")}
+          style={{ cursor: "pointer" }}
+        >
           <div className="home-feature-btn-icon">💬</div>
           <div className="home-feature-btn-label">ขอคำแนะนำ</div>
         </div>

@@ -151,6 +151,7 @@ const Profile = () => {
         type={alert.type}
         onClose={() => setAlert({ ...alert, show: false })}
       />
+       <div className="profile-title">โปรไฟล์</div>
       <form className="profile-main" onSubmit={handleSubmit}>
         <div className="profile-form-row">
           <div className="profile-form-group">

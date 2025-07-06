@@ -1,0 +1,85 @@
+.ai-layout-root {
+  display: flex;
+  min-height: 100vh;
+  background: #fafbfc;
+}
+
+.ai-layout-sidebar {
+  width: 220px;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 8px 32px #e9eaf3;
+  border: 1.5px solid #f2f2f2;
+  padding: 32px 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 50px 0 282px 32px;
+  /* ไม่มี min-height, ไม่มี height, ไม่มี flex: 1 */
+}
+
+.ai-layout-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+
+.ai-layout-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 32px;
+  font-size: 1.08rem;
+  color: #22223b;
+  border-radius: 0 24px 24px 0;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-weight: 500;
+}
+
+.ai-layout-menu-item:hover,
+.ai-layout-menu-item.active {
+  background: #f0f4ff;
+  color: #4f8cff;
+  font-weight: 600;
+}
+
+.ai-layout-menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.ai-layout-clear-btn {
+  margin: 32px 24px 0 24px; /* ดันปุ่มล้างลงล่างสุดของเมนู */
+  padding: 12px 0;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #f2f2f2 0%, #e3e6ee 100%);
+  color: #22223b;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #e3e6ee;
+  transition: background 0.18s, color 0.18s;
+  letter-spacing: 0.5px;
+}
+
+.ai-layout-clear-btn:hover {
+  background: linear-gradient(90deg, #4f8cff 0%, #6a82fb 100%);
+  color: #fff;
+}
+
+.ai-layout-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 100vh;
+  margin-left: 0;
+  padding-left: 0;
+}

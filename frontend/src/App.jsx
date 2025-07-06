@@ -5,12 +5,13 @@ import Home from "./Home";
 import Login from "./Login";
 import Register from "./Register";
 import GlassAlert from "./GlassAlert";
-import Profile from "./Profile";
+import Profile from "./profile";
 import MyEvents from "./MyEvents";
 import OrganizerPortfolios from "./OrganizerPortfolios";
 import CreateEvent from "./CreateEvent";
 import AddPortfolio from "./AddPortfolio";
 import EventDetail from "./EventDetail";
+import AiPage from "./AiPage";
 import "./App.css"; // Assuming you have some global styles
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/add-portfolio" element={<AddPortfolio />} />
         <Route path="/events/:id" element={<EventDetail />} />
+        <Route path="/ai" element={<AiPage />} />
       </Routes>
     </Router>
   );

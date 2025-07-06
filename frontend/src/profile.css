@@ -85,12 +85,13 @@
 
 .profile-main {
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.09);
-  padding: 38px 44px 32px 44px;
-  min-width: 440px;
-  max-width: 600px;
+  border-radius: 22px;
+  box-shadow: 0 4px 24px #f0f1f6;
+  padding: 32px 28px;
+  max-width: 900px;
   width: 100%;
+  margin: 24px auto 24px 60px;   /* ขยับมาทางขวาอีกนิด */
+  border: 2.5px solid #e3e6ee;
   flex: 1;
 }
 
@@ -289,4 +290,10 @@
 }
 
 
-
+.profile-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: #22223b;
+  margin-left: 65px; /* ขยับไปทางขวา */
+}
