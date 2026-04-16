@@ -1,0 +1,1371 @@
+/* Container หลัก - ลดกรอบขวา */
+.ai-invite-container--narrow {
+  max-width: 1100px; /* ลดจาก 1200px */
+  grid-template-columns: 320px 1fr; 
+  gap: 25px; /* ลดจาก 30px */
+  margin: 0 auto;
+  padding: 40px 20px 20px 20px;
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* กรอบซ้าย - ลดขนาด */
+.ai-invite-input-card--narrow {
+  background: #fff;
+  border-radius: 16px; /* ลดจาก 18px */
+  box-shadow: 0 3px 15px rgba(0,0,0,0.08); /* ลด shadow */
+  border: 1px solid #e6e9ef;
+  padding: 16px; /* ลดจาก 20px */
+  min-width: 0;
+  max-width: 100%;
+  height: fit-content;
+  position: sticky;
+  top: 80px;
+}
+
+/* กรอบขวา - ลดขนาดเพิ่มเติม */
+.ai-invite-preview-card--narrow {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+  border: 1px solid #e6e9ef;
+  padding: 14px; /* ลดจาก 16px */
+  min-width: 0;
+  width: 100%;
+  min-height: 50vh; /* ลดจาก 55vh */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  max-width: 750px; /* เพิ่มขีดจำกัดความกว้าง */
+}
+
+/* Upload Box - ปรับให้รูปแสดงผลสมส่วน */
+.ai-invite-upload-box {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: #fafbfc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: border 0.2s;
+  cursor: pointer;
+  min-height: 140px;
+}
+
+.ai-invite-upload-box:hover {
+  border-color: #4f8cff;
+}
+
+/* Placeholder เมื่อไม่มีรูป */
+.ai-invite-upload-placeholder {
+  text-align: center;
+  color: #b8b8d1;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* รูปที่อัปโหลด - แก้ไขให้สมส่วน */
+.ai-invite-upload-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* เปลี่ยนกลับเป็น cover แต่จัดให้สมส่วน */
+  object-position: center; /* จัดรูปให้อยู่ตรงกลาง */
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.ai-invite-upload-preview:hover {
+  transform: scale(1.02); /* เพิ่ม hover effect */
+}
+
+/* ปุ่มลบรูปที่อัปโหลด */
+.ai-invite-upload-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 71, 87, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.ai-invite-upload-remove:hover {
+  background: rgba(255, 71, 87, 1);
+  transform: scale(1.1);
+}
+
+/* Container สำหรับรูปที่อัปโหลด */
+.ai-invite-upload-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Label สำหรับ upload */
+.ai-invite-upload-label {
+  font-size: 0.8rem;
+  margin-top: 6px;
+  color: #b8b8d1;
+  text-align: center;
+}
+
+/* Drag & Drop effect */
+.ai-invite-upload-box.drag-over {
+  border-color: #4f8cff;
+  background: rgba(79, 140, 255, 0.05);
+  transform: scale(1.02);
+}
+
+/* Loading state สำหรับ upload */
+.ai-invite-upload-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  z-index: 10;
+}
+
+.ai-invite-upload-loading-spinner {
+  font-size: 1.5rem;
+  animation: spin 1s linear infinite;
+  margin-bottom: 8px;
+}
+
+.ai-invite-upload-loading-text {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Image overlay info */
+.ai-invite-upload-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  color: white;
+  padding: 12px 8px 8px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.ai-invite-upload-container:hover .ai-invite-upload-overlay {
+  opacity: 1;
+}
+
+.ai-invite-upload-info {
+  flex: 1;
+  text-align: left;
+}
+
+.ai-invite-upload-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.ai-invite-upload-action-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ai-invite-upload-action-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Wizard Button - ลดขนาด */
+.ai-invite-wizard-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+  color: white;
+  border: none;
+  border-radius: 10px; /* ลดจาก 12px */
+  padding: 8px; /* ลดจาก 10px */
+  font-size: 0.85rem; /* ลดจาก 0.9rem */
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 12px; /* ลดจาก 16px */
+  transition: all 0.3s;
+}
+
+/* Label - ลดขนาด */
+.ai-invite-prompt-label {
+  display: block;
+  margin-bottom: 4px; /* ลดจาก 6px */
+  font-size: 0.85rem; /* ลดจาก 0.9rem */
+  color: #22223b;
+  font-weight: 500;
+}
+
+/* Textarea - ลดขนาด */
+.ai-invite-textarea {
+  width: 100%;
+  padding: 12px; /* ลดจาก 16px */
+  border: 2px solid #e0e0e0;
+  border-radius: 10px; /* ลดจาก 12px */
+  font-size: 0.9rem; /* ลดจาก 1rem */
+  line-height: 1.4; /* ลดจาก 1.5 */
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px; /* ลดจาก 120px */
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+/* Tags - ลดขนาด */
+.ai-invite-tags {
+  display: flex;
+  gap: 4px; /* ลดจาก 6px */
+  margin-bottom: 12px; /* ลดจาก 16px */
+  flex-wrap: wrap;
+}
+
+.ai-invite-tag {
+  background: #f0f4ff;
+  color: #4f8cff;
+  padding: 3px 6px; /* ลดจาก 4px 8px */
+  border-radius: 12px; /* ลดจาก 16px */
+  font-size: 0.75rem; /* ลดจาก 0.8rem */
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #e0e8ff;
+}
+
+/* Generate Button - ลดขนาด */
+.ai-invite-generate-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px; /* ลดจาก 12px */
+  padding: 12px; /* ลดจาก 14px */
+  font-size: 0.95rem; /* ลดจาก 1rem */
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+/* Gallery Header - ปรับตำแหน่งให้ตรง */
+.ai-invite-gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f4ff;
+  flex-shrink: 0;
+  margin-left: 0 !important; /* ลบการขยายไปซ้าย */
+  width: 100% !important; /* ให้เต็มความกว้างปกติ */
+}
+
+.ai-invite-title {
+  font-size: 1.1rem;
+  color: #4f8cff;
+  margin: 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-invite-clear-btn {
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 5px; /* ลดจาก 6px */
+  padding: 4px 8px; /* ลดจาก 6px 12px */
+  font-size: 0.75rem; /* ลดจาก 0.8rem */
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+/* Gallery - ปรับตำแหน่งให้ตรง */
+.ai-invite-gallery {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  max-height: 30vh; /* ลดจาก 40vh ให้เหลือพื้นที่สำหรับ matching */
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  padding-right: 8px;
+  margin-left: 0 !important; /* ลบการขยายไปซ้าย */
+  width: 100% !important; /* ให้เต็มความกว้างปกติ */
+}
+
+.ai-invite-gallery-item {
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 160px; /* ลดจาก 170px */
+  border: 1px solid #f0f4ff;
+}
+
+.ai-invite-gallery-thumbnail {
+  width: 100%;
+  height: 110px; /* ลดจาก 120px */
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+.ai-invite-gallery-info {
+  padding: 10px; /* ลดจาก 12px */
+}
+
+.ai-invite-gallery-prompt {
+  font-size: 0.7rem; /* ลดจาก 0.75rem */
+  color: #666;
+  margin-bottom: 6px; /* ลดจาก 8px */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.ai-invite-gallery-time {
+  font-size: 0.65rem; /* ลดจาก 0.7rem */
+  color: #999;
+}
+
+.ai-invite-download-btn, .ai-invite-email-btn {
+  border: none;
+  border-radius: 3px; /* ลดจาก 4px */
+  padding: 3px 5px; /* ลดจาก 4px 6px */
+  font-size: 0.65rem; /* ลดจาก 0.7rem */
+  cursor: pointer;
+}
+
+.ai-invite-gallery-delete {
+  position: absolute;
+  top: 6px; /* ลดจาก 8px */
+  right: 6px;
+  background: rgba(255, 71, 87, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 18px; /* ลดจาก 20px */
+  height: 18px;
+  cursor: pointer;
+  font-size: 0.65rem; /* ลดจาก 0.7rem */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Matching Container */
+.ai-invite-matching-container {
+  margin-top: 160px;
+  flex-shrink: 0;
+  min-height: 0;
+}
+
+/* Matching Section - ปรับตำแหน่งให้ตรง */
+.ai-invite-matching-section {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e6e9ef;
+  margin-left: 0 !important;
+  width: 100% !important;
+  flex-shrink: 0;
+  min-height: 0;
+}
+
+.ai-invite-matching-title {
+  font-size: 0.95rem;
+  color: #4f8cff;
+  margin-bottom: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 0;
+}
+
+.ai-invite-matching-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.ai-invite-no-matches {
+  padding: 16px;
+  text-align: center;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+/* Organizer Cards แนวนอน */
+.ai-invite-matching-horizontal {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 6px;
+  padding-right: 6px;
+  max-height: 15vh;
+}
+
+.ai-invite-organizer-card-horizontal {
+  background: #fff;
+  border: 1px solid #f0f4ff;
+  border-radius: 8px;
+  padding: 8px 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 110px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+
+.ai-invite-organizer-card-horizontal:hover {
+  border-color: #4f8cff;
+  box-shadow: 0 2px 10px rgba(79, 140, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.ai-invite-organizer-image-horizontal {
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.ai-invite-organizer-avatar-horizontal {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f0f4ff;
+}
+
+.ai-invite-match-badge-horizontal {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: linear-gradient(135deg, #4f8cff, #6a82fb);
+  color: #fff;
+  font-size: 0.5rem;
+  font-weight: 700;
+  padding: 1px 2px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(79, 140, 255, 0.3);
+  min-width: 14px;
+  text-align: center;
+}
+
+.ai-invite-organizer-name-horizontal {
+  font-weight: 600;
+  color: #22223b;
+  font-size: 0.7rem;
+  margin-bottom: 2px;
+  line-height: 1.1;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.ai-invite-organizer-expertise-horizontal {
+  color: #4f8cff;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.1;
+  text-align: center;
+  word-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ปรับ Gallery เดิมให้มีพื้นที่สำหรับ Matching Organizers */
+.ai-invite-gallery {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  max-height: 25vh; /* ลดลงเพื่อเหลือพื้นที่สำหรับ matching */
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  padding-right: 8px;
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+/* ปรับ Preview Content ให้รองรับทั้ง Gallery และ Matching */
+.ai-invite-preview-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.ai-invite-gallery-container {
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+/* Responsive สำหรับ Matching Organizers */
+@media (max-width: 768px) {
+  .ai-invite-matching-horizontal {
+    gap: 8px;
+    max-height: 12vh;
+  }
+  
+  .ai-invite-organizer-card-horizontal {
+    width: 90px;
+    padding: 6px 4px;
+  }
+  
+  .ai-invite-organizer-avatar-horizontal {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .ai-invite-organizer-name-horizontal {
+    font-size: 0.65rem;
+  }
+  
+  .ai-invite-organizer-expertise-horizontal {
+    font-size: 0.5rem;
+  }
+  
+  .ai-invite-match-badge-horizontal {
+    font-size: 0.45rem;
+    min-width: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-invite-organizer-card-horizontal {
+    width: 80px;
+    padding: 4px 3px;
+  }
+  
+  .ai-invite-organizer-avatar-horizontal {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .ai-invite-matching-title {
+    font-size: 0.85rem;
+  }
+}
+
+/* Loading Spinner Animation */
+.ai-invite-loading-spinner {
+  font-size: 1.8rem;
+  animation: spin 2s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Album Styles */
+.ai-invite-album-item {
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+  border: 2px solid #e0f0ff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(79, 140, 255, 0.1);
+  transition: all 0.3s ease;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.ai-invite-album-item:hover {
+  border-color: #4f8cff;
+  box-shadow: 0 6px 25px rgba(79, 140, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Album Header */
+.ai-invite-album-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0f0ff;
+  position: relative;
+}
+
+.ai-invite-album-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4f8cff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-invite-album-time {
+  font-size: 0.7rem;
+  color: #999;
+}
+
+.ai-invite-album-delete {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: rgba(255, 71, 87, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+}
+
+.ai-invite-album-delete:hover {
+  background: rgba(255, 71, 87, 1);
+  transform: scale(1.1);
+}
+
+/* Album Images Grid */
+.ai-invite-album-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ai-invite-album-image-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ai-invite-album-image-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(79, 140, 255, 0.2);
+}
+
+.ai-invite-album-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.2s ease;
+}
+
+.ai-invite-album-image-item:hover .ai-invite-album-thumbnail {
+  transform: scale(1.05);
+}
+
+/* Album Image Overlay */
+.ai-invite-album-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.ai-invite-album-image-item:hover .ai-invite-album-image-overlay {
+  opacity: 1;
+}
+
+.ai-invite-album-variation-badge {
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(79, 140, 255, 0.3);
+  backdrop-filter: blur(10px);
+  align-self: flex-start;
+}
+
+.ai-invite-album-image-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  align-self: flex-end;
+}
+
+.ai-invite-album-action-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ai-invite-album-action-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.05);
+}
+
+/* Album Info */
+.ai-invite-album-info {
+  font-size: 0.7rem;
+  color: #666;
+  line-height: 1.3;
+}
+
+.ai-invite-album-prompt,
+.ai-invite-album-enhanced {
+  margin-bottom: 4px;
+  word-wrap: break-word;
+}
+
+.ai-invite-album-prompt strong,
+.ai-invite-album-enhanced strong {
+  color: #4f8cff;
+  font-weight: 600;
+}
+
+/* Loading สำหรับอัลบั้ม */
+.ai-invite-loading-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4f8cff;
+  background: linear-gradient(45deg, #4f8cff, #6a82fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Gallery ปรับให้รองรับอัลบั้ม */
+.ai-invite-gallery {
+  display: flex;
+  flex-direction: row; /* ให้เรียงแนวนอน */
+  gap: 12px;
+  max-height: 25vh; /* กำหนดความสูงเพื่อให้เลื่อนแนวนอนได้ */
+  overflow-x: auto;  /* เลื่อนในแนวนอน */
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  padding-right: 8px;
+}
+
+/* Responsive สำหรับอัลบั้ม */
+@media (max-width: 600px) {
+  .ai-invite-album-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  
+  .ai-invite-album-item {
+    padding: 12px;
+  }
+  
+  .ai-invite-album-title {
+    font-size: 0.8rem;
+  }
+  
+  .ai-invite-album-variation-badge {
+    font-size: 0.55rem;
+    padding: 1px 4px;
+  }
+  
+  .ai-invite-album-action-btn {
+    font-size: 0.65rem;
+    padding: 3px 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-invite-album-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .ai-invite-album-image-item {
+    aspect-ratio: 3/2;
+  }
+}
+
+/* Album Cover Styles */
+.ai-invite-album-cover {
+  position: relative;
+}
+
+.ai-invite-album-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: 2;
+}
+
+.ai-invite-view-album-btn,
+.ai-invite-delete-album-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ai-invite-view-album-btn {
+  background: #4f8cff;
+  color: white;
+}
+
+.ai-invite-view-album-btn:hover {
+  background: #3a7bd5;
+  transform: scale(1.05);
+}
+
+.ai-invite-delete-album-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.ai-invite-delete-album-btn:hover {
+  background: #c82333;
+  transform: scale(1.05);
+}
+
+/* Album Modal Overlay */
+.ai-invite-album-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  backdrop-filter: blur(12px);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Album Modal Content */
+.ai-invite-album-modal-content {
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+  border-radius: 20px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Album Modal Header */
+.ai-invite-album-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 2px solid #e6f2ff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.ai-invite-album-modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.ai-invite-album-modal-close {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.ai-invite-album-modal-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1) rotate(90deg);
+}
+
+/* Album Modal Grid */
+.ai-invite-album-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+.ai-invite-album-modal-image-item {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid #f0f4ff;
+}
+
+.ai-invite-album-modal-image-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+}
+
+.ai-invite-album-modal-image-container {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ai-invite-album-modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.ai-invite-album-modal-image-container:hover .ai-invite-album-modal-image {
+  transform: scale(1.05);
+}
+
+/* Album Modal Image Overlay */
+.ai-invite-album-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.ai-invite-album-modal-image-container:hover .ai-invite-album-modal-overlay {
+  opacity: 1;
+}
+
+.ai-invite-album-modal-variation {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  backdrop-filter: blur(10px);
+  align-self: flex-start;
+}
+
+.ai-invite-album-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-self: flex-end;
+}
+
+.ai-invite-album-modal-action-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-invite-album-modal-action-btn:hover {
+  background: white;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Album Modal Image Info */
+.ai-invite-album-modal-image-info {
+  padding: 12px 16px;
+  background: #f8fcff;
+}
+
+.ai-invite-album-modal-prompt {
+  font-size: 0.85rem;
+  color: #667eea;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Album Modal Footer */
+.ai-invite-album-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e6f2ff;
+  background: #f8fcff;
+}
+
+.ai-invite-album-modal-info {
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
+
+.ai-invite-album-modal-info strong {
+  color: #667eea;
+  font-weight: 600;
+  margin: 0 8px;
+}
+
+/* ===== Modal ปรับสมดุล / Responsive / อยู่กึ่งกลางหน้าจอ ===== */
+.ai-invite-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(15, 23, 42, 0.6); /* slate-900/60 */
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.ai-invite-modal-content {
+  width: min(92vw, 1000px);
+  max-height: 92vh;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-invite-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eef2f7;
+  background: #f8fafc;
+}
+
+.ai-invite-modal-title {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+.ai-invite-modal-close-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+.ai-invite-modal-close-btn:hover {
+  background: #e2e8f0;
+}
+
+.ai-invite-modal-body {
+  position: relative;
+  flex: 1;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  padding: 12px;
+  overflow: auto; /* กันรูปเกินจอ */
+}
+
+.ai-invite-modal-img {
+  max-width: 100%;
+  max-height: 78vh; /* กัน overflow แนวตั้ง */
+  object-fit: contain; /* รักษาสัดส่วน */
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.ai-invite-modal-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 10px 16px;
+  border-top: 1px solid #eef2f7;
+  background: #ffffff;
+}
+
+.ai-invite-modal-action {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #0f172a;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.ai-invite-modal-action:hover {
+  background: #eef2f7;
+}
+
+.ai-invite-modal-action--primary {
+  background: #4f8cff;
+  color: #fff;
+  border-color: #4f8cff;
+}
+.ai-invite-modal-action--primary:hover {
+  background: #3f79e0;
+}
+
+/* Empty / Suggestions state — align with CreateThemeAi look */
+.ai-invite-suggestions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 25vh;
+  text-align: center;
+  padding: 20px 15px;
+  background: none;
+  border-radius: 0;
+  margin: 5px 0;
+  border: none;
+}
+
+.ai-invite-suggestions::before {
+  content: "🎨";
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.6;
+  animation: float 3s ease-in-out infinite;
+}
+
+.ai-invite-suggestions-title {
+  font-size: 1rem;
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  font-weight: 600;
+  margin-bottom: 6px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.ai-invite-suggestions-subtitle {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* Reuse / add lightweight animations used by Theme page */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: translateY(0); }
+  50% { opacity: 0.75; transform: translateY(-2px); }
+}
+
+/* small tweak: ensure loading box sits nicely with suggestions */
+.ai-invite-loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #666;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+/* keep spinner animation consistent with Theme page */
+.ai-invite-loading-spinner {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  display: inline-block;
+  animation: ai-invite-spin 1.2s linear infinite;
+  color: #4f8cff;
+  transform-origin: 50% 50%;
+  line-height: 1;
+}
+@keyframes ai-invite-spin {
+  0%   { transform: rotate(0deg)   scale(1);   }
+  50%  { transform: rotate(180deg) scale(1.06);}
+  100% { transform: rotate(360deg) scale(1);   }
+}
+
+/* ----- Overlay icons on thumbnail ----- */
+.ai-invite-image-wrap {
+  position: relative;
+  display: block;
+}
+.ai-invite-thumb-overlay {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.ai-invite-image-wrap:hover .ai-invite-thumb-overlay,
+.ai-invite-gallery-item:hover .ai-invite-thumb-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+.ai-invite-thumb-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 6px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.9);
+  color: #111;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  backdrop-filter: blur(6px);
+}
+.ai-invite-thumb-btn:hover { filter: brightness(1.05); }
+.ai-invite-thumb-btn.danger {
+  background: linear-gradient(135deg, #ff6b6b, #ef4444);
+  color: #fff;
+}

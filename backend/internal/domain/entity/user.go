@@ -4,29 +4,27 @@ import (
 	"time"
 )
 
-// กำหนดชนิดของ Role เป็น string
-type Role string
-
 // ค่าคงที่สำหรับบทบาทต่างๆ
 const (
-	RoleMember    Role = "member"    // สมาชิกทั่วไป
-	RoleOrganizer Role = "organizer" // ผู้จัดงาน
-	RoleAdmin     Role = "admin"     // ผู้ดูแลระบบ
+	RoleMember    = "member"    // สมาชิกทั่วไป
+	RoleOrganizer = "organizer" // ผู้จัดงาน
+	RoleAdmin     = "admin"     // ผู้ดูแลระบบ
 )
 
 // โครงสร้างข้อมูลผู้ใช้
 type User struct {
-	UserID       int       `gorm:"primary_key;column:user_id" json:"user_id"`
-	Username     string    `gorm:"column:username" json:"username"`
-	Email        string    `gorm:"column:email" json:"email"`
-	Password     string    `gorm:"column:password" json:"password"`
-	Role         Role      `gorm:"column:role" json:"role"`
-	ProfileImage *string   `gorm:"column:profile_image" json:"profile_image"`
-	CreatedAt    time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"created_at"`
-	FirstName    string    `gorm:"column:first_name" json:"first_name"`
-	LastName     string    `gorm:"column:last_name" json:"last_name"`
-	Phone        string    `gorm:"column:phone" json:"phone"`
-	Bio          string    `gorm:"column:bio" json:"bio"`
+	UserID       int       `json:"user_id" gorm:"primaryKey"`
+	Username     string    `json:"username"`
+	FirstName    string    `json:"first_name"`
+	LastName     string    `json:"last_name"`
+	Email        string    `json:"email"`
+	Phone        string    `json:"phone"`
+	Password     string    `json:"-"` // ซ่อนไม่ให้ส่งออกไป
+	Role         string    `json:"role"`
+	ProfileImage string    `json:"profile_image"`
+	Bio          string    `json:"bio"`
+	CreatedAt    time.Time `json:"created_at"`
+	IsSuspended  bool      `json:"is_suspended" gorm:"default:false"` // เพิ่มตรงนี้
 }
 
 // กำหนดชื่อตารางสำหรับ GORM
@@ -40,7 +38,7 @@ func NewUser(username, email, password string) *User {
 		Username: username,
 		Email:    email,
 		Password: password,
-		Role:     RoleMember, // กำหนดค่าเริ่มต้นเป็นสมาชิก
+		Role:     RoleMember, // ตอนนี้จะใช้ได้แล้ว
 	}
 }
 

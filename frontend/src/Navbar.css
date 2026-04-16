@@ -209,3 +209,63 @@
   font-weight: 600;
 }
 
+.navbar-search-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #22223b;
+}
+
+.navbar-search-view-all {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.navbar-search-view-all:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.notif-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #ff4d4f;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.notif-dropdown {
+  position: absolute;
+  right: 0;
+  top: 36px;
+  width: 320px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(2,6,23,0.12);
+  overflow: hidden;
+  z-index: 1200;
+}
+
+.notif-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f2f2f2;
+  cursor: pointer;
+}
+
+.notif-item.unread {
+  background: #f6fbff;
+}
+

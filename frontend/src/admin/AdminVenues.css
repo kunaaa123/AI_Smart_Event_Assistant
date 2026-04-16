@@ -1,0 +1,375 @@
+:root{
+  --advne-bg: #ffffff;
+  --advne-border: #e6eef8;
+  --advne-muted: #6b7280;
+  --advne-primary: #0ea5a1;
+  --advne-danger: #ef4444;
+  --advne-radius: 12px;
+  --advne-gap: 12px;
+}
+
+.advne-venues {
+  background: linear-gradient(180deg, #f7fbfc 0%, #ffffff 100%);
+  padding: 32px;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(6,10,18,0.06);
+  max-width:1200px;
+  margin:0 auto;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:#0f172a;
+}
+.advne-venues-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:12px; flex-wrap:wrap; }
+.advne-venues-head h1{ margin:0; font-size:1.3rem; font-weight:700; letter-spacing: 0.2px; color: #052026; }
+.advne-venues-tools{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.advne-venues-tools input { padding:8px 12px; border-radius:10px; border:1px solid #e9eef6; min-width:220px; background:#fbfdff; }
+.advne-venues-count {
+  background: linear-gradient(90deg,#f0f9ff,#f5fff9);
+  color: #064e3b;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  border: 1px solid rgba(14,165,161,0.06);
+}
+
+/* ===== improved modal styles (replace previous modal block) ===== */
+.advne-venues-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 20px;
+  background: linear-gradient(180deg, rgba(6,10,18,0.45), rgba(6,10,18,0.45));
+  backdrop-filter: blur(6px) saturate(120%);
+}
+
+/* container (glass card) */
+.advne-venues-modal-content {
+  width: 880px;
+  max-width: 96%;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(250,250,252,0.98));
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(6,10,18,0.45), 0 6px 18px rgba(6,10,18,0.12);
+  overflow: hidden;
+  transform: translateY(6px) scale(0.995);
+  opacity: 0;
+  animation: advne-modal-in .18s cubic-bezier(.22,.9,.36,1) forwards;
+  max-height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+/* header */
+.advne-venues-modal-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 20px;
+  gap: 12px;
+  border-bottom: 1px solid rgba(15,23,42,0.04);
+  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.12));
+}
+.advne-venues-modal-header h3 {
+  margin:0;
+  font-size:1.05rem;
+  font-weight:700;
+  color:#0f172a;
+  letter-spacing:0.2px;
+}
+.advne-venues-modal-close {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background: rgba(15,23,42,0.04);
+  border: none;
+  cursor: pointer;
+  font-size:16px;
+  transition: all .12s ease;
+}
+.advne-venues-modal-close:hover {
+  transform: translateY(-1px);
+  background: rgba(15,23,42,0.07);
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+}
+
+/* body: scrollable inner area */
+.advne-venues-form {
+  padding: 18px 20px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15,23,42,0.12) transparent;
+}
+
+/* prettier form controls */
+.advne-venues-form input,
+.advne-venues-form textarea,
+.advne-map-picker-search {
+  width:100%;
+  padding:10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(15,23,42,0.06);
+  background: rgba(255,255,255,0.9);
+  transition: box-shadow .12s ease, border-color .12s ease;
+  outline: none;
+  font-size:14px;
+}
+.advne-venues-form input:focus,
+.advne-venues-form textarea:focus,
+.advne-map-picker-search:focus {
+  box-shadow: 0 6px 24px rgba(16,24,40,0.06);
+  border-color: rgba(14,165,161,0.9);
+}
+
+/* file controls */
+.advne-files-row { display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
+.advne-file-label {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  border-radius: 12px;
+  border:1px dashed rgba(15,23,42,0.06);
+  background: rgba(250,250,252,0.85);
+  cursor:pointer;
+  font-weight:700;
+  color:#0f172a;
+}
+.advne-file-label:hover { background: rgba(250,250,252,0.95); box-shadow: 0 6px 18px rgba(10,20,30,0.03); }
+.advne-files-preview { display:flex; gap:10px; align-items:center; flex-wrap:wrap; min-height: 48px; }
+
+/* thumbnail */
+.advne-file-p { display:flex; align-items:center; gap:8px; padding:8px; border-radius:10px; background: rgba(250,250,252,0.9); border: 1px solid rgba(15,23,42,0.04); font-size:13px; color:#0f172a; }
+.advne-file-p.cover { border-color: rgba(14,165,161,0.25); background: linear-gradient(90deg, rgba(14,165,161,0.06), rgba(255,255,255,0.6)); }
+.advne-file-p img { display:block; height:84px; width:140px; object-fit:cover; border-radius:8px; }
+
+/* actions bar sticky */
+.advne-actions {
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  align-items:center;
+}
+.advne-venues-form .advne-actions {
+  position: sticky;
+  bottom: 0;
+  padding: 14px 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.95));
+  border-top: 1px solid rgba(15,23,42,0.04);
+}
+
+/* primary / danger buttons */
+.advne-btn {
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid rgba(15,23,42,0.06);
+  background: #fff;
+  cursor:pointer;
+  font-weight:700;
+  letter-spacing:0.2px;
+}
+.advne-btn.advne-primary {
+  background: linear-gradient(90deg, #06b6a4, #0ea5a1);
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 30px rgba(14,165,161,0.14);
+}
+.advne-btn.advne-danger {
+  border: none;
+  box-shadow: none;
+  background: linear-gradient(90deg,#fff0f0,#fff5f5);
+  color: var(--advne-danger);
+}
+
+/* layout: list / grid */
+.advne-venues-list {
+  margin-top: 12px;
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+  padding-right: 8px; /* give space for scrollbar */
+}
+
+/* grid of cards: responsive and balanced */
+.advne-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--advne-gap);
+  align-items: start;
+}
+
+/* card */
+.advne-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,0.04);
+  background: var(--advne-bg);
+  min-height: 220px;
+  box-shadow: 0 6px 20px rgba(12,18,30,0.04);
+  transition: transform .16s cubic-bezier(.2,.9,.36,1), box-shadow .16s ease;
+}
+.advne-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(6,10,18,0.08);
+}
+
+/* cover image area */
+.advne-card-cover {
+  width: 100%;
+  height:160px;
+  border-radius: 10px;
+  overflow:hidden;
+  background: linear-gradient(180deg, #f6f9fc, #eef4fb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.advne-card-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* body */
+.advne-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-height: 56px;
+}
+.advne-card-title {
+  font-weight: 700;
+  font-size: 1.02rem;
+  line-height: 1.2;
+  color: #0f172a;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.advne-card-sub {
+  color: #4b5563;
+  font-size:0.9rem;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* footer actions of card */
+.advne-card-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* alert */
+.advne-venues-alert {
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(12,18,30,0.04);
+}
+.advne-venues-alert.success { background: linear-gradient(90deg,#e6fffa,#f0fdf4); color:#064e3b; border:1px solid rgba(14,165,161,0.12); }
+.advne-venues-alert.danger { background: linear-gradient(90deg,#fff5f5,#fff0f0); color:#7f1d1d; border:1px solid rgba(239,68,68,0.08); }
+
+/* ensure modal + page spacing balanced when many cards */
+.advne-venues { padding: 28px 20px; max-width:1200px; margin:0 auto; }
+
+/* small responsive tweaks */
+@media (max-width: 900px) {
+  .advne-grid { grid-template-columns: 1fr; gap: 12px; }
+  .advne-card { min-height: 160px; padding: 10px; }
+  .advne-venues-list { max-height: calc(100vh - 160px); }
+}
+
+/* ensure inner scrollbars look consistent */
+.advne-venues-list::-webkit-scrollbar { width: 10px; }
+.advne-venues-list::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.06); border-radius: 8px; }
+.advne-venues-form::-webkit-scrollbar { height: 10px; }
+.advne-venues-form::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.06); border-radius: 8px; }
+
+/* subtle entrance */
+@keyframes advne-modal-in {
+  from { transform: translateY(12px) scale(.995); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* helper map picker (scoped for this component) */
+.advne-map-picker-wrap { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+.advne-map-picker-search {
+  width: 100%;
+  max-width: 420px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+  font-size: 14px;
+}
+.advne-map-picker-map {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  border: 1px solid #e6edf3;
+  overflow: hidden;
+}
+
+/* ทำให้ช่องคำอธิบายใหญ่ขึ้น อ่านง่ายขึ้น */
+.advne-venues-form textarea {
+  min-height: 140px;
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 12px;
+  resize: vertical;
+  border-radius: 10px;
+  font-family: inherit;
+  color: #0f172a;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(15,23,42,0.06);
+}
+
+/* placeholder ให้อ่านง่ายขึ้น */
+.advne-venues-form textarea::placeholder {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* row helper: ให้ input / textarea ใน .row ขยายอย่างสมดุล และป้องกัน overflow */
+.advne-venues-form .row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.advne-venues-form .row input,
+.advne-venues-form .row textarea {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* form layout: make rows nicer, two-column on wide */
+.advne-venues-form .row { display:flex; gap:12px; }
+@media(min-width:1000px) {
+  .advne-venues-form .row > input { flex: 1 1 0; }
+}
+
+/* file label styling (bigger tappable target) */
+.advne-file-label { padding:12px 16px; border-radius:12px; font-weight:700; }
+.advne-file-label input { display:none; }

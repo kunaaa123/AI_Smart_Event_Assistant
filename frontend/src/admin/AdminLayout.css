@@ -1,0 +1,201 @@
+.admin-layout {
+  --admin-sidebar-w: 240px;
+  min-height: 100vh;              /* เต็มจอ */
+  background: #0b1220;
+}
+
+/* Sidebar คงที่ชิดซ้ายเต็มความสูงจอ */
+.admin-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;                         /* ชิดบน ไม่เผื่อ Navbar */
+  bottom: 0;
+  width: var(--admin-sidebar-w);
+  height: 100vh;
+  background: #0b1220;
+  color: #cbd5e1;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  padding: 14px 10px;
+  z-index: 20;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* เนื้อหาเลื่อนไปขวาตามความกว้าง sidebar และเลื่อนภายในได้ */
+.admin-content {
+  margin-left: var(--admin-sidebar-w);
+  min-height: 100vh;
+  background: #ffffff; /* พื้นหลังสีขาว */
+  color: #0f172a;      /* สีตัวอักษรให้อ่านชัดบนพื้นขาว */
+  padding: 0;
+  overflow-y: auto;
+  border-top-left-radius: 0;
+}
+
+/* หน้า Welcome ใช้พื้นหลังจาก admin-content */
+.admin-welcome {
+  padding: 24px;
+  margin: 0;
+  background: transparent;
+}
+/* กัน margin-collapse ของคอมโพเนนต์ตัวแรก */
+.admin-content > :first-child { margin-top: 0; }
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px 14px 10px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.admin-brand-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #4f8cff, #7c3aed, #22c55e, #4f8cff);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.12) inset;
+}
+.admin-brand-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.admin-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 4px 0 4px;
+
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.admin-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #cbd5e1;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  font-size: 14px;
+}
+.admin-menu-item:hover {
+  background: rgba(79, 140, 255, 0.08);
+  color: #e7eefc;
+  border-color: rgba(79, 140, 255, 0.15);
+}
+.admin-menu-item.active {
+  background: rgba(79, 140, 255, 0.13);
+  color: #ffffff;
+  border-color: rgba(79, 140, 255, 0.35);
+}
+
+.admin-menu-icon {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-menu-text {
+  line-height: 1;
+}
+
+/* ปุ่มโปรไฟล์มุมล่างซ้าย */
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.admin-profile:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.admin-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #2a2f3b;
+  border: 1px solid rgba(255,255,255,0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-avatar-fallback {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #9fb3ff;
+}
+
+.admin-profile-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.admin-profile-name {
+  font-size: 0.95rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-profile-email {
+  font-size: 0.78rem;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ซ่อนข้อความบนจอแคบ ให้เหลือเฉพาะไอคอนภาพ */
+@media (max-width: 860px) {
+  .admin-profile-info { display: none; }
+  .admin-avatar { width: 32px; height: 32px; }
+}
+
+.admin-menu-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  margin-left: 8px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: #fff;
+  background: linear-gradient(135deg,#ef4444,#f97316);
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(239,68,68,0.18), inset 0 -2px 4px rgba(255,255,255,0.06);
+  line-height: 1;
+}

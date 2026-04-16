@@ -117,16 +117,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 0 18px 0;
-  transition: box-shadow 0.18s, border 0.18s;
+  padding: 0 0 20px 0; /* เพิ่ม padding-bottom */
+  transition: box-shadow 0.18s, border 0.18s, transform 0.18s;
   position: relative;
   border: 2px solid #e3e6ee;
   background: #fff;
+  border-radius: 16px;
 }
 
 .my-event-card-grid:hover {
-  box-shadow: 0 6px 24px #d1d5db;
-
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  border-color: #a5b4fc;
 }
 
 .my-event-img-wrap {
@@ -174,19 +176,26 @@
 
 .my-event-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 8px;
+  margin-top: auto;
   justify-content: center;
+  padding: 0 12px;
 }
 
 .my-event-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   background: #f7f8fa;
-  border: none;
+  border: 1px solid #e5e7eb;
   border-radius: 6px;
-  padding: 7px 14px;
-  font-size: 1.15rem;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.2s;
+  min-width: 70px;
+  justify-content: center;
 }
 
 .my-event-action-btn:hover {
@@ -205,4 +214,787 @@
   min-height: 500px;
   overflow: hidden;
 }
+
+/* เพิ่ม CSS ใหม่ */
+
+/* Modal Overlay */
+.my-events-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.my-events-modal-content {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  padding: 32px;
+  min-width: 380px;
+  max-width: 760px; /* เดิม 600px -> กว้างขึ้นกำลังดี */
+  width: 100%;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.my-events-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #22223b;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.my-events-modal-close:hover {
+  background: #f1f5f9;
+}
+
+/* Edit Form */
+.my-events-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.my-events-edit-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #22223b;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.my-events-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.my-events-form-label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 1rem;
+}
+
+.my-events-form-input,
+.my-events-form-textarea,
+.my-events-form-select {
+  padding: 12px 16px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #374151;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+.my-events-form-input:focus,
+.my-events-form-textarea:focus,
+.my-events-form-select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.my-events-form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.5;
+}
+
+.my-events-form-select {
+  cursor: pointer;
+}
+
+.my-events-form-input:disabled,
+.my-events-form-textarea:disabled,
+.my-events-form-select:disabled {
+  background: #f9fafb;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.my-events-form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.my-events-save-btn,
+.my-events-cancel-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.my-events-save-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.my-events-save-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.my-events-save-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.my-events-cancel-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.my-events-cancel-btn:hover:not(:disabled) {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.my-events-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading และ Empty State */
+.my-events-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  font-size: 1.1rem;
+  color: #6b7280;
+}
+
+.my-events-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.my-events-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.my-events-empty h3 {
+  font-size: 1.4rem;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.my-events-empty p {
+  color: #6b7280;
+  margin-bottom: 24px;
+  font-size: 1.05rem;
+}
+
+/* ปรับปรุง Actions */
+.my-event-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  justify-content: center;
+  padding: 0 12px;
+}
+
+.my-event-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f7f8fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 70px;
+  justify-content: center;
+}
+
+.my-event-view-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.my-event-view-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.my-event-edit-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.my-event-edit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.my-event-delete-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.my-event-delete-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.my-event-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ปรับให้ card สูงขึ้นเล็กน้อย */
+.my-event-card-grid {
+  width: 100%;
+  max-width: 260px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 20px 0; /* เพิ่ม padding-bottom */
+  transition: box-shadow 0.18s, border 0.18s, transform 0.18s;
+  position: relative;
+  border: 2px solid #e3e6ee;
+  background: #fff;
+  border-radius: 16px;
+}
+
+.my-event-card-grid:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  border-color: #a5b4fc;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .my-events-modal-content {
+    padding: 24px;
+    min-width: 320px;
+  }
+  
+  .my-events-form-actions {
+    flex-direction: column;
+  }
+  
+  .my-events-save-btn,
+  .my-events-cancel-btn {
+    width: 100%;
+  }
+  
+  .my-event-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .my-event-action-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .my-events-header-outer {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .my-events-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .my-events-search,
+  .my-events-create-btn,
+  .my-events-organizer-btn {
+    width: 100%;
+  }
+}
+
+/* Animation */
+.my-event-card-grid {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover effects */
+.my-event-info-title:hover {
+  color: #6366f1;
+  text-decoration: underline;
+}
+
+.my-event-img-wrap:hover .my-event-img {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+/* เพิ่มใน MyEvents.css - เพิ่มที่ท้ายไฟล์ */
+
+/* Edit Modal Specific Styles */
+.my-events-modal-content.edit-modal {
+  max-width: 800px;
+  min-width: 600px;
+}
+
+/* Edit Venue Styles */
+.edit-venue-selector {
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.9);
+  margin-top: 8px;
+}
+
+.edit-venue-tabs {
+  display: flex;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.edit-venue-tab {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #64748b;
+}
+
+.edit-venue-tab:hover {
+  background: #e2e8f0;
+  color: #1f2937;
+}
+
+.edit-venue-tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.edit-custom-venue-form {
+  padding: 20px;
+  background: #fafbfc;
+}
+
+.edit-venue-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.edit-venue-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-venue-full {
+  margin-bottom: 16px;
+}
+
+.edit-venue-col label,
+.edit-venue-full label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.edit-venue-col input,
+.edit-venue-col select,
+.edit-venue-full input {
+  padding: 10px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.edit-venue-col input:focus,
+.edit-venue-col select:focus,
+.edit-venue-full input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  outline: none;
+}
+
+/* Current Images */
+.current-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.current-image-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+}
+
+.current-image-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-cover-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.current-image-remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(239, 68, 68, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: all 0.2s ease;
+}
+
+.current-image-remove-btn:hover {
+  transform: scale(1.1);
+  background: #dc2626;
+}
+
+/* Edit Image Upload */
+.edit-image-upload-box {
+  border: 2px dashed rgba(102, 126, 234, 0.3);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-image-upload-box:hover {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
+}
+
+.edit-image-upload-box.has-image {
+  padding: 0;
+  border: 2px solid rgba(102, 126, 234, 0.2);
+}
+
+.edit-image-preview-container {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.edit-cover-preview {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.edit-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-image-preview-container:hover .edit-image-overlay {
+  opacity: 1;
+}
+
+.edit-image-action-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.edit-image-action-btn.remove-btn:hover {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+}
+
+.edit-image-placeholder {
+  text-align: center;
+}
+
+.edit-upload-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+
+.edit-upload-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.edit-upload-subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Edit Gallery Upload */
+.edit-gallery-upload-area {
+  border: 2px dashed rgba(147, 197, 253, 0.5);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(147, 197, 253, 0.05);
+}
+
+.edit-gallery-upload-area:hover {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.edit-gallery-upload-content {
+  pointer-events: none;
+}
+
+.edit-gallery-preview {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+}
+
+.edit-gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.edit-clear-all-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-clear-all-btn:hover {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+}
+
+.edit-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.edit-gallery-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.edit-gallery-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.edit-gallery-remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(239, 68, 68, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: all 0.2s ease;
+}
+
+.edit-gallery-remove-btn:hover {
+  transform: scale(1.1);
+  background: #dc2626;
+}
+
+/* Responsive for Edit Modal */
+@media (max-width: 768px) {
+  .my-events-modal-content.edit-modal {
+    min-width: auto;
+    max-width: 95%;
+    padding: 20px;
+  }
+  
+  .edit-venue-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .current-images-grid,
+  .edit-gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+  }
+  
+  .edit-venue-tabs {
+    flex-direction: column;
+  }
+}
+
+.empty-card-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 36px 12px;
+}
+
+.empty-card {
+  width: min(720px, 92%);
+  background: #fff;
+  border: 1px solid #eef2ff;
+  border-radius: 14px;
+  padding: 42px 30px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.06);
+}
+
+.empty-icon {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 12px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  background: linear-gradient(135deg,#e6f0ff,#f7fbff);
+  color: #0ea5e9;
+}
+
+.empty-title {
+  margin: 6px 0;
+  font-size: 20px;
+  color: #111827;
+}
+
+.empty-subtitle {
+  margin: 8px 0 18px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.empty-btn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.empty-btn:hover { background: #2563eb; }
 

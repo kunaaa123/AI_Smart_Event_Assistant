@@ -1,0 +1,74 @@
+/* filepath: c:\Users\Gnsi_ah\Desktop\GG\Smart_Ai_Event_Assistant\frontend\src\components\FavoriteButton.css */
+.favorite-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.favorite-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.favorite-btn--active {
+  background: rgba(255, 71, 87, 0.1);
+}
+
+.favorite-btn--active:hover {
+  background: rgba(255, 71, 87, 0.2);
+}
+
+.favorite-btn--loading {
+  animation: pulse 1.5s infinite;
+}
+
+.favorite-icon {
+  width: 60%;
+  height: 60%;
+  transition: all 0.2s ease;
+}
+
+.favorite-btn:hover .favorite-icon {
+  transform: scale(1.1);
+}
+
+.favorite-btn--active .favorite-icon {
+  animation: heartBeat 0.6s ease-in-out;
+}
+
+.favorite-loading {
+  font-size: 12px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes heartBeat {
+  0%, 14% { transform: scale(1); }
+  7% { transform: scale(1.3); }
+  21% { transform: scale(1); }
+  28% { transform: scale(1.3); }
+  35% { transform: scale(1); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,164 @@
+.EUAD-popup-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.18);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.EUAD-popup {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px #0002;
+  padding: 32px 28px 24px 28px;
+  min-width: 340px;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+}
+.EUAD-close-btn {
+  position: absolute;
+  top: 18px; right: 18px;
+  background: #eee;
+  border: none;
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.EUAD-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.EUAD-avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+.EUAD-name {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+.EUAD-role {
+  font-size: 0.98rem;
+  color: #888;
+}
+.EUAD-title {
+  font-size: 1.08rem;
+  margin: 12px 0 10px 0;
+  font-weight: 600;
+}
+.EUAD-event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.EUAD-event-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f7f8fa;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: box-shadow 0.18s;
+  box-shadow: 0 2px 8px #0001;
+}
+.EUAD-event-card:hover {
+  box-shadow: 0 4px 16px #0002;
+  background: #e6f3ff;
+}
+.EUAD-event-img {
+  width: 48px; height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1.5px solid #e0e0e0;
+}
+.EUAD-event-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+.EUAD-event-desc {
+  font-size: 0.95rem;
+  color: #666;
+}
+.EUAD-loading, .EUAD-empty {
+  text-align: center;
+  color: #888;
+  margin: 18px 0;
+}
+.EUAD-popup-large {
+  max-width: 700px;
+  min-width: 420px;
+  padding: 38px 36px 28px 36px;
+}
+.EUAD-avatar-large {
+  width: 80px;
+  height: 80px;
+}
+.EUAD-name-large {
+  font-size: 1.25rem;
+}
+.EUAD-title-large {
+  font-size: 1.15rem;
+  margin-top: 18px;
+  margin-bottom: 12px;
+}
+.EUAD-event-list-large {
+  margin-top: 10px;
+}
+.EUAD-event-card-large {
+  min-height: 120px;
+}
+.EUAD-event-img-large {
+  width: 90px;
+  height: 90px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+.EUAD-event-name-large {
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+.EUAD-event-desc-large {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 4px;
+}
+.EUAD-suspend-btn {
+  transition: background 0.2s;
+}
+.EUAD-suspend-btn.suspended {
+  background: #ff4d4f !important;
+}
+.EUAD-suspend-btn.active {
+  background: #52c41a !important;
+}
+.EUAD-view-btn {
+  transition: background 0.2s;
+}
+
+/* ป้ายบอกสถานะผู้ใช้ */
+.EUAD-statuschip {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-block;
+  vertical-align: middle;
+}
+.EUAD-statuschip.ok {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.EUAD-statuschip.suspended {
+  background: #fdecea;
+  color: #a8071a;
+  border: 1px solid #f5c6cb;
+}

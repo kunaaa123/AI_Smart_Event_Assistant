@@ -1,0 +1,958 @@
+from flask import Flask, request, Response, jsonify
+from flask_cors import CORS
+import requests
+import json
+import base64
+import time
+import logging
+from deep_translator import GoogleTranslator
+import re
+from PIL import Image
+import io
+
+# เพิ่ม imports สำหรับ matching
+import numpy as np
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import mysql.connector
+import os
+from typing import List, Dict
+
+app = Flask(__name__)
+CORS(app)
+
+# ตั้งค่า logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def enhance_prompt_for_invitations(prompt):
+    """ปรับปรุง prompt สำหรับการสร้างบัตรเชิญ"""
+    try:
+        # แปลจากไทยเป็นอังกฤษ
+        translator = GoogleTranslator(source='th', target='en')
+        english_prompt = translator.translate(prompt)
+        
+        # เพิ่มคำที่เกี่ยวข้องกับบัตรเชิญ
+        invitation_keywords = [
+            "invitation card",
+            "elegant design",
+            "beautiful typography",
+            "professional layout",
+            "high quality",
+            "detailed illustration",
+            "premium design",
+            "festive",
+            "celebration",
+            "card design",
+            "formal invitation",
+            "decorative border",
+            "sophisticated style"
+        ]
+        
+        # รวม prompt พร้อมคำสำคัญ
+        enhanced = f"{english_prompt}, {', '.join(invitation_keywords)}"
+        
+        logger.info(f"Enhanced invitation prompt: {enhanced}")
+        return enhanced
+        
+    except Exception as e:
+        logger.error(f"Error enhancing invitation prompt: {e}")
+        # ถ้าแปลไม่ได้ ให้ใช้ prompt เดิม + คำสำคัญ
+        return f"{prompt}, invitation card, elegant design, beautiful layout, professional typography"
+
+def enhance_prompt_for_events(prompt):
+    """ปรับปรุง prompt สำหรับการสร้างภาพอีเว้นท์ทั่วไป"""
+    try:
+        # แปลจากไทยเป็นอังกฤษ
+        translator = GoogleTranslator(source='th', target='en')
+        english_prompt = translator.translate(prompt)
+        
+        # เพิ่มคำที่เกี่ยวข้องกับอีเว้นท์
+        event_keywords = [
+            "event decoration",
+            "professional setup",
+            "beautiful venue",
+            "festive atmosphere",
+            "elegant arrangement",
+            "high quality photography",
+            "detailed scene",
+            "event planning",
+            "party decoration",
+            "celebration setup"
+        ]
+        
+        # รวม prompt พร้อมคำสำคัญ
+        enhanced = f"{english_prompt}, {', '.join(event_keywords)}"
+        
+        logger.info(f"Enhanced event prompt: {enhanced}")
+        return enhanced
+        
+    except Exception as e:
+        logger.error(f"Error enhancing event prompt: {e}")
+        # ถ้าแปลไม่ได้ ให้ใช้ prompt เดิม + คำสำคัญ
+        return f"{prompt}, event decoration, beautiful setup, professional arrangement"
+
+# ตรวจสอบว่ามี HUGGING_FACE_API_TOKEN หรือไม่
+try:
+    HUGGING_FACE_API_TOKEN = os.getenv("HUGGING_FACE_API_TOKEN")
+    if not HUGGING_FACE_API_TOKEN or HUGGING_FACE_API_TOKEN == "hf_your_token_here":
+        logger.warning("⚠️ HUGGING_FACE_API_TOKEN not set properly")
+    else:
+        logger.info("✅ HUGGING_FACE_API_TOKEN loaded successfully")
+except Exception:
+    logger.error("❌ Failed to load HUGGING_FACE_API_TOKEN")
+    HUGGING_FACE_API_TOKEN = None
+
+# เพิ่ม class สำหรับ organizer matching
+class OrganizerMatcher:
+    def __init__(self):
+        try:
+            # โหลด sentence transformer model
+            self.model = SentenceTransformer('all-MiniLM-L6-v2')
+            logger.info("✅ Sentence transformer model loaded successfully")
+        except Exception as e:
+            logger.error(f"❌ Failed to load sentence transformer: {e}")
+            self.model = None
+    
+    def get_organizers_from_db(self):
+        """ดึงข้อมูล organizers จากฐานข้อมูล"""
+        try:
+            connection = mysql.connector.connect(
+                host='localhost',
+                database='AI_Smart_Event_Assistant',
+                user='root',
+                password='root',
+                port=3306,
+                charset='utf8mb4',
+                autocommit=True
+            )
+            
+            cursor = connection.cursor(dictionary=True)
+            
+            # ตรวจสอบว่าตาราง organizers มีอยู่หรือไม่
+            cursor.execute("SHOW TABLES LIKE 'organizers'")
+            table_exists = cursor.fetchone()
+            
+            if not table_exists:
+                logger.warning("⚠️ Table 'organizers' not found")
+                return []
+            
+            # แก้ไข query ให้ดึงทั้ง profile_image และ portfolio_img
+            query = """
+            SELECT 
+                o.organizer_id,
+                o.user_id,
+                o.expertise,
+                o.portfolio_img,
+                u.first_name,
+                u.last_name,
+                u.profile_image,
+                u.bio
+            FROM organizers o
+            JOIN users u ON o.user_id = u.user_id
+            WHERE u.role IN ('organizer', 'admin')
+            LIMIT 10
+            """
+            
+            cursor.execute(query)
+            organizers = cursor.fetchall()
+            
+            cursor.close()
+            connection.close()
+            
+            logger.info(f"📊 Loaded {len(organizers)} organizers from database")
+            return organizers
+        
+        except mysql.connector.Error as e:
+            logger.error(f"❌ MySQL error: {e}")
+            logger.error(f"Error code: {e.errno}")
+            return []
+        except Exception as e:
+            logger.error(f"❌ Database error: {e}")
+            return []
+    
+    def calculate_similarity(self, user_prompt, organizers, threshold=0.3):
+        """คำนวณความคล้ายคลึงระหว่าง prompt และ organizer"""
+        if not self.model:
+            logger.warning("⚠️ No sentence transformer model available")
+            return []
+        
+        try:
+            # สร้าง embedding สำหรับ user prompt
+            user_embedding = self.model.encode([user_prompt])
+            
+            matches = []
+            
+            for organizer in organizers:
+                # รวมข้อมูล organizer เป็นข้อความ
+                organizer_text = f"{organizer.get('expertise', '')} {organizer.get('bio', '')}"
+                
+                if not organizer_text.strip():
+                    continue
+                
+                # สร้าง embedding สำหรับ organizer
+                organizer_embedding = self.model.encode([organizer_text])
+                
+                # คำนวณ cosine similarity
+                similarity = cosine_similarity(user_embedding, organizer_embedding)[0][0]
+                
+                # ถ้า similarity มากกว่า threshold
+                if similarity >= threshold:
+                    organizer['similarity_score'] = float(similarity)
+                    organizer['match_percentage'] = int(similarity * 100)
+                    matches.append(organizer)
+            
+            # เรียงตาม similarity จากมากไปน้อย
+            matches.sort(key=lambda x: x['similarity_score'], reverse=True)
+            
+            # จำกัดผลลัพธ์ไม่เกิน 5 คน
+            return matches[:5]
+            
+        except Exception as e:
+            logger.error(f"❌ Similarity calculation error: {e}")
+            return []
+
+# สร้าง instance ของ matcher
+matcher = OrganizerMatcher()
+
+# System prompt ใหม่ที่โหดและเฉพาะเจาะจง
+system_prompt = """
+คุณคือ "EventMaster AI" ผู้เชี่ยวชาญด้านอีเว้นท์ระดับมาสเตอร์ที่มีประสบการณ์กว่า 15 ปี 🎯
+
+หน้าที่หลัก:
+- ให้คำปรึกษาเฉพาะเกี่ยวกับการจัดงานอีเว้นท์ทุกประเภท (งานแต่งงาน, วันเกิด, ปาร์ตี้, สัมมนา, คอนเสิร์ต, งานองค์กร, trade show, product launch ฯลฯ)
+- วิเคราะห์งบประมาณ, timeline, venue, decoration, catering, entertainment
+- แนะนำ vendor, supplier, ผู้ให้บริการในแต่ละพื้นที่
+- แก้ไขปัญหาเฉพาะหน้าในงานอีเว้นท์
+- ให้คำแนะนำการตลาดและโปรโมทงาน
+
+กฎเหล็ก:
+❌ หากคำถามไม่เกี่ยวข้องกับอีเว้นท์ ให้ตอบ: "ขออภัยครับ ผมเป็น EventMaster AI ที่ให้คำปรึกษาเฉพาะด้านการจัดงานอีเว้นท์เท่านั้น กรุณาถามเกี่ยวกับการจัดงาน planning หรือ event management นะครับ 🎪"
+
+สไตล์การตอบ:
+✨ ใช้ emoji ที่เกี่ยวข้องกับอีเว้นท์
+🎯 ตอบกระชับแต่มีประสิทธิภาพ (2-4 บรรทัด)
+💡 ให้คำแนะนำเชิงปฏิบัติที่ใช้งานได้จริง
+📊 แนะนำราคาและงบประมาณประมาณการ (ในบริบทไทย)
+🔥 แสดงความเป็นผู้เชี่ยวชาญด้วยข้อมูลเชิงลึก
+
+ตอบเป็นภาษาไทยเท่านั้น พร้อมใช้คำศัพท์เฉพาะทางที่เป็นมืออาชีพ
+"""
+
+# เพิ่มฟังก์ชันตรวจสอบว่าเป็นคำถามเกี่ยวกับอีเว้นท์หรือไม่
+def is_event_related_question(message):
+    """ตรวจสอบว่าคำถามเกี่ยวข้องกับอีเว้นท์หรือไม่"""
+    
+    # คำสำคัญที่เกี่ยวข้องกับอีเว้นท์
+    event_keywords = [
+        # งานอีเว้นท์ทั่วไป
+        'งาน', 'อีเว้นท์', 'event', 'จัดงาน', 'งานเลี้ยง', 'ปาร์ตี้', 'party',
+        
+        # ประเภทงาน
+        'แต่งงาน', 'wedding', 'วันเกิด', 'birthday', 'ครบรอบ', 'anniversary',
+        'สัมมนา', 'seminar', 'workshop', 'conference', 'ประชุม', 'meeting',
+        'คอนเสิร์ต', 'concert', 'show', 'performance', 'แสดง',
+        'งานบวช', 'งานศพ', 'งานขึ้นบ้านใหม่', 'housewarming',
+        'graduation', 'จบการศึกษา', 'รับปริญญา',
+        'เปิดร้าน', 'grand opening', 'launch', 'เปิดตัวสินค้า',
+        'ของขวัญ', 'gift', 'present',
+        
+        # การวางแผนงาน
+        'วางแผน', 'plan', 'planning', 'จัดการ', 'management', 'organize',
+        'timeline', 'ไทม์ไลน์', 'กำหนดการ', 'schedule', 'ตารางเวลา',
+        'checklist', 'รายการ', 'เช็คลิสต์',
+        
+        # งบประมาณ
+        'งบประมาณ', 'budget', 'ราคา', 'price', 'cost', 'ค่าใช้จ่าย',
+        'เงิน', 'money', 'บาท', 'baht', 'ถูก', 'แพง', 'expensive', 'cheap',
+        
+        # สถานที่
+        'สถานที่', 'venue', 'location', 'ห้องจัดงาน', 'banquet', 'hall',
+        'โรงแรม', 'hotel', 'resort', 'รีสอร์ท', 'ร้านอาหาร', 'restaurant',
+        'สวน', 'garden', 'outdoor', 'indoor', 'beach', 'ชายหาด',
+        
+        # การตกแต่ง
+        'ตกแต่ง', 'decoration', 'decor', 'จัดดอกไม้', 'flower', 'ดอกไม้',
+        'บอลลูน', 'balloon', 'lighting', 'แสงไฟ', 'เวที', 'stage',
+        'backdrop', 'พื้นหลัง', 'theme', 'ธีม', 'สี', 'color',
+        
+        # อาหารและเครื่องดื่ม
+        'อาหาร', 'food', 'catering', 'เค้ก', 'cake', 'dessert', 'ของหวาน',
+        'เครื่องดื่ม', 'drink', 'beverage', 'cocktail', 'บุฟเฟ่ต์', 'buffet',
+        'มื้อ', 'meal', 'menu', 'เมนู', 'จานหลัก', 'main course',
+        
+        # การถ่ายภาพ
+        'ช่างภาพ', 'photographer', 'photo', 'รูปภาพ', 'วีดีโอ', 'video',
+        'ถ่ายภาพ', 'shooting', 'edit', 'แต่งรูป',
+        
+        # เสียงและแสง
+         'เสียง', 'sound', 'ไมค์', 'microphone', 'speaker', 'music', 'เพลง',
+        'dj', 'ดีเจ', 'band', 'วงดนตรี', 'นักร้อง', 'singer',
+        
+        # การเชิญ
+        'เชิญ', 'invite', 'invitation', 'บัตรเชิญ', 'แขก', 'guest',
+        'รายชื่อ', 'list', 'RSVP', 'ตอบรับ',
+        
+        # ขนส่งและที่พัก
+        'รถ', 'car', 'transport', 'ขนส่ง', 'shuttle', 'รถบัส', 'bus',
+        'ที่พัก', 'accommodation', 'hotel booking', 'จองโรงแรม',
+        
+        # ของที่ระลึก
+        'ของที่ระลึก', 'souvenir', 'gift', 'goodie bag', 'ถุงของขวัญ',
+        
+        # การโปรโมท
+        'โปรโมท', 'promote', 'marketing', 'การตลาด', 'โฆษณา', 'ads',
+        'social media', 'facebook', 'instagram', 'line',
+        
+        # ผู้ให้บริการ
+        'vendor', 'supplier', 'ผู้ให้บริการ', 'บริษัท', 'ร้าน', 'shop',
+        'ช่าง', 'technician', 'staff', 'พนักงาน', 'ทีมงาน', 'crew',
+        
+        # อื่นๆ
+        'กิจกรรม', 'activity', 'เกม', 'game', 'ของรางวัล', 'prize',
+        'lucky draw', 'จับฉลาก', 'mc', 'พิธีกร', 'host',
+        'protocol', 'พิธีการ', 'ceremony', 'ritual'
+    ]
+    
+    message_lower = message.lower()
+    
+    # ตรวจสอบคำสำคัญ
+    for keyword in event_keywords:
+        if keyword.lower() in message_lower:
+            return True
+    
+    # ตรวจสอบรูปแบบประโยคที่เกี่ยวข้องกับอีเว้นท์
+    event_patterns = [
+        'จัด.*งาน', 'ทำ.*งาน', 'จะมี.*งาน', 'อยาก.*งาน',
+        'ช่วย.*งาน', 'แนะนำ.*งาน', 'วางแผน.*งาน',
+        'how.*event', 'plan.*event', 'organize.*event'
+    ]
+    
+    import re
+    for pattern in event_patterns:
+        if re.search(pattern, message_lower):
+            return True
+    
+    return False
+
+@app.route("/", methods=["GET"])
+def health_check():
+    return jsonify({
+        "status": "OK",
+        "service": "AI Service",
+        "endpoints": ["/ai-chat", "/ai-generate-image", "/ai-match-organizers", "/test-hf-token"]
+    })
+
+@app.route("/ai-chat", methods=["POST"])
+def ai_chat():
+    try:
+        data = request.json
+        user_message = data.get("message", "")
+        
+        if not user_message:
+            return jsonify({"error": "กรุณาใส่ข้อความ"}), 400
+        
+        # ตรวจสอบว่าเป็นคำถามเกี่ยวกับอีเว้นท์หรือไม่
+        if not is_event_related_question(user_message):
+            # ตอบแบบเท่และเฉพาะเจาะจง
+            non_event_response = """ขออภัยครับ ผมเป็น EventMaster AI 🎪 ที่ให้คำปรึกษาเฉพาะด้านการจัดงานอีเว้นท์เท่านั้น 
+
+ผมเชี่ยวชาญใน:
+🎯 การวางแผนอีเว้นท์ทุกประเภท
+💰 การจัดการงบประมาณ  
+🏛️ การเลือกสถานที่และ vendor
+🎨 การตกแต่งและธีม
+📱 การโปรโมทงาน
+
+กรุณาถามเกี่ยวกับการจัดงาน event planning หรือ event management นะครับ! 🚀"""
+            
+            def generate_fixed_response():
+                yield non_event_response
+            
+            return Response(generate_fixed_response(), mimetype="text/plain")
+        
+        # ถ้าเป็นคำถามเกี่ยวกับอีเว้นท์ ให้ดำเนินการปกติ
+        def generate():
+            try:
+                res = requests.post(
+                    "http://localhost:11434/api/chat",
+                    json={
+                        "model": "gemma",
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_message}
+                        ]
+                    },
+                    stream=True,
+                    timeout=30
+                )
+                
+                if res.status_code != 200:
+                    yield f"Error: {res.status_code} - {res.text}"
+                    return
+                
+                for line in res.iter_lines():
+                    if line:
+                        chunk = line.decode("utf-8")
+                        try:
+                            obj = json.loads(chunk)
+                            content = obj.get("message", {}).get("content", "")
+                            if content:
+                                yield content
+                        except Exception as e:
+                            logger.error(f"JSON parse error: {e}")
+                            continue
+                            
+            except requests.exceptions.RequestException as e:
+                yield f"Connection Error: {str(e)}"
+            except Exception as e:
+                yield f"Server Error: {str(e)}"
+        
+        return Response(generate(), mimetype="text/plain")
+        
+    except Exception as e:
+        logger.error(f"AI Chat Error: {str(e)}")
+        return jsonify({"error": "เกิดข้อผิดพลาดในระบบ"}), 500
+
+@app.route("/test-hf-token", methods=["GET"])
+def test_hf_token():
+    """ทดสอบ Hugging Face Token"""
+    try:
+        headers = {
+            "Authorization": f"Bearer {HUGGING_FACE_API_TOKEN}",
+        }
+        
+        # ทดสอบด้วย API endpoint สำหรับดูข้อมูล user
+        response = requests.get(
+            "https://huggingface.co/api/whoami",
+            headers=headers,
+            timeout=10
+        )
+        
+        logger.info(f"Token test status: {response.status_code}")
+        logger.info(f"Token test response: {response.text}")
+        
+        if response.status_code == 200:
+            user_info = response.json()
+            return jsonify({
+                "status": "success",
+                "message": "Token ใช้งานได้",
+                "user": user_info.get("name", "Unknown"),
+                "token_valid": True
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": "Token ไม่ถูกต้อง",
+                "status_code": response.status_code,
+                "token_valid": False
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"เกิดข้อผิดพลาด: {str(e)}",
+            "token_valid": False
+        }), 500
+
+def get_working_models():
+    """ตรวจสอบ models ที่ทำงานได้"""
+    headers = {
+        "Authorization": f"Bearer {HUGGING_FACE_API_TOKEN}",
+    }
+    
+    working_models = []
+    
+    test_models = [
+        "black-forest-labs/FLUX.1-schnell",
+        "stabilityai/stable-diffusion-3-medium-diffusers", 
+        "Artples/LAI-ImageGeneration-vSDXL-2",
+        "XLabs-AI/flux-RealismLora",
+        "stabilityai/sdxl-turbo",
+        "runwayml/stable-diffusion-v1-5",
+        "stabilityai/stable-diffusion-2-1",
+        "CompVis/stable-diffusion-v1-4"
+    ]
+    
+    for model in test_models:
+        try:
+            response = requests.get(
+                f"https://huggingface.co/api/models/{model}",
+                headers=headers,
+                timeout=5
+            )
+            if response.status_code == 200:
+                working_models.append(model)
+                logger.info(f"✅ Model working: {model}")
+            else:
+                logger.warning(f"❌ Model not available: {model} (Status: {response.status_code})")
+        except Exception as e:
+            logger.error(f"❌ Error checking model {model}: {str(e)}")
+    
+    return working_models
+
+def generate_image_with_retry(prompt, max_retries=3):
+    """สร้างรูปภาพพร้อม retry logic และ translation"""
+    
+    working_models = get_working_models()
+    
+    if not working_models:
+        logger.error("ไม่พบ models ที่ทำงานได้")
+        return {
+            "success": False,
+            "error": "ไม่พบ AI models ที่ใช้งานได้ กรุณาตรวจสอบ Token หรือลองใหม่อีกครั้ง"
+        }
+    
+    headers = {
+        "Authorization": f"Bearer {HUGGING_FACE_API_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    for model in working_models:
+        logger.info(f"🔄 Trying model: {model}")
+        
+        for attempt in range(max_retries):
+            try:
+                # ใช้ฟังก์ชันใหม่สำหรับปรับปรุง prompt
+                enhanced_prompt = enhance_prompt_for_events(prompt)
+                logger.info(f"Enhanced prompt: {enhanced_prompt}")
+                
+                response = requests.post(
+                    f"https://api-inference.huggingface.co/models/{model}",
+                    headers=headers,
+                    json={"inputs": enhanced_prompt},
+                    timeout=60
+                )
+                
+                logger.info(f"Attempt {attempt + 1}, Status: {response.status_code}")
+                
+                if response.status_code == 200:
+                    content_type = response.headers.get('content-type', '')
+                    content_length = len(response.content)
+                    
+                    if 'image' in content_type or content_length > 1000:
+                        logger.info(f"✅ Success with model: {model}")
+                        return {
+                            "success": True,
+                            "content": response.content,
+                            "model": model,
+                            "prompt_used": enhanced_prompt,
+                            "original_prompt": prompt
+                        }
+                    else:
+                        logger.warning(f"Invalid response from {model}")
+                        continue
+                        
+                elif response.status_code == 503:
+                    logger.info(f"⏳ Model loading: {model}, waiting...")
+                    time.sleep(15)
+                    continue
+                    
+                elif response.status_code == 429:
+                    logger.warning(f"⚠️ Rate limited on {model}, waiting...")
+                    time.sleep(10)
+                    continue
+                    
+                else:
+                    logger.error(f"❌ Error {response.status_code} from {model}")
+                    break
+                    
+            except requests.exceptions.Timeout:
+                logger.warning(f"⏱️ Timeout on {model} attempt {attempt + 1}")
+                if attempt < max_retries - 1:
+                    time.sleep(5)
+                    continue
+                    
+            except Exception as e:
+                logger.error(f"❌ Exception on {model}: {str(e)}")
+                if attempt < max_retries - 1:
+                    time.sleep(3)
+                    continue
+    
+    return {
+        "success": False,
+        "error": "ไม่สามารถสร้างรูปภาพได้จาก AI models ทั้งหมด กรุณาลองใหม่อีกครั้ง"
+    }
+
+@app.route("/ai-generate-image", methods=["POST"])
+def ai_generate_image():
+    try:
+        if not request.is_json:
+            return jsonify({"error": "Content-Type ต้องเป็น application/json"}), 400
+        
+        data = request.json
+        prompt = data.get("prompt", "").strip()
+        
+        if not prompt:
+            return jsonify({"error": "กรุณาใส่คำอธิบายภาพ (prompt)"}), 400
+        
+        if len(prompt) > 500:
+            return jsonify({"error": "คำอธิบายยาวเกินไป ( สูงสุด 500 ตัวอักษร)"}), 400
+        
+        logger.info(f"Generating image with prompt: {prompt}")
+        
+        result = generate_image_with_retry(prompt)
+        
+        if result["success"]:
+            img_bytes = result["content"]
+            img_base64 = base64.b64encode(img_bytes).decode("utf-8")
+            
+            return jsonify({
+                "success": True,
+                "image_base64": img_base64,
+                "model_used": result["model"],
+                "prompt": prompt,
+                "enhanced_prompt": result.get("prompt_used", "")
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result["error"]
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Image generation error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": "เกิดข้อผิดพลาดในระบบ"
+        }), 500
+
+def process_reference_image(image_base64):
+    """ประมวลผลรูปอ้างอิงเพื่อใช้ในการอธิบาย"""
+    try:
+        image_data = base64.b64decode(image_base64)
+        image = Image.open(io.BytesIO(image_data))
+        
+        width, height = image.size
+        
+        description = "event decoration inspired by reference image, "
+        
+        if width > height:
+            description += "wide venue setup, "
+        elif height > width:
+            description += "tall decoration elements, "
+        else:
+            description += "balanced composition, "
+            
+        return description
+        
+    except Exception as e:
+        logger.error(f"Error processing reference image: {e}")
+        return "event decoration, "
+
+@app.route("/ai-generate-image-with-reference", methods=["POST"])
+def ai_generate_image_with_reference():
+    """สร้างรูปภาพโดยใช้รูปอ้างอิง"""
+    try:
+        if not request.is_json:
+            return jsonify({"error": "Content-Type ต้องเป็น application/json"}), 400
+        
+        data = request.json
+        prompt = data.get("prompt", "").strip()
+        reference_image = data.get("reference_image", "")
+        
+        if not prompt:
+            return jsonify({"error": "กรุณาใส่คำอธิบายภาพ (prompt)"}), 400
+        
+        reference_description = ""
+        if reference_image:
+            reference_description = process_reference_image(reference_image)
+        
+        combined_prompt = f"{reference_description}{prompt}"
+        
+        logger.info(f"Generating image with reference - Combined prompt: {combined_prompt}")
+        
+        result = generate_image_with_retry(combined_prompt)
+        
+        if result["success"]:
+            img_bytes = result["content"]
+            img_base64 = base64.b64encode(img_bytes).decode("utf-8")
+            
+            return jsonify({
+                "success": True,
+                "image_base64": img_base64,
+                "model_used": result["model"],
+                "prompt": prompt,
+                "enhanced_prompt": result.get("prompt_used", ""),
+                "has_reference": bool(reference_image)
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result["error"]
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Image generation with reference error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": "เกิดข้อผิดพลาดในระบบ"
+        }), 500
+
+@app.route("/ai-generate-invitation", methods=["POST"])
+def ai_generate_invitation():
+    """สร้างบัตรเชิญด้วย AI"""
+    try:
+        if not request.is_json:
+            return jsonify({"error": "Content-Type ต้องเป็น application/json"}), 400
+        
+        data = request.json
+        prompt = data.get("prompt", "").strip()
+        
+        if not prompt:
+            return jsonify({"error": "กรุณาใส่คำอธิบายบัตรเชิญ"}), 400
+        
+        if len(prompt) > 500:
+            return jsonify({"error": "คำอธิบายยาวเกินไป (สูงสุด 500 ตัวอักษร)"}), 400
+        
+        logger.info(f"Generating invitation with prompt: {prompt}")
+        
+        # ใช้ฟังก์ชันใหม่สำหรับบัตรเชิญ
+        enhanced_prompt = enhance_prompt_for_invitations(prompt)
+        result = generate_image_with_retry(enhanced_prompt)
+        
+        if result["success"]:
+            img_bytes = result["content"]
+            img_base64 = base64.b64encode(img_bytes).decode("utf-8")
+            
+            return jsonify({
+                "success": True,
+                "image_base64": img_base64,
+                "model_used": result["model"],
+                "prompt": prompt,
+                "enhanced_prompt": enhanced_prompt
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result["error"]
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Invitation generation error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": "เกิดข้อผิดพลาดในระบบ"
+        }), 500
+
+# เพิ่ม endpoint สำหรับสร้างบัตรเชิญแบบละเอียด
+@app.route("/ai-generate-invitation-detailed", methods=["POST"])
+def ai_generate_invitation_detailed():
+    """สร้างบัตรเชิญด้วยข้อมูลละเอียดจาก Wizard"""
+    try:
+        if not request.is_json:
+            return jsonify({"error": "Content-Type ต้องเป็น application/json"}), 400
+        
+        data = request.json
+        prompt = data.get("prompt", "").strip()
+        event_type = data.get("event_type", "")
+        theme = data.get("theme", "")
+        colors = data.get("colors", [])
+        style = data.get("style", "")
+        
+        if not prompt:
+            return jsonify({"error": "กรุณาใส่คำอธิบายบัตรเชิญ"}), 400
+        
+        # สร้าง enhanced prompt จากข้อมูลที่ได้
+        enhanced_parts = [prompt]
+        
+        if event_type:
+            enhanced_parts.append(f"for {event_type} event")
+        
+        if theme:
+            enhanced_parts.append(f"{theme} theme")
+            
+        if style:
+            enhanced_parts.append(f"{style} style")
+            
+        if colors:
+            enhanced_parts.append(f"color scheme: {', '.join(colors)}")
+        
+        combined_prompt = ", ".join(enhanced_parts)
+        logger.info(f"Generating detailed invitation with prompt: {combined_prompt}")
+        
+        # ใช้ฟังก์ชันปรับปรุง prompt
+        final_prompt = enhance_prompt_for_invitations(combined_prompt)
+        result = generate_image_with_retry(final_prompt)
+        
+        if result["success"]:
+            img_bytes = result["content"]
+            img_base64 = base64.b64encode(img_bytes).decode("utf-8")
+            
+            return jsonify({
+                "success": True,
+                "image_base64": img_base64,
+                "model_used": result["model"],
+                "original_prompt": prompt,
+                "enhanced_prompt": final_prompt,
+                "wizard_data": {
+                    "event_type": event_type,
+                    "theme": theme,
+                    "colors": colors,
+                    "style": style
+                }
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result["error"]
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Detailed invitation generation error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": "เกิดข้อผิดพลาดในระบบ"
+        }), 500
+
+# เพิ่ม endpoint สำหรับ matching
+@app.route("/ai-match-organizers", methods=["POST"])
+def ai_match_organizers():
+    """หาผู้จัดอีเว้นต์ที่เหมาะสมตาม prompt"""
+    try:
+        data = request.json
+        # รองรับทั้ง prompt และ user_prompt
+        prompt = data.get("prompt", "") or data.get("user_prompt", "")
+        prompt = prompt.strip()
+        
+        if not prompt:
+            return jsonify({"error": "กรุณาใส่คำอธิบาย"}), 400
+        
+        logger.info(f"Matching request for prompt: {prompt}")
+        
+        # ดึงข้อมูล organizers
+        organizers = matcher.get_organizers_from_db()
+        
+        if not organizers:
+            return jsonify({
+                "success": True,
+                "matches": [],
+                "message": "ไม่พบผู้จัดอีเว้นต์ในระบบ"
+            })
+        
+        # คำนวณ matching
+        matches = matcher.calculate_similarity(prompt, organizers)
+        
+        # ปรับโครงสร้างข้อมูลให้ตรงกับ frontend
+        formatted_matches = []
+        for match in matches:
+            formatted_match = {
+                "organizer_id": match.get("organizer_id"),
+                "name": f"{match.get('first_name', '')} {match.get('last_name', '')}".strip(),
+                "first_name": match.get("first_name"),
+                "last_name": match.get("last_name"),
+                "expertise": match.get("expertise"),
+                "profile_image": match.get("profile_image"),
+                "bio": match.get("bio"),
+                "similarity_score": match.get("similarity_score"),
+                "match_percentage": match.get("match_percentage")
+            }
+            formatted_matches.append(formatted_match)
+        
+        logger.info(f"Found {len(formatted_matches)} matches")
+        
+        return jsonify({
+            "success": True,
+            "matches": formatted_matches,
+            "total_organizers": len(organizers)
+        })
+        
+    except Exception as e:
+        logger.error(f"Matching error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "success": False,
+            "error": "เกิดข้อผิดพลาดในระบบ matching"
+        }), 500
+
+@app.route("/test-db-connection", methods=["GET"])
+def test_db_connection():
+    """ทดสอบการเชื่อมต่อฐานข้อมูล"""
+    try:
+        organizers = matcher.get_organizers_from_db()
+        return jsonify({
+            "success": True,
+            "organizer_count": len(organizers),
+            "organizers": organizers[:2] if organizers else [],  # แสดงแค่ 2 คนแรก
+            "has_sentence_transformer": matcher.model is not None
+        })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route("/ai-generate-invitation-album", methods=["POST"])
+def ai_generate_invitation_album():
+    """สร้างบัตรเชิญ 3 แบบพร้อมกัน (Album)"""
+    try:
+        if not request.is_json:
+            return jsonify({"error": "Content-Type ต้องเป็น application/json"}), 400
+        
+        data = request.json
+        prompt = data.get("prompt", "").strip()
+        count = data.get("count", 3)  # จำนวนภาพที่ต้องการ
+        
+        if not prompt:
+            return jsonify({"error": "กรุณาใส่คำอธิบายบัตรเชิญ"}), 400
+        
+        if len(prompt) > 500:
+            return jsonify({"error": "คำอธิบายยาวเกินไป (สูงสุด 500 ตัวอักษร)"}), 400
+        
+        logger.info(f"Generating invitation album with prompt: {prompt}, count: {count}")
+        
+        # สร้างภาพหลายรูป
+        images = []
+        enhanced_prompt = enhance_prompt_for_invitations(prompt)
+        
+        for i in range(count):
+            # เพิ่มความหลากหลายในแต่ละรูป
+            variation_prompt = f"{enhanced_prompt}, variation {i+1}, different composition"
+            result = generate_image_with_retry(variation_prompt)
+            
+            if result["success"]:
+                img_bytes = result["content"]
+                img_base64 = base64.b64encode(img_bytes).decode("utf-8")
+                images.append(img_base64)
+                logger.info(f"Generated image {i+1}/{count}")
+            else:
+                logger.warning(f"Failed to generate image {i+1}: {result.get('error', 'Unknown error')}")
+        
+        if len(images) > 0:
+            return jsonify({
+                "success": True,
+                "images": images,  # ส่งกลับเป็น array ของ base64
+                "count": len(images),
+                "model_used": result.get("model", "unknown"),
+                "prompt": prompt,
+                "enhanced_prompt": enhanced_prompt
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": "ไม่สามารถสร้างรูปภาพใดๆ ได้"
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Album generation error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": "เกิดข้อผิดพลาดในระบบ"
+        }), 500
+
+if __name__ == "__main__":
+    logger.info("Starting AI Service with Matching...")
+    logger.info(f"Available endpoints: /ai-chat, /ai-generate-image, /ai-match-organizers, /test-hf-token")
+    
+    # ติดตั้ง dependencies ที่จำเป็น
+    try:
+        import sentence_transformers
+        import sklearn
+        import mysql.connector
+        logger.info("All matching dependencies available")
+    except ImportError as e:
+        logger.warning(f"Missing dependency: {e}")
+        logger.warning("Install with: pip install sentence-transformers scikit-learn mysql-connector-python")
+    
+    app.run(host="0.0.0.0", port=8081, debug=True)

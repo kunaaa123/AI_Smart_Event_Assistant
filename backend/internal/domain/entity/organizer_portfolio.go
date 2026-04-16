@@ -10,6 +10,7 @@ type OrganizerPortfolio struct {
 	ImageURL    string    `gorm:"column:image_url" json:"image_url"`
 	Category    string    `gorm:"column:category" json:"category"`
 	Price       string    `gorm:"column:price" json:"price"`
+	IsActive    bool      `gorm:"column:is_active" json:"is_active"`
 	CreatedAt   time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"created_at"`
 }
 

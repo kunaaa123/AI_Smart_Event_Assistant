@@ -3,6 +3,8 @@ package http
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kunaaa123/smart-ai-event-assistant/backend/internal/domain/entity"
@@ -26,6 +28,7 @@ func (h *OrganizerPortfolioHandler) RegisterRoutes(router *gin.Engine) {
 		portfolios.PUT("/:id", h.Update)
 		portfolios.DELETE("/:id", h.Delete)
 		portfolios.GET("/organizer/:organizer_id", h.GetByOrganizerID)
+		portfolios.PATCH("/:id/status", h.UpdatePortfolioStatus)
 	}
 }
 
@@ -41,13 +44,21 @@ func (h *OrganizerPortfolioHandler) Create(c *gin.Context) {
 		fmt.Sscanf(organizerIDStr, "%d", &portfolio.OrganizerID)
 	}
 
-	// รับไฟล์
+	// รับไฟล์ -> เก็บที่ uploads/organizer_portfolios
 	file, err := c.FormFile("image")
 	if err == nil && file != nil {
-		filename := file.Filename
-		dst := fmt.Sprintf("./uploads/%s", filename)
+		dstBase := UploadsDir
+		if dstBase == "" {
+			dstBase = "./uploads"
+		}
+		sub := "organizer_portfolios"
+		dstDir := filepath.Join(dstBase, sub)
+		_ = os.MkdirAll(dstDir, 0755)
+
+		name := NewUniqueFilename(file.Filename)
+		dst := filepath.Join(dstDir, name)
 		if err := c.SaveUploadedFile(file, dst); err == nil {
-			portfolio.ImageURL = "/uploads/" + filename
+			portfolio.ImageURL = "/uploads/" + sub + "/" + name
 		}
 	}
 
@@ -112,4 +123,20 @@ func (h *OrganizerPortfolioHandler) GetByOrganizerID(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, portfolios)
+}
+
+func (h *OrganizerPortfolioHandler) UpdatePortfolioStatus(c *gin.Context) {
+	id := c.Param("id")
+	var body struct {
+		IsActive bool `json:"is_active"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(400, gin.H{"error": "invalid body"})
+		return
+	}
+	if err := h.usecase.UpdateStatus(c.Request.Context(), id, body.IsActive); err != nil {
+		c.JSON(500, gin.H{"error": "failed to update status"})
+		return
+	}
+	c.JSON(200, gin.H{"message": "ok"})
 }

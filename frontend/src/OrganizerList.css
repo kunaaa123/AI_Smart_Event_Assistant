@@ -1,0 +1,152 @@
+.organizer-list-container {
+  max-width: 1200px;
+  margin: 120px auto 40px; /* เพิ่มจาก 80px เป็น 120px */
+  padding: 0 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.organizer-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.organizer-list-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #22223b;
+  margin: 0;
+}
+
+.organizer-list-search-input {
+  padding: 12px 20px;
+  border: 2px solid #e9ecef;
+  border-radius: 25px;
+  font-size: 1rem;
+  width: 300px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.organizer-list-search-input:focus {
+  border-color: #22223b;
+}
+
+.organizer-list-loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.organizer-list-empty {
+  text-align: center;
+  padding: 60px;
+  color: #666;
+}
+
+.organizer-list-empty h3 {
+  margin-bottom: 10px;
+  color: #22223b;
+}
+
+.organizer-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.organizer-list-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.organizer-list-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.organizer-list-img-wrap {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.organizer-list-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.organizer-list-card:hover .organizer-list-img {
+  transform: scale(1.05);
+}
+
+.organizer-list-info {
+  padding: 20px;
+}
+
+.organizer-list-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #22223b;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.organizer-list-expertise {
+  color: #6c757d;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.organizer-list-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.organizer-list-stars {
+  color: #ffc107;
+  font-size: 1rem;
+}
+
+.organizer-list-rating-num {
+  font-weight: 600;
+  color: #22223b;
+  font-size: 0.9rem;
+}
+
+.organizer-list-rating-count {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .organizer-list-container {
+    margin-top: 140px; /* เพิ่มจาก 100px เป็น 140px สำหรับ mobile */
+    padding: 0 15px;
+  }
+
+  .organizer-list-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .organizer-list-search-input {
+    width: 100%;
+  }
+
+  .organizer-list-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

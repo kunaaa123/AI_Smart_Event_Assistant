@@ -1,0 +1,788 @@
+.organizer-detail-container {
+  max-width: 1200px;
+  margin: 80px auto 40px;
+  padding: 0 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.organizer-detail-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Header */
+.organizer-detail-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.organizer-detail-header h1 {
+  color: #22223b;
+  margin: 0;
+  font-size: 24px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Main Layout */
+.organizer-detail-main {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+/* Left Column */
+.organizer-detail-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Profile Card */
+.organizer-profile-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  border: 1px solid #e9ecef;
+}
+
+.organizer-profile-image {
+  margin-bottom: 20px;
+}
+
+.organizer-profile-image img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #e9ecef;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.organizer-name {
+  color: #22223b;
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.organizer-expertise {
+  color: #6c757d;
+  margin: 0 0 15px 0;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.organizer-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stars {
+  color: #ffc107;
+  font-size: 16px;
+}
+
+.rating-text {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+/* รวม Contact + Bio Card */
+.organizer-info-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 1px solid #e9ecef;
+}
+
+.organizer-info-card h3 {
+  color: #22223b;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.contact-section, .bio-section {
+  margin-bottom: 20px;
+}
+
+.contact-section:last-child, .bio-section:last-child {
+  margin-bottom: 0;
+}
+
+.subsection-title {
+  color: #495057;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e9ecef;
+  text-align: center; /* จัดกลาง */
+}
+
+.contact-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.contact-label {
+  color: #495057;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.contact-value {
+  color: #22223b;
+  font-size: 14px;
+  text-align: right;
+  word-break: break-all;
+  font-weight: 500;
+}
+
+.bio-content {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #e9ecef;
+}
+
+.bio-content p {
+  color: #495057;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 14px;
+}
+
+.no-bio {
+  color: #6c757d !important;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Reviews Card */
+.organizer-reviews-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 1px solid #e9ecef;
+}
+
+.organizer-reviews-card h3 {
+  color: #22223b;
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.review-item {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #007bff;
+  border: 1px solid #e9ecef;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.reviewer-name {
+  font-weight: 600;
+  color: #22223b;
+  font-size: 14px;
+}
+
+.review-stars {
+  color: #ffc107;
+  font-size: 12px;
+}
+
+.review-comment {
+  color: #495057;
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.review-date {
+  color: #6c757d;
+  font-size: 11px;
+}
+
+.view-all-reviews {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  width: 100%;
+  margin-top: 10px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.view-all-reviews:hover {
+  background: #0056b3;
+}
+
+/* Right Column - ปรับให้สมดุล */
+.organizer-detail-right {
+  background: transparent;
+  border: none;
+  padding: 0 !important;
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 200px);
+}
+
+.organizer-portfolios-section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ลบ title ผลงาน */
+.organizer-portfolios-title {
+  display: none; /* ซ่อนคำว่า "ผลงาน" */
+}
+
+.organizer-portfolios-loading {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 14px;
+  margin-top: 0; /* ขยับขึ้นด้านบน */
+  width: 100% !important;
+  min-height: calc(100vh - 180px) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.organizer-portfolios-empty {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 14px;
+  margin-top: 0; /* ขยับขึ้นด้านบน */
+  width: 100% !important;
+  min-height: calc(100vh - 180px) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.organizer-portfolios-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 15px;
+  opacity: 0.7;
+}
+
+.organizer-portfolios-empty-text {
+  font-size: 1.1rem;
+  color: #888;
+}
+
+/* กรอบหลักล้อมรอบ portfolio grid - ขยับขึ้นด้านบน */
+.organizer-portfolios-main-border {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 16px; /* เพิ่มมุมโค้ง */
+  padding: 25px; /* เพิ่ม padding */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08); /* เพิ่มเงา */
+  margin-top: 0; /* ขยับขึ้นด้านบน */
+  width: 100% !important;
+  min-height: calc(100vh - 180px) !important;
+  box-sizing: border-box;
+}
+
+/* Grid layout - ปรับให้สวยขึ้น */
+.organizer-portfolios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* เพิ่มขนาด */
+  gap: 20px; /* เพิ่ม gap */
+  width: 100%;
+  height: 100%;
+  align-content: start;
+}
+
+/* Portfolio Card - ทำให้สวยขึ้น */
+.organizer-portfolio-card {
+  background: white;
+  border-radius: 12px; /* เพิ่มมุมโค้ง */
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08); /* เพิ่มเงา */
+  height: fit-content;
+}
+
+.organizer-portfolio-card:hover {
+  transform: translateY(-5px); /* เพิ่มการเคลื่อนไหว */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15); /* เพิ่มเงาเมื่อ hover */
+  border-color: #007bff;
+}
+
+/* Image wrapper - ปรับให้สวย */
+.organizer-portfolio-img-wrap {
+  width: 100%;
+  height: 160px; /* เพิ่มความสูง */
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); /* gradient background */
+}
+
+.organizer-portfolio-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.organizer-portfolio-card:hover .organizer-portfolio-img {
+  transform: scale(1.05);
+}
+
+/* Portfolio Info Section - ปรับให้สวย */
+.organizer-portfolio-info {
+  padding: 18px; /* เพิ่ม padding */
+  background: white;
+}
+
+.organizer-portfolio-info-title {
+  font-size: 1rem; /* เพิ่มขนาดฟอนต์ */
+  font-weight: 600;
+  color: #22223b;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.organizer-portfolio-info-category {
+  font-size: 0.85rem;
+  color: #007bff;
+  font-weight: 500;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(0, 123, 255, 0.1); /* เพิ่มพื้นหลังสี */
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.organizer-portfolio-info-price {
+  font-size: 1rem;
+  color: #28a745;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.organizer-portfolio-info-desc {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5; /* เพิ่ม line-height */
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Review Section - ข้างล่างกรอบผลงาน */
+.organizer-review-section {
+  max-width: 1200px;
+  margin: 40px auto 0 auto;
+  padding: 0 20px;
+}
+
+.organizer-review-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 1px solid #e9ecef;
+  margin-bottom: 30px;
+}
+
+.organizer-review-card h3 {
+  color: #22223b;
+  margin: 0 0 25px 0;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.organizer-review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.organizer-review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.organizer-review-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e9ecef;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.organizer-review-user {
+  flex: 1;
+}
+
+.organizer-review-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #22223b;
+}
+
+.organizer-review-textarea {
+  width: 100%;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 1rem;
+  color: #22223b;
+  resize: vertical;
+  background: #f8f9fa;
+  transition: border 0.3s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.organizer-review-textarea:focus {
+  border-color: #007bff;
+  outline: none;
+  background: white;
+}
+
+.organizer-review-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.organizer-review-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.organizer-review-star {
+  transition: all 0.2s ease;
+}
+
+.organizer-review-star:hover {
+  transform: scale(1.2);
+}
+
+.organizer-review-btn {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.organizer-review-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #003d82);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+.organizer-review-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* All Reviews Section */
+.organizer-all-reviews {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 1px solid #e9ecef;
+}
+
+.organizer-all-reviews h3 {
+  color: #22223b;
+  margin: 0 0 25px 0;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 15px;
+}
+
+.organizer-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.organizer-review-item {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.organizer-review-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  border-color: #007bff;
+}
+
+.organizer-review-item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.organizer-review-item-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e7ff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.organizer-review-item-info {
+  flex: 1;
+}
+
+.organizer-review-item-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #1f2937;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.organizer-review-item-rating {
+  color: #fbbf24;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.organizer-review-item-rating span {
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.organizer-review-item-date {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.organizer-review-item-comment {
+  font-size: 1rem;
+  color: #374151;
+  line-height: 1.6;
+  background: #f8fafc;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .organizer-portfolios-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+  }
+  
+  .organizer-portfolios-main-border {
+    padding: 20px;
+    min-height: calc(100vh - 160px) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .organizer-detail-main {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .organizer-portfolios-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+  }
+  
+  .organizer-portfolios-main-border {
+    padding: 15px;
+    border-radius: 12px;
+    min-height: calc(100vh - 140px) !important;
+  }
+  
+  .organizer-portfolio-img-wrap {
+    height: 140px;
+  }
+  
+  .organizer-review-section {
+    padding: 0 15px;
+  }
+  
+  .organizer-review-card,
+  .organizer-all-reviews {
+    padding: 20px;
+  }
+  
+  .organizer-reviews-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .organizer-review-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .organizer-review-stars {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .organizer-portfolios-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+  
+  .organizer-portfolios-main-border {
+    padding: 12px;
+    margin: 0;
+    border-radius: 8px;
+    min-height: calc(100vh - 120px) !important;
+  }
+  
+  .organizer-portfolio-img-wrap {
+    height: 120px;
+  }
+  
+  .organizer-portfolio-info {
+    padding: 12px;
+  }
+}
+
+/* ถ้าผลงานน้อย ให้กรอบยังคงเต็มจอ */
+.organizer-portfolios-empty {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 14px;
+  margin-top: 10px;
+  width: 100% !important;
+  min-height: calc(100vh - 200px) !important; /* เต็มจอแม้ไม่มีผลงาน */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.organizer-portfolios-loading {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 14px;
+  margin-top: 10px;
+  width: 100% !important;
+  min-height: calc(100vh - 200px) !important; /* เต็มจอแม้กำลังโหลด */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ลบ CSS เก่าทั้งหมด */
+.organizer-detail-right .section-title,
+.organizer-detail-right .portfolios-grid,
+.organizer-detail-right .portfolio-card,
+.organizer-detail-right .portfolio-image,
+.organizer-detail-right .portfolio-content,
+.organizer-detail-right .portfolio-title,
+.organizer-detail-right .portfolio-category,
+.organizer-detail-right .portfolio-price,
+.organizer-detail-right .portfolio-description {
+  /* ลบ CSS เก่าทั้งหมด */
+  all: unset;
+}

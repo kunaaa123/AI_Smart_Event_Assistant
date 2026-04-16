@@ -45,7 +45,6 @@ func (r *mysqlEventRepository) GetAll(ctx context.Context) ([]entity.Event, erro
 	return events, result.Error
 }
 
-// ใน repository
 func (r *mysqlEventRepository) GetByUserID(ctx context.Context, userID string) ([]entity.Event, error) {
 	var events []entity.Event
 	if err := r.db.WithContext(ctx).Where("user_id = ?", userID).Find(&events).Error; err != nil {
@@ -58,7 +57,12 @@ func (r *mysqlEventRepository) GetAllWithStats(ctx context.Context) ([]entity.Ev
 	var results []entity.EventWithStats
 	err := r.db.WithContext(ctx).Raw(`
         SELECT 
-            e.event_id, e.name, e.description, e.organizer_id,
+            e.event_id, 
+            e.name, 
+            e.description, 
+            e.organizer_id,
+            e.is_active,
+            e.price,
             IFNULL(AVG(r.rating), 0) as avgRating,
             COUNT(r.rating) as totalReviews,
             (
@@ -69,7 +73,33 @@ func (r *mysqlEventRepository) GetAllWithStats(ctx context.Context) ([]entity.Ev
             ) as cover_image
         FROM events e
         LEFT JOIN event_reviews r ON r.event_id = e.event_id
-        GROUP BY e.event_id
+        GROUP BY e.event_id, e.name, e.description, e.organizer_id, e.is_active, e.price
     `).Scan(&results).Error
+	return results, err
+}
+
+func (r *mysqlEventRepository) GetByUserIDWithStats(ctx context.Context, userID string) ([]entity.EventWithStats, error) {
+	var results []entity.EventWithStats
+	err := r.db.WithContext(ctx).Raw(`
+        SELECT 
+            e.event_id, 
+            e.name, 
+            e.description, 
+            e.organizer_id,
+            e.is_active,
+            e.price,
+            IFNULL(AVG(r.rating), 0) as avgRating,
+            COUNT(r.rating) as totalReviews,
+            (
+                SELECT image_url 
+                FROM event_images 
+                WHERE event_id = e.event_id 
+                ORDER BY is_cover DESC, image_id ASC LIMIT 1
+            ) as cover_image
+        FROM events e
+        LEFT JOIN event_reviews r ON r.event_id = e.event_id
+        WHERE e.user_id = ?
+        GROUP BY e.event_id, e.name, e.description, e.organizer_id, e.is_active, e.price
+    `, userID).Scan(&results).Error
 	return results, err
 }

@@ -1,0 +1,130 @@
+.adminDB-ev {
+  padding: 24px 32px;      /* เพิ่ม padding ซ้ายขวา */
+  max-width: 1100px;       /* กว้างขึ้น */
+  margin: 0 auto;          /* จัดตรงกลาง */
+}
+
+/* Header */
+.adminDB-ev-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.adminDB-ev-head h1 { margin: 0; font-size: 1.18rem; font-weight: 700; }
+.adminDB-ev-tools { display: flex; align-items: center; gap: 10px; }
+.adminDB-ev-search {
+  height: 36px; padding: 0 12px; border-radius: 10px;
+  border: 1px solid #e5e7eb; outline: none; min-width: 240px;
+  background: #fff;
+}
+.adminDB-ev-search:focus { border-color: #c7d2fe; box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
+.adminDB-ev-count { font-size: 0.9rem; opacity: 0.75; }
+
+/* List layout */
+.adminDB-ev-loading, .adminDB-ev-empty { padding: 28px; text-align: center; color: #6b7280; }
+.adminDB-ev-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 คอลัมน์ */
+  gap: 18px;
+  align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+  .adminDB-ev-list {
+    grid-template-columns: 1fr; /* จอเล็กเหลือ 1 คอลัมน์ */
+  }
+}
+
+/* Card */
+.adminDB-ev-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  transition: box-shadow .2s, transform .15s;
+}
+.adminDB-ev-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+
+/* Cover */
+.adminDB-ev-cover img {
+  width: 100%; aspect-ratio: 16 / 10; height: auto;
+  object-fit: cover; display: block; border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.07);
+}
+
+/* Meta */
+.adminDB-ev-meta { padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.adminDB-ev-title {
+  font-weight: 600; font-size: 1.02rem; line-height: 1.25;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.adminDB-ev-desc {
+  color: #6b7280; font-size: 0.89rem; line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.adminDB-ev-stats { display: flex; gap: 10px; color: #374151; font-size: 0.88rem; }
+
+/* Status badge */
+.adminDB-ev-status .adminDB-ev-badge {
+  display: inline-block; padding: 4px 10px; border-radius: 999px;
+  font-size: 0.78rem; font-weight: 600;
+}
+.adminDB-ev-badge.active { background: #e8f5e9; color: #15803d; border: 1px solid #b7e0c2; }
+.adminDB-ev-badge.inactive { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+/* Actions */
+.adminDB-ev-actions {
+  display: flex; flex-direction: column; gap: 8px;
+  justify-content: center; align-items: stretch; min-width: 120px;
+}
+.adminDB-ev-btn {
+  padding: 7px 12px; border-radius: 8px; border: 1px solid #e5e7eb;
+  background: #fff; cursor: pointer; font-size: 0.92rem;
+  transition: filter .15s, background .15s, border-color .15s;
+}
+.adminDB-ev-btn.ghost { background: #f3f4f6; }
+.adminDB-ev-btn.danger { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+.adminDB-ev-btn:hover { filter: brightness(0.98); }
+.adminDB-ev-btn:active { transform: translateY(0.5px); }
+
+/* Toggle Bar */
+.adminDB-ev-togglebar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.adminDB-ev-togglebtn {
+  padding: 8px 22px;
+  border-radius: 8px;
+  border: 1.5px solid #e5e7eb;
+  background: #f3f4f6;
+  color: #22223b;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.adminDB-ev-togglebtn.active {
+  background: #6366f1;
+  color: #fff;
+  border-color: #6366f1;
+}
+.adminDB-ev-togglebtn:hover:not(.active) {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+/* Tighten on small screens */
+@media (max-width: 480px) {
+  .adminDB-ev-card { grid-template-columns: 110px 1fr; }
+  .adminDB-ev-actions { grid-column: 1 / -1; flex-direction: row; }
+}

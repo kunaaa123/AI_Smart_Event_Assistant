@@ -1,0 +1,24 @@
+.admin-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  z-index: 3000;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: linear-gradient(180deg,#6366f1,#4f46e5);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(79,70,229,0.18);
+  border: none;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.admin-fab:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(79,70,229,0.22); }
+.admin-fab:active { transform: translateY(-1px); }
+.admin-fab svg { width: 20px; height: 20px; }
+@media (max-width: 640px) {
+  .admin-fab { right: 12px; bottom: 16px; width: 46px; height: 46px; }
+}

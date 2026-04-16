@@ -63,7 +63,7 @@ func (r *mysqlUserRepository) GetByUsername(ctx context.Context, username string
 }
 
 func (r *mysqlUserRepository) Update(ctx context.Context, user *entity.User) error {
-	result := r.db.WithContext(ctx).Model(&entity.User{}).
+	return r.db.WithContext(ctx).Model(&entity.User{}).
 		Where("user_id = ?", user.UserID).
 		Updates(map[string]interface{}{
 			"first_name":    user.FirstName,
@@ -71,13 +71,25 @@ func (r *mysqlUserRepository) Update(ctx context.Context, user *entity.User) err
 			"phone":         user.Phone,
 			"bio":           user.Bio,
 			"email":         user.Email,
-			"profile_image": user.ProfileImage, // <-- เพิ่มบรรทัดนี้
-		})
+			"profile_image": user.ProfileImage,
+			"is_suspended":  user.IsSuspended, // เพิ่มตรงนี้
+		}).Error
+}
 
-	if result.Error != nil {
-		return result.Error
-	}
-	return nil
+func (r *mysqlUserRepository) UpdateBasic(ctx context.Context, id string, username string, email string, bio string) error {
+	return r.db.WithContext(ctx).Model(&entity.User{}).
+		Where("user_id = ?", id).
+		Updates(map[string]interface{}{
+			"username": username,
+			"email":    email,
+			"bio":      bio, // อัปเดต bio
+		}).Error
+}
+
+func (r *mysqlUserRepository) UpdatePassword(ctx context.Context, id string, password string) error {
+	return r.db.WithContext(ctx).Model(&entity.User{}).
+		Where("user_id = ?", id).
+		Update("password", password).Error
 }
 
 func (r *mysqlUserRepository) GetAll(ctx context.Context) ([]entity.User, error) {

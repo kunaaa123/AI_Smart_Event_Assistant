@@ -1,0 +1,174 @@
+.ADUs-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 0;
+}
+
+.ADUs-head {
+  margin-bottom: 18px;
+}
+
+.ADUs-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.ADUs-search {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  font-size: 1rem;
+  width: 220px;
+}
+
+.ADUs-rolebar {
+  display: flex;
+  gap: 6px;
+}
+
+.ADUs-rolebtn {
+  background: #f2f4fa;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.ADUs-rolebtn.active {
+  background: #4f6ef7;
+  color: #fff;
+}
+
+.ADUs-count {
+  font-size: 1rem;
+  color: #888;
+}
+
+.ADUs-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.ADUs-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px #0001;
+  display: flex;
+  align-items: center;
+  padding: 14px 12px;
+  min-width: 0;
+  gap: 12px;
+  transition: box-shadow 0.2s;
+}
+.ADUs-card:hover {
+  box-shadow: 0 4px 16px #0002;
+}
+
+.ADUs-avatar img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+
+.ADUs-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ADUs-name {
+  font-weight: 600;
+  font-size: 1.08rem;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ADUs-role {
+  margin-top: 2px;
+}
+
+.ADUs-rolebadge {
+  padding: 2px 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+}
+.ADUs-rolebadge-member { background: #6ec1e4; }
+.ADUs-rolebadge-organizer { background: #ffe066; color: #222; }
+.ADUs-rolebadge-admin { background: #ff6b6b; }
+
+.ADUs-actions {
+  margin-left: 8px;
+}
+.ADUs-btn.danger {
+  background: #ff6b6b;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.ADUs-btn.danger:hover {
+  background: #e63946;
+}
+
+/* เพิ่มจุดสถานะ */
+.ADUs-status-dot {
+  vertical-align: middle;
+  transition: background 0.2s;
+}
+
+/* ปุ่มระงับ */
+.ADUs-btn.danger.suspended {
+  /* เดิมเป็นแดง -> เปลี่ยนเป็นเขียวสำหรับ "ปลดระงับ" */
+  background: #52c41a !important;
+}
+.ADUs-btn.danger.active {
+  /* เดิมเป็นเขียว -> เปลี่ยนเป็นแดงสำหรับ "ระงับ" */
+  background: #ff4d4f !important;
+}
+
+/* ป้ายบอกสถานะระงับ/ปกติ */
+.ADUs-statuschip {
+  padding: 2px 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-left: 8px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.ADUs-statuschip.ok {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.ADUs-statuschip.suspended {
+  background: #fdecea;
+  color: #a8071a;
+  border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 900px) {
+  .ADUs-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .ADUs-list {
+    grid-template-columns: 1fr;
+  }
+}

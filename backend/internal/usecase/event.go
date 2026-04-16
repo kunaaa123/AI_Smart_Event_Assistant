@@ -42,3 +42,7 @@ func (u *EventUsecase) GetByUserID(ctx context.Context, userID string) ([]entity
 func (u *EventUsecase) GetAllWithStats(ctx context.Context) ([]entity.EventWithStats, error) {
 	return u.eventRepo.GetAllWithStats(ctx)
 }
+
+func (u *EventUsecase) GetByUserIDWithStats(ctx context.Context, userID string) ([]entity.EventWithStats, error) {
+	return u.eventRepo.GetByUserIDWithStats(ctx, userID)
+}

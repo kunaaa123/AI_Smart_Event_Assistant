@@ -41,6 +41,7 @@
 
 .event-detail-nav-btns {
   display: flex;
+  align-items: center;
   gap: 12px;
   margin-top: 8px;
 }
@@ -56,9 +57,84 @@
   cursor: pointer;
   transition: background 0.15s, border 0.15s;
 }
+
 .event-detail-nav-btn:hover {
   background: #e0e7ff;
   border-color: #a5b4fc;
+}
+
+/* ปุ่มหัวใจเล็กๆ ในแถบ nav */
+.event-detail-nav-favorite-btn {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 6px;
+  flex-shrink: 0;
+}
+
+.event-detail-nav-favorite-btn:hover {
+  background: rgba(255, 107, 107, 0.15);
+  transform: scale(1.15);
+  border-radius: 8px;
+}
+
+.event-detail-nav-favorite-btn:active {
+  transform: scale(1.05);
+}
+
+/* ปรับ svg ภายในปุ่ม */
+.event-detail-nav-favorite-btn svg {
+  width: 30px !important;
+  height: 30px !important;
+  transition: all 0.2s ease;
+}
+
+.event-detail-nav-favorite-btn:hover svg {
+  animation: heartbeat-tiny 0.6s ease infinite;
+  width: 32px !important;
+  height: 32px !important;
+}
+
+@keyframes heartbeat-tiny {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .event-detail-nav-favorite-btn {
+    width: 38px;
+    height: 38px;
+    padding: 4px;
+  }
+  
+  .event-detail-nav-favorite-btn svg {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .event-detail-nav-favorite-btn:hover svg {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
+/* ลบ CSS ของปุ่มเดิม */
+.event-detail-favorite-btn {
+  display: none;
 }
 
 .event-detail-gallery-col {
@@ -186,19 +262,66 @@
 }
 
 .event-detail-organizer-bio {
-  font-size: 1.05rem;
-  color: #333;
-  line-height: 1.7;
-  background: #f7f8fa;
-  border-radius: 8px;
-  padding: 14px 12px 12px 12px;
-  margin-top: 0;
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border-left: 4px solid #6366f1;
+  text-align: center; /* เพิ่มบรรทัดนี้ */
+  margin-top: 16px; /* เพิ่ม margin ด้านบน */
+}
+
+/* หรือถ้าต้องการปรับแต่งเพิ่มเติม */
+.event-detail-organizer-content {
   text-align: center;
-  width: 100%;
-  min-width: 120px;
-  max-width: 220px;
-  box-sizing: border-box;
-  box-shadow: 0 1px 4px #0001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px; /* เพิ่มระยะห่างระหว่างองค์ประกอบ */
+}
+
+.event-detail-organizer-role {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.event-detail-organizer-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.event-detail-organizer-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f8fafc;
+  margin: 0 auto 20px auto;
+  display: block;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+}
+
+.event-detail-organizer-bio {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border-left: 4px solid #6366f1;
+  text-align: center; /* จัดกึ่งกลาง */
+  max-width: 100%;
+  margin: 0 auto; /* จัดให้อยู่กลาง */
 }
 
 .event-detail-popular-section {
@@ -420,4 +543,337 @@
 }
 .event-detail-review-star:hover {
   transform: scale(1.2);
+}
+
+/* เพิ่มใน EventDetail.css */
+.event-detail-cover-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.event-detail-favorite-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+}
+
+.event-detail-venue-section {
+  margin-top: 36px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 12px;
+  border: 1px solid #bae6fd;
+}
+
+.event-detail-venue-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #0c4a6e;
+}
+
+.event-detail-venue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.event-detail-venue-header h3 {
+  margin: 0;
+  color: #0f172a;
+}
+
+.event-detail-venue-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-detail-venue-stars {
+  color: #fbbf24;
+}
+
+.event-detail-venue-details {
+  margin-bottom: 16px;
+}
+
+.event-detail-venue-details p {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #334155;
+}
+
+.event-detail-venue-map {
+  margin: 16px 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.event-detail-venue-btn {
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.event-detail-venue-btn:hover {
+  background: #0284c7;
+}
+
+/* แทนที่ CSS เดิมใน EventDetail.css */
+
+.event-detail-organizer-venue-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.event-detail-organizer-col,
+.event-detail-venue-col {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.event-detail-organizer-col::before,
+.event-detail-venue-col::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+
+.event-detail-venue-col::before {
+  background: linear-gradient(90deg, #06b6d4, #0ea5e9);
+}
+
+.event-detail-organizer-col:hover,
+.event-detail-venue-col:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.event-detail-organizer-header h3,
+.event-detail-venue-header h3 {
+  margin: 0 0 24px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-detail-organizer-content {
+  text-align: center;
+}
+
+.event-detail-organizer-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f8fafc;
+  margin: 0 auto 20px auto;
+  display: block;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+}
+
+.event-detail-organizer-role {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.event-detail-organizer-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.event-detail-organizer-bio {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border-left: 4px solid #6366f1;
+  text-align: center; /* จัดกึ่งกลาง */
+  max-width: 100%;
+  margin: 0 auto; /* จัดให้อยู่กลาง */
+}
+
+/* Venue Styles */
+.event-detail-venue-content {
+  text-align: center;
+}
+
+.event-detail-venue-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.event-detail-venue-location {
+  background: linear-gradient(135deg, #06b6d4, #0ea5e9);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.event-detail-venue-map {
+  background: #f8fafc;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.event-detail-venue-map-container {
+  width: 100%;
+  height: 200px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.event-detail-venue-coordinates {
+  background: white;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  color: #6b7280;
+  text-align: center;
+  border-top: 1px solid #e2e8f0;
+}
+
+.event-detail-venue-map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #4285f4, #1a73e8);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+  transition: all 0.3s ease;
+}
+
+.event-detail-venue-map-link:hover {
+  background: linear-gradient(135deg, #1a73e8, #1557b0);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(66, 133, 244, 0.4);
+}
+
+.event-detail-venue-empty {
+  text-align: center;
+  color: #9ca3af;
+  font-style: italic;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border-radius: 16px;
+  border: 2px dashed #d1d5db;
+}
+
+/* ราคา badge */
+.event-price-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+.event-price-badge {
+  background: linear-gradient(90deg,#ffedd5,#ffcc80);
+  color: #7c2d12;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(252, 165, 0, 0.12);
+  font-size: 1.05rem;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* small screens adjust */
+@media (max-width: 768px) {
+  .event-price-badge { font-size: 0.98rem; padding: 6px 12px; }
+}
+
+.event-price-fab {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 30;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(90deg, #fff7ed 0%, #ffefc2 100%);
+  color: #7c2d12;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 10px 30px rgba(252,165,0,0.14), 0 2px 6px rgba(0,0,0,0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: default;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* เพิ่มไอคอนก่อนข้อความ (ถ้าต้องการ) */
+.event-price-fab::before {
+  content: "💳";
+  display: inline-block;
+  font-size: 1.08rem;
+  line-height: 1;
+}
+
+/* hover effect เล็กๆ */
+.event-price-fab:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(252,165,0,0.22), 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* เวอร์ชันสำหรับหน้าจอเล็ก */
+@media (max-width: 768px) {
+  .event-price-fab {
+    top: 12px;
+    right: 12px;
+    padding: 8px 12px;
+    font-size: 0.98rem;
+    gap: 8px;
+  }
+  .event-price-fab::before { font-size: 1rem; }
 }

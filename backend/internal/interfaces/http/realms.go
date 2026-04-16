@@ -127,3 +127,25 @@ func (h *RealmHandler) UpdateRealm(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Realm updated"})
 }
+
+// GET /realms/share/:share_id
+func (h *RealmHandler) GetByShareID(c *gin.Context) {
+	shareID := c.Param("share_id")
+	if shareID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "share_id required"})
+		return
+	}
+	var realm entity.Realm
+	if err := h.db.Where("share_id = ?", shareID).First(&realm).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Realm not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"id":         realm.ID,
+		"owner_id":   realm.OwnerID,
+		"name":       realm.Name,
+		"map_data":   realm.MapData,
+		"share_id":   realm.ShareID,
+		"only_owner": realm.OnlyOwner,
+	})
+}

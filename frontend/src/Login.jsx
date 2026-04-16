@@ -1,50 +1,90 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import GlassAlert from './GlassAlert' // เพิ่ม import
 import "./Login.css";
 
-const Login = ({ showToast }) => {
+const Login = () => { // ลบ showToast prop
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  
+  // เพิ่ม state สำหรับ GlassAlert
+  const [alert, setAlert] = useState({ show: false, message: "", type: "success" })
+  
   const navigate = useNavigate()
 
+  // ฟังก์ชันแสดง alert
+  const showAlert = (message, type = "success") => {
+    setAlert({ show: true, message, type });
+  };
+
+  // Auto hide alert after 3 seconds
+  useEffect(() => {
+    if (alert.show) {
+      const timer = setTimeout(() => {
+        setAlert(prev => ({ ...prev, show: false }));
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [alert.show]);
+
   const handleSignIn = async (e) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
     try {
       const res = await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-      })
-      const data = await res.json()
+      });
+      const data = await res.json();
       if (res.ok && data.user) {
-        // ดึง profile เพิ่มเติม
-        const profileRes = await fetch(`http://localhost:8080/users/${data.user.user_id}`)
-        if (profileRes.ok) {
-          const profile = await profileRes.json()
-          localStorage.setItem("user", JSON.stringify(profile))
-          window.dispatchEvent(new Event("user-profile-updated"))
-          showToast("เข้าสู่ระบบสำเร็จ", "success")
-          navigate("/")
-        } else {
-          localStorage.setItem("user", JSON.stringify(data.user))
-          showToast("เข้าสู่ระบบสำเร็จ (ข้อมูลไม่ครบ)", "warning")
-          navigate("/")
+        // พยายามดึง profile เต็มจาก backend เสมอ
+        let profile = null;
+        try {
+          const profileRes = await fetch(`http://localhost:8080/users/${data.user.user_id}`);
+          if (profileRes.ok) {
+            profile = await profileRes.json();
+          }
+        } catch (err) {
+          console.warn("fetch profile failed", err);
         }
-      } else {
-        setError(data.error || "เข้าสู่ระบบไม่สำเร็จ")
-        showToast(data.error || "เข้าสู่ระบบไม่สำเร็จ", "danger")
+
+        // ถ้าไม่สามารถดึง profile ได้ ให้ใช้ data.user เป็น fallback
+        // และมั่นใจว่ามี field role (fallback เป็น "member")
+        const stored = profile || {
+          ...data.user,
+          role: data.user?.role || "member",
+        };
+
+        localStorage.setItem("user", JSON.stringify(stored));
+        window.dispatchEvent(new Event("user-profile-updated"));
+        showAlert("เข้าสู่ระบบสำเร็จ! 🎉", "success");
+        const to = (stored.role === "admin") ? "/admin" : "/";
+        setTimeout(() => navigate(to), 800);
+        return;
+      } 
+      if (!res.ok && data.error) {
+        setError(data.error);
+        showAlert(data.error, "danger");
       }
     } catch {
       setError("เกิดข้อผิดพลาด")
-      showToast("เกิดข้อผิดพลาด", "danger")
+      showAlert("เกิดข้อผิดพลาด", "danger") // ใช้ showAlert แทน
     }
   }
 
   return (
     <section className="login-page-section">
+      {/* เพิ่ม GlassAlert */}
+      <GlassAlert
+        show={alert.show}
+        message={alert.message}
+        type={alert.type}
+        onClose={() => setAlert({ ...alert, show: false })}
+      />
+      
       <div className="login-page-main-box">
         <div className="login-page-img-box">
           <img
@@ -82,7 +122,7 @@ const Login = ({ showToast }) => {
             </button>
             {error && <div style={{color:'red'}}>{error}</div>}
             <div className="login-page-links">
-              <a href="#">ลืมรหัสผ่าน</a>
+              <a href="/forgot-password">ลืมรหัสผ่าน</a>
             </div>
           </form>
         </div>

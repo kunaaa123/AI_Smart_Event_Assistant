@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/kunaaa123/smart-ai-event-assistant/backend/internal/domain/entity"
 	"github.com/kunaaa123/smart-ai-event-assistant/backend/internal/domain/repository"
@@ -20,27 +21,42 @@ func (r *mysqlFavoriteRepository) Create(ctx context.Context, favorite *entity.F
 	return r.db.WithContext(ctx).Create(favorite).Error
 }
 
-func (r *mysqlFavoriteRepository) GetByID(ctx context.Context, id string) (*entity.Favorite, error) {
-	var favorite entity.Favorite
-	result := r.db.WithContext(ctx).First(&favorite, "favorite_id = ?", id)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return &favorite, nil
+func (r *mysqlFavoriteRepository) Delete(ctx context.Context, userID, eventID int) error {
+	return r.db.WithContext(ctx).Where("user_id = ? AND event_id = ?", userID, eventID).Delete(&entity.Favorite{}).Error
 }
 
-func (r *mysqlFavoriteRepository) Update(ctx context.Context, favorite *entity.Favorite) error {
-	return r.db.WithContext(ctx).Model(&entity.Favorite{}).
-		Where("favorite_id = ?", favorite.FavoriteID).
-		Updates(favorite).Error
-}
-
-func (r *mysqlFavoriteRepository) Delete(ctx context.Context, id string) error {
-	return r.db.WithContext(ctx).Delete(&entity.Favorite{}, "favorite_id = ?", id).Error
-}
-
-func (r *mysqlFavoriteRepository) GetAll(ctx context.Context) ([]entity.Favorite, error) {
+func (r *mysqlFavoriteRepository) GetByUserID(ctx context.Context, userID int) ([]entity.Favorite, error) {
 	var favorites []entity.Favorite
-	result := r.db.Find(&favorites)
-	return favorites, result.Error
+	err := r.db.WithContext(ctx).Where("user_id = ?", userID).Find(&favorites).Error
+	return favorites, err
+}
+
+func (r *mysqlFavoriteRepository) CheckExists(ctx context.Context, userID, eventID int) (bool, error) {
+	var count int64
+	err := r.db.WithContext(ctx).Model(&entity.Favorite{}).Where("user_id = ? AND event_id = ?", userID, eventID).Count(&count).Error
+	return count > 0, err
+}
+
+func (r *mysqlFavoriteRepository) GetFavoriteWithEvent(ctx context.Context, userID int) ([]entity.Favorite, error) {
+	var favorites []entity.Favorite
+	err := r.db.WithContext(ctx).
+		Preload("Event").
+		Preload("User").
+		Where("user_id = ?", userID).
+		Order("created_at DESC").
+		Find(&favorites).Error
+
+	// Debug: ตรวจสอบข้อมูลที่ได้
+	for i, fav := range favorites {
+		fmt.Printf("[DEBUG] Favorite %d: favorite_id=%d, user_id=%d, event_id=%d\n",
+			i, fav.FavoriteID, fav.UserID, fav.EventID)
+		if fav.Event.EventID != 0 {
+			fmt.Printf("[DEBUG] Event data: event_id=%d, name=%s\n",
+				fav.Event.EventID, fav.Event.Name)
+		} else {
+			fmt.Printf("[DEBUG] Event data is empty!\n")
+		}
+	}
+
+	return favorites, err
 }

@@ -1,0 +1,327 @@
+.my-favorites-header-outer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  margin-top: 8px;
+  gap: 12px;
+  padding: 0 8px;
+  max-width: 900px;         /* ปรับให้แคบลง */
+  margin-left: auto;
+  margin-right: auto;
+  background: transparent;
+}
+
+.my-favorites-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #22223b;
+}
+
+.my-favorites-count {
+  background: #bbbfc5;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* เพิ่มกรอบครอบรายการอีเว้นท์ทั้งหมด */
+.my-favorites-main-border {
+  background: #fff;
+  border: 2.5px solid #e3e6ee;
+  border-radius: 22px;
+  box-shadow: 0 4px 24px #f0f1f6;
+  padding: 32px 28px;
+  margin: 24px auto 24px auto;   /* ใช้ auto ให้อยู่ตรงกลาง */
+  width: 100%;
+  max-width: 900px;              /* ปรับให้แคบลง */
+  min-height: 500px;
+  overflow: hidden;
+}
+
+.my-favorites-list-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 คอลัมน์เสมอถ้าพอที่ */
+  gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1100px) {
+  .my-favorites-list-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .my-favorites-list-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .my-favorites-list-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.my-favorite-card-grid {
+  width: 100%;
+  max-width: 260px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 18px 0;
+  transition: box-shadow 0.18s, border 0.18s;
+  position: relative;
+  border: 2px solid #e3e6ee;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.my-favorite-card-grid:hover {
+  box-shadow: 0 8px 32px rgba(79, 140, 255, 0.15), 
+              0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: #c5ccd8;
+}
+
+.my-favorite-img-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+  background: #f7f8fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  transition: border 0.18s;
+  position: relative; /* เพิ่มเพื่อให้ปุ่มลอยได้ */
+}
+
+.my-favorite-card-grid:hover .my-favorite-img-wrap {
+  border: 3px solid #22223b;
+}
+
+.my-favorite-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ปรับ info section ให้ไม่มี actions */
+.my-favorite-info {
+  width: 100%;
+  padding: 16px 20px 8px 20px;
+  text-align: left;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(247, 248, 250, 0.3) 100%);
+}
+
+.my-favorite-info-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  color: #2c3e50;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.my-favorite-info-desc {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.my-favorite-added-date {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  margin-bottom: 0;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.my-favorite-added-date::before {
+  content: "📅";
+  font-size: 0.9rem;
+}
+
+/* ปุ่มหัวใจลอย - ย้ายมาอยู่บนภาพ */
+.my-favorite-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+}
+
+.my-favorite-action-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(255, 107, 107, 0.8);
+  border-radius: 50%;
+  padding: 12px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(240, 227, 227, 0.15);
+  position: relative;
+  overflow: hidden;
+  width: 56px;
+  height: 56px;
+  backdrop-filter: blur(10px);
+  opacity: 0.9;
+}
+
+.my-favorite-action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transition: left 0.5s ease;
+}
+
+.my-favorite-action-btn:hover::before {
+  left: 100%;
+}
+
+.my-favorite-action-btn:hover {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  border-color: #ff6b6b;
+  box-shadow: 0 8px 28px rgba(255, 107, 107, 0.5);
+  transform: scale(1.15);
+  opacity: 1;
+}
+
+.my-favorite-action-btn:active {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+/* เพิ่ม animation สำหรับหัวใจ */
+.my-favorite-action-btn svg {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.my-favorite-action-btn:hover svg {
+  animation: heartbeat 0.8s ease infinite;
+  color: white !important;
+}
+
+@keyframes heartbeat {
+  0%, 50%, 100% {
+    transform: scale(1);
+  }
+  25%, 75% {
+    transform: scale(1.3);
+  }
+}
+
+/* ทำให้ปุ่มหัวใจปรากฏเมื่อ hover การ์ด */
+.my-favorite-card-grid .my-favorite-actions {
+  opacity: 0.8;
+  transform: scale(0.9);
+  transition: all 0.3s ease;
+}
+
+.my-favorite-card-grid:hover .my-favorite-actions {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Empty State */
+.my-favorites-empty {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+}
+
+.my-favorites-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.my-favorites-empty-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #22223b;
+  margin-bottom: 8px;
+}
+
+.my-favorites-empty-desc {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.my-favorites-browse-btn {
+  background: linear-gradient(135deg, #ffffff 0%, #f2f3f8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.my-favorites-browse-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Loading State */
+.my-favorites-loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1.1rem;
+  color: #666;
+  background: white;
+  border-radius: 12px;
+}
+
+/* สำหรับ mobile ให้ปุ่มเล็กลงหน่อย */
+@media (max-width: 768px) {
+  .my-favorite-action-btn {
+    padding: 8px 12px;
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 1.1rem;
+  }
+  
+  .my-favorite-card-grid .my-favorite-actions {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .my-favorite-actions {
+    top: 8px;
+    right: 8px;
+  }
+}

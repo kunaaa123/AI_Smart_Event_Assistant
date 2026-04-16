@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./AiLayout.css";
 
 const menu = [
@@ -20,6 +21,7 @@ const menu = [
       </svg>
     ),
     label: "หน้าหลัก",
+    path: "/",
   },
   {
     icon: (
@@ -34,6 +36,7 @@ const menu = [
       </svg>
     ),
     label: "โปรไฟล์",
+    path: "/profile",
   },
   {
     icon: (
@@ -56,6 +59,7 @@ const menu = [
       </svg>
     ),
     label: "ขอคำแนะนำ",
+    path: "/ai",
   },
   {
     icon: (
@@ -68,7 +72,8 @@ const menu = [
         />
       </svg>
     ),
-    label: "รายการโปร",
+    label: "รายการโปรด",
+    path: "/my-favorites", // แก้ไขจาก "/favorite" เป็น "/my-favorites"
   },
   {
     icon: (
@@ -86,6 +91,7 @@ const menu = [
       </svg>
     ),
     label: "สร้างบัตรเชิญ",
+    path: "/ai/invite", // แก้ไขจาก "/create-invite-card" เป็น "/ai/invite"
   },
   {
     icon: (
@@ -100,17 +106,29 @@ const menu = [
       </svg>
     ),
     label: "สร้างธีม",
+    path: "/ai/theme", // แก้ไขจาก "/create-theme-ai" เป็น "/ai/theme"
   },
 ];
 
 function AiLayout({ children }) {
+  const navigate = useNavigate();
+
+  const handleMenuClick = (path) => {
+    if (path) navigate(path);
+  };
+
   return (
     <div className="ai-layout-root">
       <aside className="ai-layout-sidebar">
         <nav>
           <ul className="ai-layout-menu">
             {menu.map((item, idx) => (
-              <li className="ai-layout-menu-item" key={idx}>
+              <li
+                className="ai-layout-menu-item"
+                key={idx}
+                onClick={() => handleMenuClick(item.path)}
+                style={{ cursor: item.path ? "pointer" : "default" }}
+              >
                 <span className="ai-layout-menu-icon">{item.icon}</span>
                 <span>{item.label}</span>
               </li>

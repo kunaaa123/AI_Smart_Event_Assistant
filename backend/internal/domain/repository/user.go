@@ -15,4 +15,6 @@ type UserRepository interface {
 	Update(ctx context.Context, user *entity.User) error
 	Delete(ctx context.Context, id string) error
 	GetAll(ctx context.Context) ([]entity.User, error) // เพิ่ม method นี้
+	UpdateBasic(ctx context.Context, id string, username string, email string, bio string) error
+	UpdatePassword(ctx context.Context, id string, password string) error
 }

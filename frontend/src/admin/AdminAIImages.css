@@ -1,0 +1,84 @@
+.AdminAI { padding: 20px; }
+.AdminAI-title { font-size: 22px; font-weight: 900; color: #0f172a; }
+.AdminAI-subtitle { color: #64748b; font-size: 13px; margin-top: 4px; }
+
+.AdminAI-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.AdminAI-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
+.AdminAI-input, .AdminAI-select, .AdminAI-search {
+  height: 36px; border-radius: 10px; border: 1px solid #e5e7eb; padding: 0 12px; outline: none; background: #fff;
+}
+.AdminAI-btn { height: 36px; padding: 0 12px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; cursor: pointer; }
+.AdminAI-btn:hover { background: #f8fafc; }
+.AdminAI-btn.danger { color: #dc2626; border-color: #fecaca; background: #fff; }
+.AdminAI-btn.ghost { background: #f8fafc; }
+.AdminAI-search-wrap { position: relative; }
+.AdminAI-search-ico { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); }
+.AdminAI-search { padding-left: 28px; min-width: 240px; }
+
+.AdminAI-toggle { display: inline-flex; gap: 6px; align-items: center; color: #475569; }
+.AdminAI-count { color: #64748b; font-size: 13px; margin-bottom: 8px; }
+
+.AdminAI-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; }
+.AdminAI-loading, .AdminAI-empty { padding: 24px; text-align: center; color: #64748b; }
+
+.AdminAI-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.AdminAI-item { border: 1px solid #f1f5f9; border-radius: 12px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+.AdminAI-thumb-wrap { position: relative; }
+.AdminAI-thumb { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; cursor: zoom-in; }
+.AdminAI-variation { position: absolute; right: 8px; bottom: 8px; background: #0f172a; color: #fff; font-size: 12px; border-radius: 999px; padding: 2px 8px; }
+.AdminAI-album-badge { position: absolute; left: 8px; top: 8px; background: #eef2ff; color: #3730a3; font-weight: 700; font-size: 12px; border-radius: 8px; padding: 2px 6px; cursor: pointer; }
+
+.AdminAI-meta { padding: 8px; }
+.AdminAI-prompt { font-size: 13px; color: #0f172a; font-weight: 600; }
+.AdminAI-info { font-size: 12px; color: #64748b; margin-top: 4px; display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.AdminAI-badge { background: #fff7ed; color: #9a3412; padding: 1px 6px; border-radius: 999px; font-size: 11px; margin-left: 6px; }
+
+.AdminAI-actions { display: flex; gap: 8px; padding: 8px; border-top: 1px solid #f1f5f9; }
+
+.AdminAI-albums { display: flex; flex-direction: column; gap: 16px; }
+.AdminAI-album { border: 1px solid #f1f5f9; border-radius: 12px; overflow: hidden; }
+.AdminAI-album-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #f8fafc; border-bottom: 1px solid #eef2f7; }
+.AdminAI-album-title { font-weight: 800; color: #0f172a; }
+
+/* Layout ซ้าย-ขวา */
+.AdminAI-two { display: grid; grid-template-columns: 280px 1fr; gap: 12px; align-items: start; }
+.AdminAI-right { min-width: 0; }
+
+/* Users pane */
+.AdminAI-users { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px; max-height: calc(100vh - 180px); display: flex; flex-direction: column; }
+.AdminAI-u-head { display: grid; gap: 8px; margin-bottom: 8px; }
+.AdminAI-u-search { height: 34px; border-radius: 10px; border: 1px solid #e5e7eb; padding: 0 10px; }
+.AdminAI-rolebar { display: flex; gap: 6px; flex-wrap: wrap; }
+.AdminAI-rolebtn { height: 28px; padding: 0 10px; border: 1px solid #e5e7eb; border-radius: 999px; background: #fff; cursor: pointer; font-size: 12px; }
+.AdminAI-rolebtn.active { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
+
+.AdminAI-ul { overflow: auto; display: flex; flex-direction: column; gap: 6px; }
+.AdminAI-u-loading, .AdminAI-u-empty { padding: 12px; text-align: center; color: #64748b; }
+
+.AdminAI-user { display: grid; grid-template-columns: 36px 1fr auto; gap: 10px; align-items: center; width: 100%; text-align: left; padding: 8px; border-radius: 10px; border: 1px solid #f1f5f9; background: #fff; cursor: pointer; }
+.AdminAI-user:hover { background: #f8fafc; }
+.AdminAI-user.active { outline: 2px solid #c7d2fe; background: linear-gradient(0deg, #eef2ff, #eef2ff); }
+
+.AdminAI-u-avatar { width: 36px; height: 36px; border-radius: 999px; object-fit: cover; }
+.AdminAI-u-meta { display: grid; gap: 2px; min-width: 0; }
+.AdminAI-u-name { font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.AdminAI-u-sub { font-size: 12px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.AdminAI-u-role { font-size: 11px; border-radius: 999px; padding: 2px 8px; border: 1px solid #e5e7eb; color: #334155; }
+.chip-admin { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
+.chip-organizer { background: #ecfeff; color: #155e75; border-color: #a5f3fc; }
+.chip-member { background: #f8fafc; color: #475569; }
+
+/* Modal (เดิม) */
+.AdminAI-modal { position: fixed; inset: 0; background: rgba(2,8,20,.55); display: flex; align-items: center; justify-content: center; z-index: 60; }
+.AdminAI-modal-content { background: #fff; border-radius: 12px; width: min(980px, 92vw); max-height: 92vh; overflow: auto; }
+.AdminAI-modal-content--image { width: min(880px, 92vw); }
+.AdminAI-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+.AdminAI-modal-title { font-weight: 800; }
+.AdminAI-modal-close { border: 0; background: #f1f5f9; border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.AdminAI-modal-grid { padding: 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.AdminAI-modal-item { position: relative; }
+.AdminAI-modal-item img { width: 100%; border-radius: 10px; cursor: zoom-in; }
+.AdminAI-modal-variation { position: absolute; right: 8px; bottom: 8px; background: #0f172a; color: #fff; font-size: 12px; border-radius: 999px; padding: 2px 8px; }
+.AdminAI-modal-img { width: 100%; display: block; }
+.AdminAI-modal-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; border-top: 1px solid #e5e7eb; }
+.AdminAI-modal-caption { color: #334155; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
