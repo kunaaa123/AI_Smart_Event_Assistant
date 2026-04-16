@@ -26,3 +26,11 @@ func (u *OrganizerReviewUsecase) GetByOrganizerID(ctx context.Context, organizer
 func (u *OrganizerReviewUsecase) GetAvgRating(ctx context.Context, organizerID int) (float64, int, error) {
 	return u.repo.GetAvgRating(ctx, organizerID)
 }
+
+func (u *OrganizerReviewUsecase) GetAll(ctx context.Context) ([]entity.OrganizerReview, error) {
+	return u.repo.GetAll(ctx)
+}
+
+func (u *OrganizerReviewUsecase) Delete(ctx context.Context, reviewID int) error {
+	return u.repo.Delete(ctx, reviewID)
+}

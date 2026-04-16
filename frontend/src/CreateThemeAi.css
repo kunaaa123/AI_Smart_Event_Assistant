@@ -1,0 +1,1357 @@
+/* Container หลัก - ลดกรอบขวา */
+.ai-theme-container--narrow {
+  max-width: 1100px; /* ลดจาก 1200px */
+  grid-template-columns: 320px 1fr; 
+  gap: 25px; /* ลดจาก 30px */
+  margin: 0 auto;
+  padding: 40px 20px 20px 20px;
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* กรอบซ้าย - ลดขนาด */
+.ai-theme-input-card--narrow {
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+  border-radius: 16px; /* ลดจาก 18px */
+  box-shadow: 0 8px 25px rgba(79, 140, 255, 0.1), 0 4px 10px rgba(0,0,0,0.05);
+  border: 1px solid #e0f0ff;
+  padding: 16px; /* ลดจาก 20px */
+  min-width: 0;
+  max-width: 100%;
+  height: fit-content;
+  position: sticky;
+  top: 80px;
+  backdrop-filter: blur(10px);
+}
+
+/* กรอบขวา - ลดขนาดเพิ่มเติม */
+.ai-theme-preview-card--narrow {
+  background: linear-gradient(135deg, #fff 0%, #fafcff 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(79, 140, 255, 0.08), 0 4px 10px rgba(0,0,0,0.03);
+  border: 1px solid #e0f0ff;
+  padding: 14px; /* ลดจาก 16px */
+  min-width: 0;
+  width: 100%;
+  min-height: 50vh; /* ลดจาก 55vh */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  max-width: 750px; /* เพิ่มขีดจำกัดความกว้าง */
+  backdrop-filter: blur(10px);
+}
+
+/* Upload Box - ปรับให้รูปแสดงผลสมส่วน พร้อมธีมอีเว้นต์ */
+.ai-theme-upload-box {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border: 2px dashed #9bb5ff;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f0f6ff 0%, #e6f2ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 140px;
+}
+
+.ai-theme-upload-box:hover {
+  border-color: #4f8cff;
+  background: linear-gradient(135deg, #e6f2ff 0%, #daeeff 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.15);
+}
+
+/* Placeholder เมื่อไม่มีรูป - ธีมอีเว้นต์ */
+.ai-theme-upload-placeholder {
+  text-align: center;
+  color: #6a82fb;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* รูปที่อัปโหลด - แก้ไขให้สมส่วน */
+.ai-theme-upload-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.ai-theme-upload-preview:hover {
+  transform: scale(1.05);
+}
+
+/* ปุ่มลบรูปที่อัปโหลด */
+.ai-theme-upload-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+}
+
+.ai-theme-upload-remove:hover {
+  background: linear-gradient(135deg, #ff3742 0%, #ff2737 100%);
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
+}
+
+/* Container สำหรับรูปที่อัปโหลด */
+.ai-theme-upload-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Label สำหรับ upload */
+.ai-theme-upload-label {
+  font-size: 0.9rem;
+  margin-top: 8px;
+  color: #6a82fb;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Drag & Drop effect */
+.ai-theme-upload-box.drag-over {
+  border-color: #4f8cff;
+  background: linear-gradient(135deg, #daeeff 0%, #c7e3ff 100%);
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(79, 140, 255, 0.25);
+}
+
+/* Image overlay info */
+.ai-theme-upload-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(106, 130, 251, 0.9));
+  color: white;
+  padding: 12px 8px 8px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ai-theme-upload-container:hover .ai-theme-upload-overlay {
+  opacity: 1;
+}
+
+.ai-theme-upload-info {
+  flex: 1;
+  text-align: left;
+  font-weight: 500;
+}
+
+.ai-theme-upload-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.ai-theme-upload-action-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.ai-theme-upload-action-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Wizard Button - ธีมอีเว้นต์ */
+.ai-theme-wizard-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.ai-theme-wizard-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Label - ธีมอีเว้นต์ */
+.ai-theme-prompt-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  color: #4f8cff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Textarea - ธีมอีเว้นต์ */
+.ai-theme-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0f0ff;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+}
+
+.ai-theme-textarea:focus {
+  outline: none;
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.1);
+  background: #fff;
+}
+
+/* Tags - ธีมอีเว้นต์ */
+.ai-theme-tags {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.ai-theme-tag {
+  background: linear-gradient(135deg, #e6f2ff 0%, #d4e9ff 100%);
+  color: #4f8cff;
+  padding: 3px 6px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #c7e3ff;
+  font-weight: 500;
+}
+
+.ai-theme-tag:hover {
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 140, 255, 0.3);
+}
+
+/* Generate Button - ธีมอีเว้นต์ */
+.ai-theme-generate-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(79, 140, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ai-theme-generate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.4);
+}
+
+.ai-theme-generate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Gallery Header - ธีมอีเว้นต์ */
+.ai-theme-gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e6f2ff;
+  flex-shrink: 0;
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+.ai-theme-title {
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-theme-clear-btn {
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+}
+
+.ai-theme-clear-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+}
+
+/* Gallery - ธีมอีเว้นต์ */
+.ai-theme-gallery {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  max-height: 30vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  padding-right: 8px;
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+.ai-theme-gallery-item {
+  position: relative;
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(79, 140, 255, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 160px;
+  border: 1px solid #e0f0ff;
+}
+
+.ai-theme-gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(79, 140, 255, 0.2);
+  border-color: #4f8cff;
+}
+
+/* === Floating action icons on thumbnails (overlay) === */
+.ai-theme-image-wrap {
+  position: relative;
+  display: block;
+}
+.ai-theme-thumb-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.18s ease;
+}
+.ai-theme-image-wrap:hover .ai-theme-thumb-overlay,
+.ai-theme-gallery-item:hover .ai-theme-thumb-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+.ai-theme-thumb-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 6px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.95);
+  color: #111;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  backdrop-filter: blur(6px);
+}
+.ai-theme-thumb-btn:hover { filter: brightness(1.05); }
+.ai-theme-thumb-btn.danger {
+  background: linear-gradient(135deg, #ff6b6b, #ef4444);
+  color: #fff;
+}
+
+/* ให้รูปโค้งมุมและไม่บัง overlay */
+.ai-theme-gallery-thumbnail {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* Gallery - ธีมอีเว้นต์ */
+.ai-theme-gallery {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  max-height: 30vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  padding-right: 8px;
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+.ai-theme-gallery-item {
+  position: relative;
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(79, 140, 255, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 160px;
+  border: 1px solid #e0f0ff;
+}
+
+.ai-theme-gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(79, 140, 255, 0.2);
+  border-color: #4f8cff;
+}
+
+.ai-theme-gallery-thumbnail {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  transition: transform 0.3s ease;
+}
+
+.ai-theme-gallery-item:hover .ai-theme-gallery-thumbnail {
+  transform: scale(1.05);
+}
+
+.ai-theme-gallery-info {
+  padding: 10px;
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+}
+
+.ai-theme-gallery-prompt {
+  font-size: 0.7rem;
+  color: #666;
+  margin-bottom: 6px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-weight: 500;
+}
+
+.ai-theme-gallery-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.ai-theme-gallery-time {
+  font-size: 0.65rem;
+  color: #999;
+  font-weight: 400;
+}
+
+.ai-theme-action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.ai-theme-download-btn {
+  background: linear-gradient(135deg, #10ac84 0%, #06a085 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 3px 5px;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(16, 172, 132, 0.3);
+}
+
+.ai-theme-download-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(16, 172, 132, 0.4);
+}
+
+.ai-theme-gallery-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+  opacity: 0;
+}
+
+.ai-theme-gallery-item:hover .ai-theme-gallery-delete {
+  opacity: 1;
+}
+
+.ai-theme-gallery-delete:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.6);
+}
+
+/* Matching Section - ธีมอีเว้นต์ */
+.ai-theme-matching-section {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e6f2ff;
+  margin-left: 0 !important;
+  width: 100% !important;
+  flex-shrink: 0;
+  min-height: 0;
+}
+
+.ai-theme-matching-title {
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 0;
+}
+
+.ai-theme-matching-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  color: #666;
+  font-size: 0.85rem;
+  background: linear-gradient(135deg, #f0f6ff 0%, #e6f2ff 100%);
+  border-radius: 8px;
+  border: 1px solid #e0f0ff;
+}
+
+/* Organizer Cards - ธีมอีเว้นต์ */
+.ai-theme-matching-horizontal {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 6px;
+  padding-right: 6px;
+  max-height: 15vh;
+}
+
+.ai-theme-organizer-card-horizontal {
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+  border: 1px solid #e0f0ff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 110px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(79, 140, 255, 0.08);
+}
+
+.ai-theme-organizer-card-horizontal:hover {
+  border-color: #4f8cff;
+  box-shadow: 0 4px 20px rgba(79, 140, 255, 0.15);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #f8fcff 0%, #f0f6ff 100%);
+}
+
+.ai-theme-organizer-image-horizontal {
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.ai-theme-organizer-avatar-horizontal {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0f0ff;
+  transition: all 0.3s ease;
+}
+
+.ai-theme-organizer-card-horizontal:hover .ai-theme-organizer-avatar-horizontal {
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.2);
+}
+
+.ai-theme-match-badge-horizontal {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: linear-gradient(135deg, #4f8cff, #6a82fb);
+  color: #fff;
+  font-size: 0.5rem;
+  font-weight: 700;
+  padding: 1px 2px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(79, 140, 255, 0.4);
+  min-width: 14px;
+  text-align: center;
+}
+
+.ai-theme-organizer-name-horizontal {
+  font-weight: 600;
+  color: #22223b;
+  font-size: 0.7rem;
+  margin-bottom: 2px;
+  line-height: 1.1;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.ai-theme-organizer-expertise-horizontal {
+  color: #4f8cff;
+  font-size: 0.55rem;
+  font-weight: 500;
+  line-height: 1.1;
+  text-align: center;
+  word-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Empty State - ธีมอีเว้นต์ */
+.ai-theme-suggestions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 25vh;
+  text-align: center;
+  padding: 20px 15px;
+  background: none;
+  border-radius: 0;
+  margin: 5px 0;
+  border: none;
+}
+
+.ai-theme-suggestions::before {
+  content: "🎨";
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.6;
+  animation: float 3s ease-in-out infinite;
+}
+
+.ai-theme-suggestions-title {
+  font-size: 1rem;
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  font-weight: 600;
+  margin-bottom: 6px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.ai-theme-suggestions-subtitle {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* Loading State - ธีมอีเว้นต์ */
+.ai-theme-loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px 15px;
+  color: #666;
+  background: none;
+  border-radius: 0;
+  margin: 5px 0;
+  border: none;
+}
+
+.ai-theme-loading-spinner {
+  font-size: 1.8rem;
+  animation: spin 2s linear infinite;
+  margin-bottom: 10px;
+}
+
+.ai-theme-loading-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Modal - ธีมอีเว้นต์ */
+.ai-theme-modal {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.ai-theme-modal-content {
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.ai-theme-modal-img {
+  max-width: 85vw;
+  max-height: 85vh;
+  border-radius: 15px;
+  box-shadow: 0 15px 50px rgba(79, 140, 255, 0.3);
+  object-fit: contain;
+  background: #fff;
+}
+
+.ai-theme-modal-close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+  border: 1px solid #e0f0ff;
+  font-size: 1.5rem;
+  color: #4f8cff;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.ai-theme-modal-close:hover {
+  background: linear-gradient(135deg, #4f8cff 0%, #6a82fb 100%);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(79, 140, 255, 0.4);
+}
+
+/* Error Message - ธีมอีเว้นต์ */
+.ai-theme-error {
+  background: linear-gradient(135deg, #ffe6e6 0%, #ffd6d6 100%);
+  color: #dc3545;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  margin-top: 8px;
+  border: 1px solid #ffcdd2;
+  font-weight: 500;
+}
+
+/* Preview Card Content - ปรับการจัดการพื้นที่ */
+.ai-theme-preview-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ai-theme-gallery-container {
+  flex: 2;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-theme-matching-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Album Cover Styles - ธีมอีเว้นต์ */
+.ai-theme-album-cover {
+  position: relative;
+}
+
+.ai-theme-album-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: 2;
+}
+
+.ai-theme-view-album-btn,
+.ai-theme-delete-album-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ai-theme-view-album-btn {
+  background: #4f8cff;
+  color: white;
+}
+
+.ai-theme-view-album-btn:hover {
+  background: #3a7bd5;
+  transform: scale(1.05);
+}
+
+.ai-theme-delete-album-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.ai-theme-delete-album-btn:hover {
+  background: #c82333;
+  transform: scale(1.05);
+}
+
+/* Album Modal Overlay - ธีมอีเว้นต์ */
+.ai-theme-album-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  backdrop-filter: blur(12px);
+  animation: themeModalFadeIn 0.3s ease-out;
+}
+
+@keyframes themeModalFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Album Modal Content - ธีมอีเว้นต์ */
+.ai-theme-album-modal-content {
+  background: linear-gradient(135deg, #fff 0%, #f8fcff 100%);
+  border-radius: 20px;
+  box-shadow: 0 25px 80px rgba(102, 126, 234, 0.3);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: themeModalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+@keyframes themeModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Album Modal Header - ธีมอีเว้นต์ */
+.ai-theme-album-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 2px solid #e6f2ff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  position: relative;
+}
+
+.ai-theme-album-modal-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+  background-size: 300% 100%;
+  animation: themeHeaderShimmer 3s ease-in-out infinite;
+}
+
+@keyframes themeHeaderShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.ai-theme-album-modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-theme-album-modal-header h3::before {
+  content: '🎨';
+  font-size: 1.3rem;
+  animation: themeIconBounce 2s ease-in-out infinite;
+}
+
+@keyframes themeIconBounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+  60% { transform: translateY(-4px); }
+}
+
+.ai-theme-album-modal-close {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.ai-theme-album-modal-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Album Modal Grid - ธีมอีเว้นต์ */
+.ai-theme-album-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 70vh;
+  background: linear-gradient(135deg, #f8fcff 0%, #fff 100%);
+}
+
+.ai-theme-album-modal-image-item {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid #f0f6ff;
+  position: relative;
+}
+
+.ai-theme-album-modal-image-item::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+  background-size: 300% 300%;
+  border-radius: 17px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: themeGradientShift 3s ease infinite;
+}
+
+@keyframes themeGradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.ai-theme-album-modal-image-item:hover::before {
+  opacity: 1;
+}
+
+.ai-theme-album-modal-image-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.25);
+  border-color: transparent;
+}
+
+.ai-theme-album-modal-image-container {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 15px 15px 0 0;
+}
+
+.ai-theme-album-modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.ai-theme-album-modal-image-container:hover .ai-theme-album-modal-image {
+  transform: scale(1.08);
+}
+
+/* Album Modal Image Overlay - ธีมอีเว้นต์ */
+.ai-theme-album-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.1) 0%,
+    rgba(118, 75, 162, 0.4) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.ai-theme-album-modal-image-container:hover .ai-theme-album-modal-overlay {
+  opacity: 1;
+}
+
+.ai-theme-album-modal-variation {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  backdrop-filter: blur(10px);
+  align-self: flex-start;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ai-theme-album-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-self: flex-end;
+}
+
+.ai-theme-album-modal-action-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.ai-theme-album-modal-action-btn:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: scale(1.15);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Album Modal Image Info - ธีมอีเว้นต์ */
+.ai-theme-album-modal-image-info {
+  padding: 16px;
+  background: linear-gradient(135deg, #f8fcff 0%, #fff 100%);
+  border-top: 1px solid #e6f2ff;
+}
+
+.ai-theme-album-modal-prompt {
+  font-size: 0.85rem;
+  color: #667eea;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Album Modal Footer - ธีมอีเว้นต์ */
+.ai-theme-album-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e6f2ff;
+  background: linear-gradient(135deg, #f8fcff 0%, #e6f2ff 100%);
+}
+
+.ai-theme-album-modal-info {
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ai-theme-album-modal-info strong {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+}
+
+/* Special effects for theme album */
+.ai-theme-album-modal-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ai-theme-album-modal-image-item {
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive Design for Theme Album Modal */
+@media (max-width: 768px) {
+  .ai-theme-album-modal-content {
+    max-width: 95vw;
+    max-height: 95vh;
+    border-radius: 15px;
+  }
+  
+  .ai-theme-album-modal-header {
+    padding: 16px 20px;
+  }
+  
+  .ai-theme-album-modal-header h3 {
+    font-size: 1rem;
+  }
+  
+  .ai-theme-album-modal-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 20px;
+  }
+  
+  .ai-theme-album-modal-action-btn {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+    min-width: 32px;
+    height: 32px;
+  }
+
+  .ai-theme-album-modal-image-item:hover {
+    transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-theme-album-modal-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .ai-theme-album-modal-image-item {
+    border-radius: 12px;
+  }
+  
+  .ai-theme-album-modal-variation {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+  }
+
+  .ai-theme-album-modal-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Loading animation for theme album */
+.ai-theme-album-modal-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #667eea;
+}
+
+.ai-theme-album-modal-loading::before {
+  content: '🎨';
+  font-size: 2rem;
+  margin-right: 12px;
+  animation: themeIconBounce 1.5s ease-in-out infinite;
+}
+
+/* Enhanced hover effects */
+.ai-theme-album-modal-image-item:hover .ai-theme-album-modal-variation {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.ai-theme-album-modal-image-item:hover .ai-theme-album-modal-image-info {
+  background: linear-gradient(135deg, #e6f2ff 0%, #f0f6ff 100%);
+}
+
+/* Scrollbar styling for theme modal */
+.ai-theme-album-modal-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ai-theme-album-modal-grid::-webkit-scrollbar-track {
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 4px;
+}
+
+.ai-theme-album-modal-grid::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+.ai-theme-album-modal-grid::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}

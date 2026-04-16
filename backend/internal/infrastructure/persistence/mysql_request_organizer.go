@@ -44,3 +44,25 @@ func (r *mysqlRequestOrganizerRepository) GetAll(ctx context.Context) ([]entity.
 	result := r.db.Find(&reqs)
 	return reqs, result.Error
 }
+
+type mysqlRequestOrganizerImageRepository struct {
+	db *gorm.DB
+}
+
+func NewMySQLRequestOrganizerImageRepository(db *gorm.DB) repository.RequestOrganizerImageRepository {
+	return &mysqlRequestOrganizerImageRepository{db: db}
+}
+
+func (r *mysqlRequestOrganizerImageRepository) Create(ctx context.Context, img *entity.RequestOrganizerImage) error {
+	return r.db.WithContext(ctx).Create(img).Error
+}
+
+func (r *mysqlRequestOrganizerImageRepository) GetByRequestID(ctx context.Context, requestID int) ([]entity.RequestOrganizerImage, error) {
+	var imgs []entity.RequestOrganizerImage
+	err := r.db.WithContext(ctx).Where("request_id = ?", requestID).Order("created_at ASC").Find(&imgs).Error
+	return imgs, err
+}
+
+func (r *mysqlRequestOrganizerImageRepository) Delete(ctx context.Context, imageID int) error {
+	return r.db.WithContext(ctx).Delete(&entity.RequestOrganizerImage{}, imageID).Error
+}

@@ -38,3 +38,7 @@ func (u *OrganizerPortfolioUsecase) GetAll(ctx context.Context) ([]entity.Organi
 func (u *OrganizerPortfolioUsecase) GetByOrganizerID(ctx context.Context, organizerID string) ([]entity.OrganizerPortfolio, error) {
 	return u.repo.GetByOrganizerID(ctx, organizerID)
 }
+
+func (u *OrganizerPortfolioUsecase) UpdateStatus(ctx context.Context, id string, isActive bool) error {
+	return u.repo.UpdateStatus(ctx, id, isActive)
+}

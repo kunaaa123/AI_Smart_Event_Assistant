@@ -50,3 +50,10 @@ func (r *mysqlOrganizerPortfolioRepository) GetByOrganizerID(ctx context.Context
 	result := r.db.Where("organizer_id = ?", organizerID).Find(&portfolios)
 	return portfolios, result.Error
 }
+
+func (r *mysqlOrganizerPortfolioRepository) UpdateStatus(ctx context.Context, id string, isActive bool) error {
+	return r.db.WithContext(ctx).
+		Model(&entity.OrganizerPortfolio{}).
+		Where("portfolio_id = ?", id).
+		Update("is_active", isActive).Error
+}

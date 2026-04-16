@@ -7,30 +7,48 @@ import (
 	"github.com/kunaaa123/smart-ai-event-assistant/backend/internal/domain/repository"
 )
 
-type FavoriteUsecase struct {
+type FavoriteUsecase interface {
+	AddToFavorites(ctx context.Context, userID, eventID int) error
+	RemoveFromFavorites(ctx context.Context, userID, eventID int) error
+	GetUserFavorites(ctx context.Context, userID int) ([]entity.Favorite, error)
+	CheckIsFavorite(ctx context.Context, userID, eventID int) (bool, error)
+}
+
+type favoriteUsecase struct {
 	favoriteRepo repository.FavoriteRepository
 }
 
-func NewFavoriteUsecase(favoriteRepo repository.FavoriteRepository) *FavoriteUsecase {
-	return &FavoriteUsecase{favoriteRepo: favoriteRepo}
+func NewFavoriteUsecase(favoriteRepo repository.FavoriteRepository) FavoriteUsecase {
+	return &favoriteUsecase{
+		favoriteRepo: favoriteRepo,
+	}
 }
 
-func (u *FavoriteUsecase) Create(ctx context.Context, favorite *entity.Favorite) error {
+func (u *favoriteUsecase) AddToFavorites(ctx context.Context, userID, eventID int) error {
+	// ตรวจสอบว่ามีอยู่แล้วหรือไม่
+	exists, err := u.favoriteRepo.CheckExists(ctx, userID, eventID)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return nil // ถ้ามีอยู่แล้วไม่ต้องเพิ่ม
+	}
+
+	favorite := &entity.Favorite{
+		UserID:  userID,
+		EventID: eventID,
+	}
 	return u.favoriteRepo.Create(ctx, favorite)
 }
 
-func (u *FavoriteUsecase) GetByID(ctx context.Context, id string) (*entity.Favorite, error) {
-	return u.favoriteRepo.GetByID(ctx, id)
+func (u *favoriteUsecase) RemoveFromFavorites(ctx context.Context, userID, eventID int) error {
+	return u.favoriteRepo.Delete(ctx, userID, eventID)
 }
 
-func (u *FavoriteUsecase) Update(ctx context.Context, favorite *entity.Favorite) error {
-	return u.favoriteRepo.Update(ctx, favorite)
+func (u *favoriteUsecase) GetUserFavorites(ctx context.Context, userID int) ([]entity.Favorite, error) {
+	return u.favoriteRepo.GetFavoriteWithEvent(ctx, userID)
 }
 
-func (u *FavoriteUsecase) Delete(ctx context.Context, id string) error {
-	return u.favoriteRepo.Delete(ctx, id)
-}
-
-func (u *FavoriteUsecase) GetAll(ctx context.Context) ([]entity.Favorite, error) {
-	return u.favoriteRepo.GetAll(ctx)
+func (u *favoriteUsecase) CheckIsFavorite(ctx context.Context, userID, eventID int) (bool, error) {
+	return u.favoriteRepo.CheckExists(ctx, userID, eventID)
 }

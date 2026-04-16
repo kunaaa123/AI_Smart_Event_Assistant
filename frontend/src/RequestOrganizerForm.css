@@ -1,0 +1,92 @@
+.ORQ-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.ORQ-modal {
+  width: 96%;
+  max-width: 820px;
+  max-height: 90vh;      /* ป้องกัน modal ยืดเกินหน้า */
+  overflow-y: auto;      /* เลื่อนภายใน modal แทนให้ body ไม่เลื่อน */
+  -webkit-overflow-scrolling: touch;
+  background: linear-gradient(180deg, rgba(255,255,255,0.97), #fff);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(8, 15, 52, 0.18);
+  padding: 20px 22px;
+  box-sizing: border-box;
+  border: 1px solid rgba(15,23,42,0.06);
+}
+
+.ORQ-modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.ORQ-title { font-size:18px; font-weight:700; color:#0f172a; }
+.ORQ-close { background:none; border:none; font-size:20px; cursor:pointer; color:#475569; padding:6px 8px; border-radius:8px; }
+.ORQ-close:hover { background:#f1f5f9; color:#0f172a; }
+
+.ORQ-form { display:block; gap:14px; }
+.ORQ-row { display:flex; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+.ORQ-col { flex:1; min-width:180px; }
+.ORQ-col-full { flex:1 1 100%; }
+
+.ORQ-label { display:block; font-weight:600; margin-bottom:8px; color:#334155; font-size:0.95rem; }
+.ORQ-input, .ORQ-select, .ORQ-textarea {
+  width:100%;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid rgba(15,23,42,0.06);
+  background: linear-gradient(180deg,#fff,#fbfdff);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.03);
+  font-size:0.95rem;
+  color:#0f172a;
+  box-sizing:border-box;
+}
+.ORQ-input:focus, .ORQ-select:focus, .ORQ-textarea:focus { outline:none; border-color:#4f8cff; box-shadow:0 6px 20px rgba(79,140,255,0.08); transform: translateY(-1px); }
+
+.ORQ-input-inline { display:inline-block; width:auto; min-width:180px; }
+
+.ORQ-textarea { min-height:110px; resize:vertical; padding-top:12px; padding-bottom:12px; }
+
+.ORQ-price-row { display:flex; gap:10px; align-items:center; }
+.ORQ-btn { background:#fff; border:1px solid rgba(148,163,184,0.25); padding:8px 12px; border-radius:10px; cursor:pointer; color:#0f172a; font-weight:600; }
+.ORQ-btn:hover { box-shadow:0 6px 18px rgba(2,6,23,0.04); transform: translateY(-2px); }
+.ORQ-btn-danger { border-color:#ffb3b3; color:#b91c1c; }
+
+.ORQ-upload-area {
+  border-radius:12px;
+  padding:14px;
+  border:2px dashed rgba(79,140,255,0.12);
+  background: linear-gradient(180deg, rgba(250,252,255,0.9), rgba(248,250,255,0.9));
+  transition: all .16s ease;
+}
+.ORQ-upload-area.ORQ-drag { background: linear-gradient(180deg,#f0f8ff,#f8fbff); border-color: #4f8cff; box-shadow: 0 10px 30px rgba(79,140,255,0.06); }
+
+.ORQ-upload-top { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+.ORQ-upload-instruction { color:#475569; font-size:0.95rem; }
+.ORQ-upload-actions { display:flex; gap:8px; }
+
+.ORQ-upload-placeholder { text-align:center; padding:18px; color:#94a3b8; }
+
+.ORQ-gallery-grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(120px,1fr)); gap:10px; }
+.ORQ-gallery-item { position:relative; border-radius:10px; overflow:hidden; background:#fff; border:1px solid rgba(14,20,34,0.04); }
+.ORQ-gallery-img { width:100%; height:110px; object-fit:cover; display:block; }
+.ORQ-gallery-overlay { position:absolute; top:8px; right:8px; display:flex; gap:6px; z-index:5; }
+.ORQ-gallery-action { background:rgba(0,0,0,0.55); color:#fff; border:none; padding:6px 8px; border-radius:8px; cursor:pointer; }
+.ORQ-gallery-action-remove { background:#ff4d4f; }
+
+.ORQ-gallery-number { position:absolute; left:8px; bottom:8px; background:rgba(2,6,23,0.6); color:#fff; padding:4px 8px; border-radius:8px; font-size:12px; }
+
+.ORQ-actions { display:flex; justify-content:flex-end; margin-top:8px; }
+.ORQ-submit { background: linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; padding:12px 20px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 10px 30px rgba(102,126,234,0.18); }
+.ORQ-submit:hover { transform: translateY(-3px); }
+
+@media (max-width:720px) {
+  .ORQ-row { flex-direction:column; }
+  .ORQ-gallery-img { height:100px; }
+  .ORQ-modal { padding:16px; }
+}

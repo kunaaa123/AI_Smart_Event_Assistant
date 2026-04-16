@@ -40,6 +40,10 @@ func (h *LoginHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Email or password incorrect"})
 		return
 	}
+	if user.IsSuspended {
+		c.JSON(http.StatusForbidden, gin.H{"error": "บัญชียังรอการอนุมัติจากแอดมิน"})
+		return
+	}
 
 	// หลังจากดึง user ได้แล้ว
 	var organizerID int

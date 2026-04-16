@@ -1,3 +1,29 @@
+:root{
+  --navbar-height: 70px; /* ปรับตามความสูงจริงของ Navbar */
+}
+
+/* เอา margin-top ออกจาก body => เคลื่อนเป็น padding บน .App แทน */
 body {
-  margin-top: 70px; /* ปรับตามความสูง Navbar จริง (เช่น 70-90px) */
+  margin: 0;
+  padding: 0;
+}
+
+/* ให้พื้นที่สำหรับ Navbar โดยค่าเริ่มต้น */
+.App {
+  padding-top: 0; /* spacer ถูกใช้แทน padding-top เพื่อควบคุมเฉพาะเส้นทางที่ต้องการ */
+}
+
+/* spacer ที่วางไว้ด้านล่าง navbar เพื่อให้เนื้อหาไม่ถูกทับโดย fixed navbar */
+.app-navbar-spacer {
+  height: var(--navbar-height);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* โหมด admin (ถ้าใช้) */
+body.admin-mode,
+body.admin-mode #root,
+body.admin-mode .App {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }

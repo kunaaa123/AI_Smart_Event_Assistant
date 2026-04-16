@@ -13,3 +13,9 @@ type RequestOrganizerRepository interface {
 	Delete(ctx context.Context, id string) error
 	GetAll(ctx context.Context) ([]entity.RequestOrganizer, error)
 }
+
+type RequestOrganizerImageRepository interface {
+	Create(ctx context.Context, img *entity.RequestOrganizerImage) error
+	GetByRequestID(ctx context.Context, requestID int) ([]entity.RequestOrganizerImage, error)
+	Delete(ctx context.Context, imageID int) error
+}

@@ -34,3 +34,23 @@ func (u *RequestOrganizerUsecase) Delete(ctx context.Context, id string) error {
 func (u *RequestOrganizerUsecase) GetAll(ctx context.Context) ([]entity.RequestOrganizer, error) {
 	return u.repo.GetAll(ctx)
 }
+
+type RequestOrganizerImageUsecase struct {
+	repo repository.RequestOrganizerImageRepository
+}
+
+func NewRequestOrganizerImageUsecase(r repository.RequestOrganizerImageRepository) *RequestOrganizerImageUsecase {
+	return &RequestOrganizerImageUsecase{repo: r}
+}
+
+func (u *RequestOrganizerImageUsecase) Create(ctx context.Context, img *entity.RequestOrganizerImage) error {
+	return u.repo.Create(ctx, img)
+}
+
+func (u *RequestOrganizerImageUsecase) GetByRequestID(ctx context.Context, requestID int) ([]entity.RequestOrganizerImage, error) {
+	return u.repo.GetByRequestID(ctx, requestID)
+}
+
+func (u *RequestOrganizerImageUsecase) Delete(ctx context.Context, imageID int) error {
+	return u.repo.Delete(ctx, imageID)
+}

@@ -51,6 +51,16 @@ func (u *UserUsecase) GetByEmail(ctx context.Context, email string) (*entity.Use
 	return u.userRepo.GetByEmail(ctx, email)
 }
 
+// เพิ่มเมธอดใน Usecase
+func (u *UserUsecase) UpdateBasic(ctx context.Context, id string, username string, email string, bio string) error {
+	return u.userRepo.UpdateBasic(ctx, id, username, email, bio)
+}
+
+func (u *UserUsecase) UpdatePassword(ctx context.Context, id string, newPassword string) error {
+	// TODO: แนะนำให้ hash password ภายหลัง
+	return u.userRepo.UpdatePassword(ctx, id, newPassword)
+}
+
 // MySQL implementation
 type mysqlUserRepository struct {
 	db *gorm.DB

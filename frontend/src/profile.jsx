@@ -1,252 +1,252 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ProfileLayout from "./ProfileLayout";
-import RequestOrganizerForm from "./RequestOrganizerForm";
 import GlassAlert from "./GlassAlert";
+import GCFFEConfirm from "./GCFFEConfirm"; // เพิ่ม
 
 const Profile = () => {
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const [form, setForm] = useState({
-    first_name: user.first_name || "",
-    last_name: user.last_name || "",
-    email: user.email || "",
-    phone: user.phone || "",
-    bio: user.bio || "",
     username: user.username || "",
-    password: user.password || "",
-    role: user.role || "member",
-    profile_image: user.profile_image || null,
+    email: user.email || "",
+    bio: user.bio || "",       // เพิ่ม bio
   });
 
-  // สำหรับ popup ส่งคำร้องขอ
-  const [showRequestModal, setShowRequestModal] = useState(false);
-  const [requestForm, setRequestForm] = useState({
-    organizer_name: user.first_name || "", // ชื่อจริง
-    category: "",                         // ประเภทงาน
-    email: user.email || "",
-    price: "", // ✅ แก้ไขตรงนี้
-    phone: user.phone || "",
-    description: "",
-    image: null,
-    imagePreview: "",
-    imageLabel: "",
+  const [pw, setPw] = useState({
+    current_password: "",
+    new_password: "",
+    confirm_password: "",
   });
 
   const [alert, setAlert] = useState({ show: false, message: "", type: "success" });
 
-  const handleRequestChange = (e) => {
-    setRequestForm({ ...requestForm, [e.target.name]: e.target.value });
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handlePwChange = (e) => setPw({ ...pw, [e.target.name]: e.target.value });
+
+  const show = (message, type="success") => setAlert({ show: true, message, type });
+
+  // คอนเฟิร์มสำหรับหน้าบ้าน (GCFFEConfirm)
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOpts, setConfirmOpts] = useState({
+    title: "ยืนยันการทำรายการ",
+    message: "คุณแน่ใจหรือไม่?",
+    type: "warning",
+    confirmText: "บันทึก",
+    cancelText: "ยกเลิก",
+    closeOnOverlay: true,
+  });
+  const confirmResolverRef = useRef(null);
+  const ask = (opts = {}) =>
+    new Promise((resolve) => {
+      confirmResolverRef.current = resolve;
+      setConfirmOpts((prev) => ({ ...prev, ...opts }));
+      setConfirmOpen(true);
+    });
+  const onConfirm = () => {
+    setConfirmOpen(false);
+    confirmResolverRef.current?.(true);
+    confirmResolverRef.current = null;
+  };
+  const onCancel = () => {
+    setConfirmOpen(false);
+    confirmResolverRef.current?.(false);
+    confirmResolverRef.current = null;
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setRequestForm((prev) => ({
-        ...prev,
-        image: file,
-        imagePreview: URL.createObjectURL(file),
-      }));
-    }
-  };
-
-  const handleRequestSubmit = async (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
+
+    // ยืนยันก่อนบันทึก (แจ้งถ้ามีการเปลี่ยนรหัสผ่าน)
+    const willChangePw = pw.current_password || pw.new_password || pw.confirm_password;
+    const ok = await ask({
+      title: "ยืนยันบันทึกโปรไฟล์",
+      message: `ต้องการบันทึกการเปลี่ยนแปลง${willChangePw ? " และเปลี่ยนรหัสผ่าน" : ""} หรือไม่?`,
+      type: "warning",
+      confirmText: "บันทึก",
+      closeOnOverlay: false,
+    });
+    if (!ok) return; // ผู้ใช้กดยกเลิก ไม่ต้องแสดง error
+
     try {
-      const user = JSON.parse(localStorage.getItem("user")) || {};
-      const payload = {
-        user_id: user.user_id,
-        organizer_name: requestForm.organizer_name,
-        category: requestForm.category,
-        email: requestForm.email,
-        price: requestForm.price,
-        phone: requestForm.phone,
-        description: requestForm.description,
-        imageLabel: requestForm.imageLabel,
-      };
-      const res = await fetch("http://localhost:8080/request_organizers", {
-        method: "POST",
+      // 1) อัปเดต username/email
+      const resBasic = await fetch(`http://localhost:8080/users/${user.user_id}/basic`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(form),   // form มี bio แล้ว
       });
-      if (res.ok) {
-        setAlert({ show: true, message: "ส่งคำร้องขอสำเร็จ", type: "success" });
-        setShowRequestModal(false);
-      } else {
-        setAlert({ show: true, message: "เกิดข้อผิดพลาดในการส่งคำร้องขอ", type: "danger" });
+      const basicData = await resBasic.json();
+
+      if (!resBasic.ok) {
+        show(basicData.error || "อัปเดตโปรไฟล์ไม่สำเร็จ", "danger");
+        return;
       }
-    } catch {
-      setAlert({ show: true, message: "เกิดข้อผิดพลาดในการเชื่อมต่อ", type: "danger" });
-    }
-  };
 
-  // สำหรับปุ่มแก้ไข (icon)
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+      // เก็บ user ล่าสุด
+      localStorage.setItem("user", JSON.stringify(basicData));
+      window.dispatchEvent(new Event("user-profile-updated"));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const userId = user.user_id;
-      const res = await fetch(`http://localhost:8080/users/${userId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (res.ok) {
-        setAlert({ show: true, message: "บันทึกข้อมูลสำเร็จ", type: "success" });
-        fetchUserProfile(userId);
-      } else {
-        setAlert({ show: true, message: "เกิดข้อผิดพลาด", type: "danger" });
-      }
-    } catch {
-      setAlert({ show: true, message: "เกิดข้อผิดพลาด", type: "danger" });
-    }
-  };
+      // 2) ถ้ามีกรอกรหัสผ่านใหม่ ให้เรียกเปลี่ยนรหัสผ่าน
+      const wantsChangePassword =
+        pw.current_password || pw.new_password || pw.confirm_password;
 
-  const fetchUserProfile = async (userId) => {
-    try {
-      const res = await fetch(`http://localhost:8080/users/${userId}`);
-      if (res.ok) {
-        const data = await res.json();
-        // อัปเดตทั้ง form และ localStorage
-        setForm({
-          first_name: data.first_name || "",
-          last_name: data.last_name || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          bio: data.bio || "",
-          username: data.username || "",
-          password: "", // ไม่ควรดึง password
-          role: data.role || "member",
-          profile_image: data.profile_image || null,
+      if (wantsChangePassword) {
+        if (!pw.new_password) {
+          show("กรุณากรอกรหัสผ่านใหม่", "warning");
+          return;
+        }
+        if (pw.new_password !== pw.confirm_password) {
+          show("รหัสผ่านใหม่ไม่ตรงกัน", "warning");
+          return;
+        }
+
+        const resPw = await fetch(`http://localhost:8080/users/${user.user_id}/password`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            current_password: pw.current_password,
+            new_password: pw.new_password,
+          }),
         });
-        // อัปเดต localStorage ด้วย (ถ้าต้องการให้ navbar เปลี่ยนด้วย)
-        localStorage.setItem("user", JSON.stringify(data)); // data ต้องมี organizer_id
+        const pwData = await resPw.json();
+        if (!resPw.ok) {
+          show(pwData.error || "เปลี่ยนรหัสผ่านไม่สำเร็จ", "danger");
+          return;
+        }
+
+        setPw({ current_password: "", new_password: "", confirm_password: "" });
       }
+
+      show("บันทึกข้อมูลสำเร็จ", "success");
     } catch {
-      // handle error
+      show("เกิดข้อผิดพลาด", "danger");
     }
   };
-
-  useEffect(() => {
-    if (user.user_id) {
-      fetchUserProfile(user.user_id);
-    }
-  }, []);
 
   useEffect(() => {
     if (alert.show) {
-      const timer = setTimeout(() => {
-        setAlert((prev) => ({ ...prev, show: false }));
-      }, 2500); // 2.5 วินาที
-      return () => clearTimeout(timer);
+      const t = setTimeout(() => setAlert((p) => ({ ...p, show: false })), 2500);
+      return () => clearTimeout(t);
     }
   }, [alert.show]);
 
   return (
     <ProfileLayout user={user}>
-      <GlassAlert
-        show={alert.show}
-        message={alert.message}
-        type={alert.type}
-        onClose={() => setAlert({ ...alert, show: false })}
+      {/* GCFFE Confirm */}
+      <GCFFEConfirm
+        open={confirmOpen}
+        title={confirmOpts.title}
+        message={confirmOpts.message}
+        type={confirmOpts.type}
+        confirmText={confirmOpts.confirmText}
+        cancelText={confirmOpts.cancelText}
+        closeOnOverlay={confirmOpts.closeOnOverlay}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
       />
-       <div className="profile-title">โปรไฟล์</div>
-      <form className="profile-main" onSubmit={handleSubmit}>
+
+      <GlassAlert show={alert.show} message={alert.message} type={alert.type}
+        onClose={() => setAlert({ ...alert, show: false })} />
+
+      <div className="profile-title">โปรไฟล์</div>
+
+      {/* ฟอร์มเดียว: ชื่อผู้ใช้/อีเมล + เปลี่ยนรหัสผ่าน */}
+      <form className="profile-main" onSubmit={handleSave}>
         <div className="profile-form-row">
           <div className="profile-form-group">
-            <label className="profile-label">ชื่อจริง</label>
+            <label className="profile-label">ชื่อผู้ใช้</label>
             <div className="profile-input-wrapper">
               <input
                 className="profile-input"
-                name="first_name"
-                value={form.first_name}
+                name="username"
+                value={form.username}
                 onChange={handleChange}
-                placeholder="ชื่อจริง"
+                placeholder="ชื่อผู้ใช้"
                 autoComplete="off"
               />
               <span className="profile-edit-icon">✎</span>
             </div>
           </div>
-          <div className="profile-form-group">
-            <label className="profile-label">นามสกุล</label>
-            <div className="profile-input-wrapper">
-              <input
-                className="profile-input"
-                name="last_name"
-                value={form.last_name}
-                onChange={handleChange}
-                placeholder="นามสกุล"
-                autoComplete="off"
-              />
-              <span className="profile-edit-icon">✎</span>
-            </div>
-          </div>
-        </div>
-        <div className="profile-form-row">
           <div className="profile-form-group">
             <label className="profile-label">อีเมล</label>
             <div className="profile-input-wrapper">
               <input
                 className="profile-input"
                 name="email"
+                type="email"
                 value={form.email}
                 onChange={handleChange}
                 placeholder="อีเมล"
                 autoComplete="off"
-                type="email"
+                readOnly
+                disabled
+                title="อีเมลไม่สามารถแก้ไขได้"
               />
-              <span className="profile-edit-icon">✎</span>
-            </div>
-          </div>
-          <div className="profile-form-group">
-            <label className="profile-label">เบอร์มือถือ</label>
-            <div className="profile-input-wrapper">
-              <input
-                className="profile-input"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="เบอร์มือถือ"
-                autoComplete="off"
-              />
-              <span className="profile-edit-icon">✎</span>
+              <span className="profile-edit-icon"></span>
             </div>
           </div>
         </div>
-        <div className="profile-form-group" style={{ marginBottom: 18 }}>
-          <label className="profile-label">คำอธิบาย</label>
+
+        {/* Bio - อยู่ในกรอบเดียวกัน */}
+        <div className="profile-form-group">
+          <label className="profile-label">คำเเนะนำตัว</label>
           <textarea
             className="profile-textarea"
             name="bio"
             value={form.bio}
             onChange={handleChange}
-            placeholder="คำอธิบาย"
+            placeholder="แนะนำตัวสั้นๆ"
+            rows={3}
           />
         </div>
-        <button
-          className="profile-submit-btn"
-          type="submit"
-          style={{ marginBottom: 18 }} // เพิ่มระยะห่าง
-        >
+
+        {/* ส่วนเปลี่ยนรหัสผ่าน (อยู่ในกรอบเดียวกัน) */}
+        <div className="profile-form-row" style={{ marginTop: 12 }}>
+          <div className="profile-form-group">
+            <label className="profile-label">รหัสผ่านปัจจุบัน</label>
+            <input
+              className="profile-input"
+              name="current_password"
+              type="password"
+              value={pw.current_password}
+              onChange={handlePwChange}
+              placeholder="••••••••"
+              autoComplete="current-password"
+            />
+          </div>
+          <div className="profile-form-group">
+            <label className="profile-label">รหัสผ่านใหม่</label>
+            <input
+              className="profile-input"
+              name="new_password"
+              type="password"
+              value={pw.new_password}
+              onChange={handlePwChange}
+              placeholder="อย่างน้อย 6 ตัวอักษร"
+              autoComplete="new-password"
+              minLength={6}
+            />
+          </div>
+        </div>
+
+        <div className="profile-form-row">
+          <div className="profile-form-group">
+            <label className="profile-label">ยืนยันรหัสผ่านใหม่</label>
+            <input
+              className="profile-input"
+              name="confirm_password"
+              type="password"
+              value={pw.confirm_password}
+              onChange={handlePwChange}
+              placeholder="พิมพ์ซ้ำ"
+              autoComplete="new-password"
+              minLength={6}
+            />
+          </div>
+        </div>
+
+        <button className="profile-submit-btn" type="submit" style={{ marginTop: 12 }}>
           บันทึก
         </button>
-        <button
-          className="profile-submit-btn"
-          type="button"
-          onClick={() => setShowRequestModal(true)}
-        >
-          ส่งคำร้องขอ
-        </button>
       </form>
-      <RequestOrganizerForm
-        show={showRequestModal}
-        onClose={() => setShowRequestModal(false)}
-        form={requestForm}
-        onChange={handleRequestChange}
-        onImageChange={handleImageChange}
-        onSubmit={handleRequestSubmit}
-      />
     </ProfileLayout>
   );
 };

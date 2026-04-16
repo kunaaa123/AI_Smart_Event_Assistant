@@ -1,0 +1,630 @@
+/* ===== PORTFOLIO DETAIL PAGE STYLES ===== */
+.portfolio-detail-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Loading State */
+.portfolio-detail-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.portfolio-detail-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: portfolio-detail-spin 1s linear infinite;
+}
+
+@keyframes portfolio-detail-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.portfolio-detail-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  color: #ef4444;
+  font-size: 1.1rem;
+}
+
+.portfolio-detail-error-icon {
+  font-size: 3rem;
+}
+
+/* Header */
+.portfolio-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.portfolio-detail-back-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.portfolio-detail-back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.portfolio-detail-breadcrumb {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.portfolio-detail-breadcrumb-sep {
+  margin: 0 12px;
+  color: #cbd5e1;
+}
+
+/* Main Layout */
+.portfolio-detail-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+/* Left Side - Cover & Gallery */
+.portfolio-detail-left {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-detail-cover-section {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.portfolio-detail-cover-wrapper {
+  width: 100%;
+  height: 400px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+}
+
+.portfolio-detail-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.portfolio-detail-cover-img:hover {
+  transform: scale(1.02);
+}
+
+.portfolio-detail-cover-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #94a3b8;
+  gap: 12px;
+}
+
+.portfolio-detail-cover-placeholder-icon {
+  font-size: 4rem;
+  opacity: 0.6;
+}
+
+/* Gallery */
+.portfolio-detail-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.portfolio-detail-gallery-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.portfolio-detail-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.portfolio-detail-gallery-item {
+  width: 100%;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.portfolio-detail-gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.portfolio-detail-gallery-img:hover {
+  transform: scale(1.05);
+}
+
+.portfolio-detail-gallery-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #94a3b8;
+  padding: 40px 20px;
+  font-style: italic;
+}
+
+/* Right Side - Details */
+.portfolio-detail-right {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.portfolio-detail-info {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-detail-title-section {
+  margin-bottom: 30px;
+}
+
+.portfolio-detail-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+  line-height: 1.2;
+}
+
+.portfolio-detail-badges {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.portfolio-detail-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.portfolio-detail-badge-category {
+  background: linear-gradient(135deg, #06b6d4, #0ea5e9);
+  color: white;
+}
+
+.portfolio-detail-badge-price {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.portfolio-detail-section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 16px 0;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.portfolio-detail-description-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #475569;
+  white-space: pre-line;
+}
+
+/* Organizer Info */
+.portfolio-detail-organizer {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-detail-organizer-card {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.portfolio-detail-organizer-avatar {
+  flex-shrink: 0;
+}
+
+.portfolio-detail-organizer-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e2e8f0;
+}
+
+.portfolio-detail-organizer-info {
+  flex: 1;
+}
+
+.portfolio-detail-organizer-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.portfolio-detail-organizer-role {
+  font-size: 0.95rem;
+  color: #3b82f6;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.portfolio-detail-organizer-bio {
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.portfolio-detail-organizer-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.portfolio-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.portfolio-detail-btn-profile {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.portfolio-detail-btn-profile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.portfolio-detail-btn-contact {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.portfolio-detail-btn-contact:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+/* Related Portfolios - เปลี่ยนเป็นการ์ดแนวตั้งเล็ก */
+.portfolio-detail-related {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-detail-related-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.portfolio-detail-related-more {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.25);
+}
+
+.portfolio-detail-related-more:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(245, 158, 11, 0.35);
+}
+
+.portfolio-detail-related-loading {
+  text-align: center;
+  color: #64748b;
+  padding: 30px;
+  font-size: 1rem;
+}
+
+/* Grid - การ์ดแนวตั้งขยายขนาด */
+.portfolio-detail-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* ขยายจาก 140px เป็น 160px */
+  gap: 16px; /* ขยายจาก 12px เป็น 16px */
+  justify-content: center;
+}
+
+/* การ์ดผลงาน - แนวตั้งขยายขนาด */
+.portfolio-detail-related-card {
+  background: white;
+  border-radius: 10px; /* ขยายจาก 8px เป็น 10px */
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* เพิ่มเงา */
+  height: fit-content;
+}
+
+.portfolio-detail-related-card:hover {
+  transform: translateY(-3px); /* ขยายจาก -2px เป็น -3px */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* เพิ่มเงา */
+  border-color: #3b82f6;
+}
+
+/* รูปภาพ - ขยายความสูง */
+.portfolio-detail-related-img-wrap {
+  width: 100%;
+  height: 110px; /* ขยายจาก 90px เป็น 110px */
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.portfolio-detail-related-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.portfolio-detail-related-card:hover .portfolio-detail-related-img {
+  transform: scale(1.05);
+}
+
+/* ข้อมูลภายในการ์ด - ขยาย padding และฟอนต์ */
+.portfolio-detail-related-info {
+  padding: 10px; /* ขยายจาก 8px เป็น 10px */
+}
+
+.portfolio-detail-related-title {
+  font-size: 0.85rem; /* ขยายจาก 0.75rem เป็น 0.85rem */
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 5px; /* ขยายจาก 4px เป็น 5px */
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.portfolio-detail-related-category {
+  font-size: 0.7rem; /* ขยายจาก 0.65rem เป็น 0.7rem */
+  color: #0ea5e9;
+  font-weight: 500;
+  margin-bottom: 4px; /* ขยายจาก 3px เป็น 4px */
+  background: rgba(14, 165, 233, 0.1);
+  padding: 2px 6px; /* ขยายจาก 1px 4px เป็น 2px 6px */
+  border-radius: 5px; /* ขยายจาก 4px เป็น 5px */
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.portfolio-detail-related-price {
+  font-size: 0.75rem; /* ขยายจาก 0.7rem เป็น 0.75rem */
+  color: #10b981;
+  font-weight: 600;
+  margin-bottom: 5px; /* ขยายจาก 4px เป็น 5px */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.portfolio-detail-related-desc {
+  font-size: 0.7rem; /* ขยายจาก 0.65rem เป็น 0.7rem */
+  color: #64748b;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 30px; /* ขยายจาก 26px เป็น 30px */
+}
+
+/* Responsive Design - ปรับการ์ดให้ใหญ่ขึ้นทุกขนาด */
+@media (max-width: 1024px) {
+  .portfolio-detail-main {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .portfolio-detail-container {
+    padding: 15px;
+  }
+  
+  .portfolio-detail-title {
+    font-size: 2rem;
+  }
+  
+  /* การ์ดขยายในหน้าจอขนาดกลาง */
+  .portfolio-detail-related-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* ขยายจาก 130px เป็น 150px */
+    gap: 14px; /* ขยายจาก 10px เป็น 14px */
+  }
+}
+
+@media (max-width: 768px) {
+  .portfolio-detail-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .portfolio-detail-left,
+  .portfolio-detail-info,
+  .portfolio-detail-organizer,
+  .portfolio-detail-related {
+    padding: 20px;
+  }
+  
+  .portfolio-detail-cover-wrapper {
+    height: 280px;
+  }
+  
+  .portfolio-detail-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .portfolio-detail-title {
+    font-size: 1.8rem;
+  }
+  
+  .portfolio-detail-organizer-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  /* การ์ดผลงานในมือถือ */
+  .portfolio-detail-related-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* ขยายจาก 120px เป็น 140px */
+    gap: 12px; /* ขยายจาก 8px เป็น 12px */
+  }
+  
+  .portfolio-detail-related-img-wrap {
+    height: 90px; /* ขยายจาก 80px เป็น 90px */
+  }
+  
+  .portfolio-detail-related-info {
+    padding: 8px; /* ขยายจาก 6px เป็น 8px */
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-detail-container {
+    padding: 10px;
+  }
+  
+  .portfolio-detail-cover-wrapper {
+    height: 220px;
+  }
+  
+  .portfolio-detail-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .portfolio-detail-gallery-item {
+    height: 140px;
+  }
+  
+  .portfolio-detail-title {
+    font-size: 1.5rem;
+  }
+  
+  .portfolio-detail-badges {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .portfolio-detail-organizer-actions {
+    flex-direction: column;
+  }
+  
+  .portfolio-detail-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* การ์ดผลงานในมือถือขนาดเล็ก */
+  .portfolio-detail-related-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* ขยายจาก 100px เป็น 120px */
+    gap: 10px; /* ขยายจาก 6px เป็น 10px */
+  }
+  
+  .portfolio-detail-related-img-wrap {
+    height: 80px; /* ขยายจาก 70px เป็น 80px */
+  }
+  
+  .portfolio-detail-related-info {
+    padding: 7px; /* ขยายจาก 5px เป็น 7px */
+  }
+  
+  .portfolio-detail-related-title {
+    font-size: 0.75rem; /* ขยายจาก 0.7rem เป็น 0.75rem */
+  }
+  
+  .portfolio-detail-related-category,
+  .portfolio-detail-related-price {
+    font-size: 0.65rem; /* ขยายจาก 0.6rem เป็น 0.65rem */
+  }
+  
+  .portfolio-detail-related-desc {
+    font-size: 0.65rem; /* ขยายจาก 0.6rem เป็น 0.65rem */
+    height: 24px; /* ขยายจาก 20px เป็น 24px */
+    -webkit-line-clamp: 1;
+  }
+}

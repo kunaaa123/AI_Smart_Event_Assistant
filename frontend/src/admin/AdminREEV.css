@@ -1,0 +1,406 @@
+.AdminREEV {
+  padding: 20px;
+  min-height: 100%;
+  background: linear-gradient(180deg, #f7fbff, #ffffff);
+}
+
+/* Header */
+.AdminREEV-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.AdminREEV-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: .2px;
+}
+.AdminREEV-subtitle {
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* Filters */
+.AdminREEV-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.AdminREEV-input-wrap { position: relative; }
+.AdminREEV-input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: .6;
+}
+.AdminREEV-filter-input {
+  padding: 10px 12px 10px 30px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  min-width: 300px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+  background: #fff;
+}
+.AdminREEV-filter-input:focus {
+  border-color: #94a3b8;
+  box-shadow: 0 0 0 4px rgba(148,163,184,.18);
+}
+.AdminREEV-filter-select {
+  padding: 10px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+/* Chips */
+.AdminREEV-chip-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0 2px;
+}
+.AdminREEV-chip {
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  color: #334155;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background .15s, border-color .15s, transform .05s;
+}
+.AdminREEV-chip:hover { background: #eef2f7; }
+.AdminREEV-chip:active { transform: translateY(1px); }
+.AdminREEV-chip.active {
+  background: #e0ecff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+.AdminREEV-chip-count {
+  background: #fff;
+  border: 1px solid #dbeafe;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+/* Card wrapper */
+.AdminREEV-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.06);
+}
+.AdminREEV-loading {
+  padding: 40px 0;
+  text-align: center;
+  color: #64748b;
+}
+.AdminREEV-empty {
+  padding: 48px 0;
+  text-align: center;
+  color: #64748b;
+}
+.AdminREEV-empty-emoji { font-size: 40px; margin-bottom: 8px; }
+
+/* Table */
+.AdminREEV-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+/* หัวตารางไม่ตัดบรรทัดและกึ่งกลางแนวตั้ง */
+.AdminREEV-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8fafc;
+  color: #334155;
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 12px;
+  text-transform: none;
+  letter-spacing: .2px;
+  white-space: nowrap;       /* กันคำว่า “รายละเอียด” แตกบรรทัด */
+  overflow: hidden;          /* ถ้าคับคอลัมน์ */
+  text-overflow: ellipsis;   /* ใส่ … */
+  vertical-align: middle;
+  line-height: 1.2;
+}
+
+/* ให้เซลล์ข้อมูลกึ่งกลางแนวตั้ง */
+.AdminREEV-table tbody td { 
+  padding: 12px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+/* ปรับความกว้างคอลัมน์ช่วยไม่ให้ “รายละเอียด” โดนบีบ */
+.AdminREEV-table th:nth-child(4), .AdminREEV-table td:nth-child(4) { width: 160px; }  /* เหตุผล */
+.AdminREEV-table th:nth-child(5), .AdminREEV-table td:nth-child(5) { width: auto; }   /* รายละเอียด */
+
+/* ผู้รายงานให้เสมอกัน */
+.AdminREEV-user-cell {
+  display: flex;
+  align-items: center;   /* จาก baseline -> center */
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.AdminREEV-user-name, .AdminREEV-user-id {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.25;
+}
+.AdminREEV-user-id {
+  color: #94a3b8;
+  font-size: 12.5px;
+}
+
+/* ป้ายสถานะให้กว้างเท่ากันและกึ่งกลาง */
+.AdminREEV-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;   /* รองรับ “รอดำเนินการ” */
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: none;
+}
+
+/* ปุ่ม Action ไม่ตัดคำและจัดกริดให้สมดุล */
+.AdminREEV-btn { white-space: nowrap; }
+.AdminREEV-action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;      /* ไม่ตัดบรรทัด */
+  overflow-x: auto;       /* ถ้าคับให้เลื่อนแนวนอน */
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;    /* กันชนกับสโครลบาร์ */
+}
+.AdminREEV-action-group > .AdminREEV-btn { flex: 0 0 auto; }
+
+/* Status badge */
+.AdminREEV-status-badge {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: none;
+}
+.AdminREEV-status-badge.pending  { background: #fef3c7; color: #92400e; }
+.AdminREEV-status-badge.resolved { background: #d1fae5; color: #065f46; }
+.AdminREEV-status-badge.rejected { background: #fee2e2; color: #7f1d1d; }
+
+/* Buttons */
+.AdminREEV-btn {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #0f172a;
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .05s, box-shadow .15s, background .15s, border-color .15s;
+}
+.AdminREEV-btn:hover { background: #f8fafc; }
+.AdminREEV-btn:active { transform: translateY(1px); }
+.AdminREEV-btn:disabled { opacity: .55; cursor: not-allowed; }
+.AdminREEV-btn.subtle {
+  background: #f8fafc;
+  border-color: #e5e7eb;
+}
+.AdminREEV-btn.success {
+  background: #ecfdf5;
+  border-color: #bbf7d0;
+  color: #065f46;
+}
+.AdminREEV-btn.danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #7f1d1d;
+}
+.AdminREEV-btn.ghost {
+  background: #fff;
+  border-color: #e5e7eb;
+  color: #334155;
+}
+.AdminREEV-btn.close {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  font-weight: 900;
+  padding: 6px 10px;
+}
+
+/* Actions */
+.AdminREEV-action-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Pagination */
+.AdminREEV-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+}
+.AdminREEV-pagination-info { color: #64748b; font-size: 13px; }
+
+/* Modal */
+.AdminREEV-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+.AdminREEV-modal {
+  width: 100%;
+  max-width: 720px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(2,6,23,.18);
+  overflow: hidden;
+}
+.AdminREEV-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #eef2f7;
+  background: linear-gradient(180deg, #f8fafc, #ffffff);
+}
+.AdminREEV-modal-title {
+  font-weight: 900;
+  color: #0f172a;
+}
+.AdminREEV-modal-body {
+  padding: 16px;
+}
+.AdminREEV-detail { display: grid; gap: 12px; }
+.AdminREEV-detail-row { display: grid; grid-template-columns: 140px 1fr; gap: 12px; }
+@media (max-width: 560px) {
+  .AdminREEV-detail-row { grid-template-columns: 1fr; }
+}
+.AdminREEV-detail-label {
+  color: #64748b;
+  font-weight: 700;
+}
+.AdminREEV-detail-value { color: #0f172a; }
+.AdminREEV-detail-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* อีเวนท์: คุมขนาดรูปและจัดกึ่งกลางคอลัมน์ */
+.AdminREEV-table th:nth-child(2),
+.AdminREEV-table td:nth-child(2) {
+  width: 140px;
+  text-align: center;
+}
+
+.AdminREEV-event-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.AdminREEV-event-thumb-wrap {
+  display: inline-block;
+  line-height: 0; /* กันเด้ง baseline */
+  border-radius: 10px;
+}
+
+.AdminREEV-event-thumb {
+  width: 84px;      /* ปรับได้ 72–96 ตามต้องการ */
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  display: block;   /* กัน inline gap */
+}
+
+/* กันภาพในตารางหลุดขนาด */
+.AdminREEV-table img { max-width: 100%; height: auto; }
+
+@media (max-width: 640px) {
+  .AdminREEV-event-thumb { width: 68px; height: 46px; }
+}
+
+/* กำหนดความกว้างคอลัมน์ “การจัดการ” ให้พอวางแนวนอน */
+.AdminREEV-table th:nth-child(8),
+.AdminREEV-table td:nth-child(8) { width: 420px; }
+
+@media (max-width: 1100px) {
+  .AdminREEV-table th:nth-child(8),
+  .AdminREEV-table td:nth-child(8) { width: 340px; }
+}
+@media (max-width: 780px) {
+  .AdminREEV-table th:nth-child(8),
+  .AdminREEV-table td:nth-child(8) { width: 260px; }
+}
+
+/* ขยับคอลัมน์สถานะ (เฉพาะแถวข้อมูล) ไปซ้ายเล็กน้อย */
+.AdminREEV-table tbody td:nth-child(7) {
+  padding-left: 4px;          /* เดิม 10px */
+  text-align: left;           /* ย้ำให้อยู่ชิดซ้าย */
+}
+.AdminREEV-table tbody td:nth-child(7) .AdminREEV-status-badge {
+  margin-left: -6px;          /* ขยับ badge ไปซ้ายอีกนิด */
+}
+
+/* เมนูการจัดการแบบไอคอน ⋮ */
+.AdminREEV-actions { position: relative; display: inline-block; }
+.AdminREEV-actions-trigger {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 10px;
+  border: 1px solid #e5e7eb; background: #fff; cursor: pointer;
+  font-size: 18px; line-height: 1; color: #0f172a;
+}
+.AdminREEV-actions-trigger:hover { background: #f8fafc; }
+.AdminREEV-actions-menu {
+  position: absolute; top: 40px; right: 0; z-index: 20;
+  min-width: 200px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(2, 8, 20, .12);
+  padding: 6px;
+}
+.AdminREEV-actions-item {
+  display: block; width: 100%; text-align: left;
+  padding: 9px 10px; border-radius: 8px; background: transparent; border: 0; cursor: pointer;
+  color: #0f172a; font-weight: 600;
+}
+.AdminREEV-actions-item:hover { background: #f1f5f9; }
+.AdminREEV-actions-item.success { color: #16a34a; }
+.AdminREEV-actions-item.danger { color: #dc2626; }
+.AdminREEV-actions-sep { height: 1px; background: #eef2f7; margin: 4px 6px; }
+
+/* ปรับคอลัมน์การจัดการให้พอดีไอคอน */
+.AdminREEV-table th:nth-child(8), .AdminREEV-table td:nth-child(8) { width: 120px; }

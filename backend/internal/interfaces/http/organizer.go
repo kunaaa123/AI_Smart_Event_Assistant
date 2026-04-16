@@ -65,7 +65,7 @@ func (h *OrganizerHandler) GetOrganizer(c *gin.Context) {
 		return
 	}
 
-	// รวมข้อมูล organizer + user
+	// รวมข้อมูล organizer + user - เพิ่ม email และ phone
 	resp := map[string]interface{}{
 		"organizer_id":  organizer.OrganizerID,
 		"user_id":       organizer.UserID,
@@ -76,7 +76,8 @@ func (h *OrganizerHandler) GetOrganizer(c *gin.Context) {
 		"last_name":     user.LastName,
 		"profile_image": user.ProfileImage,
 		"bio":           user.Bio,
-		// เพิ่ม field อื่นๆ ตามต้องการ
+		"email":         user.Email, // เพิ่มบรรทัดนี้
+		"phone":         user.Phone, // เพิ่มบรรทัดนี้
 	}
 	c.JSON(http.StatusOK, resp)
 }

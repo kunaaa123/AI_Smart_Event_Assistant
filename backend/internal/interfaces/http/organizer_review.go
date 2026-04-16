@@ -19,12 +19,6 @@ func NewOrganizerReviewHandler(u *usecase.OrganizerReviewUsecase, db *gorm.DB) *
 	return &OrganizerReviewHandler{usecase: u, db: db}
 }
 
-func (h *OrganizerReviewHandler) RegisterRoutes(router *gin.Engine) {
-	router.POST("/organizers/:id/reviews", h.Create)
-	router.GET("/organizers/:id/reviews", h.GetByOrganizerID)
-	router.GET("/organizers/:id/reviews/avg", h.GetAvgRating)
-}
-
 func (h *OrganizerReviewHandler) Create(c *gin.Context) {
 	organizerID, _ := strconv.Atoi(c.Param("id")) // <-- แก้ตรงนี้
 	var req struct {
@@ -76,6 +70,43 @@ func (h *OrganizerReviewHandler) GetAvgRating(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"avg_rating": avg, "total_reviews": count})
+}
+
+func (h *OrganizerReviewHandler) GetAll(c *gin.Context) {
+	var reviews []struct {
+		entity.OrganizerReview
+		Username      string  `json:"username"`
+		ProfileImage  *string `json:"profile_image"`
+		OrganizerName string  `json:"organizer_name"`
+	}
+	err := h.db.
+		Table("organizer_reviews").
+		Select("organizer_reviews.*, users.username, users.profile_image, organizers.expertise as organizer_name").
+		Joins("JOIN users ON organizer_reviews.user_id = users.user_id").
+		Joins("JOIN organizers ON organizer_reviews.organizer_id = organizers.organizer_id").
+		Order("organizer_reviews.created_at desc").
+		Scan(&reviews).Error
+	if err != nil {
+		c.JSON(500, gin.H{"error": "failed to fetch organizer reviews"})
+		return
+	}
+	c.JSON(200, reviews)
+}
+
+func (h *OrganizerReviewHandler) DeleteReview(c *gin.Context) {
+	reviewID, err := strconv.Atoi(c.Param("review_id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid review ID"})
+		return
+	}
+
+	err = h.usecase.Delete(c.Request.Context(), reviewID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete review"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "review deleted successfully"})
 }
 
 type OrganizerReviewWithUser struct {

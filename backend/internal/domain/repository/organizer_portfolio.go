@@ -13,4 +13,5 @@ type OrganizerPortfolioRepository interface {
 	Delete(ctx context.Context, id string) error
 	GetAll(ctx context.Context) ([]entity.OrganizerPortfolio, error)
 	GetByOrganizerID(ctx context.Context, organizerID string) ([]entity.OrganizerPortfolio, error)
+	UpdateStatus(ctx context.Context, id string, isActive bool) error
 }
