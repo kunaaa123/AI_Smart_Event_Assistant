@@ -24,6 +24,34 @@ var (
 	emailService *EmailService // Global EmailService
 )
 
+func resolveUploadsDir() string {
+	// Allow override from env for deployments/containerized environments.
+	if custom := strings.TrimSpace(os.Getenv("UPLOADS_DIR")); custom != "" {
+		return custom
+	}
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		// Safe fallback - relative to current process working dir.
+		return "uploads"
+	}
+
+	// Support running either from backend root or backend/cmd/api.
+	candidates := []string{
+		filepath.Join(cwd, "cmd", "api", "uploads"),
+		filepath.Join(cwd, "uploads"),
+	}
+
+	for _, candidate := range candidates {
+		if info, err := os.Stat(candidate); err == nil && info.IsDir() {
+			return candidate
+		}
+	}
+
+	// Default to backend-root style if none exists yet; it will be created.
+	return candidates[0]
+}
+
 type approvalMailer struct{}
 
 // ทำหน้าที่ส่งอีเมลแบบง่าย โดยใช้ EmailService ภายในแพ็กเกจ main
@@ -309,8 +337,8 @@ func main() {
 	categoryHandler := httpHandler.NewCategoryHandler(db)
 	categoryHandler.RegisterRoutes(r)
 
-	// Static files - use a local uploads directory under backend/cmd/api
-	uploadsDir := filepath.Join(".", "uploads")
+	// Static files - use portable uploads dir (avoid machine-specific absolute paths)
+	uploadsDir := resolveUploadsDir()
 	if abs, err := filepath.Abs(uploadsDir); err == nil {
 		uploadsDir = abs
 	}

@@ -123,12 +123,12 @@ FORCE_HF_MODEL = "black-forest-labs/FLUX.1-schnell"
 
 # ตรวจสอบว่ามี HUGGING_FACE_API_TOKEN หรือไม่
 try:
-    HUGGING_FACE_API_TOKEN = os.getenv("HUGGING_FACE_API_TOKEN")
+    HUGGING_FACE_API_TOKEN = os.getenv("HUGGING_FACE_API_TOKEN", "")
     if not HUGGING_FACE_API_TOKEN or HUGGING_FACE_API_TOKEN == "hf_your_token_here":
         logger.warning("⚠️ HUGGING_FACE_API_TOKEN not set properly")
     else:
         logger.info("✅ HUGGING_FACE_API_TOKEN loaded successfully")
-except Exception:
+except:
     logger.error("❌ Failed to load HUGGING_FACE_API_TOKEN")
     HUGGING_FACE_API_TOKEN = None
 

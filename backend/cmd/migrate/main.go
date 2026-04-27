@@ -12,7 +12,7 @@ import (
 func main() {
 	task := flag.String("task", "events", "migration task: events|venues|all")
 	dsn := flag.String("dsn", "root:@tcp(127.0.0.1:3306)/AI_Smart_Event_Assistant?charset=utf8mb4&parseTime=True&loc=Local", "DB DSN")
-	uploads := flag.String("uploads", `..\api\uploads`, "uploads dir")
+	uploads := flag.String("uploads", `C:\Users\Gnsi_ah\Desktop\GG\Smart_Ai_Event_Assistant\backend\cmd\api\uploads`, "uploads dir")
 	flag.Parse()
 
 	// ensure uploads dir exists
